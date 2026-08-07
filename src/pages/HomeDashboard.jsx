@@ -1,5 +1,6 @@
 import React from 'react';
 import { GraduationCap, Sparkles } from 'lucide-react';
+import AvatarWelcome from '../components/AvatarWelcome';
 import './HomeDashboard.css';
 
 export default function HomeDashboard() {
@@ -8,22 +9,24 @@ export default function HomeDashboard() {
       <header className="dashboard-header glass-panel">
         <div>
           <p className="unit-subtitle">Bienvenue !</p>
-          <h2 className="unit-title text-gradient">Menu Principal</h2>
+          <h2 className="unit-title text-gradient">La classe de français immersion 11</h2>
         </div>
       </header>
 
       <div className="dashboard-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', textAlign: 'center' }}>
-        <div className="glass-panel" style={{ padding: '4rem', maxWidth: '800px', borderRadius: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
-            <div style={{ background: 'var(--primary-color)', padding: '1.5rem', borderRadius: '50%', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 25px rgba(255, 94, 98, 0.3)' }}>
-              <GraduationCap size={64} />
+        <AvatarWelcome />
+
+        <div className="glass-panel" style={{ padding: '3rem 4rem', maxWidth: '800px', borderRadius: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
+            <div style={{ background: 'var(--primary-color)', padding: '1.2rem', borderRadius: '50%', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 25px rgba(255, 94, 98, 0.3)' }}>
+              <GraduationCap size={48} />
             </div>
           </div>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '1.5rem', color: 'var(--text-color)' }}>
-            Bienvenue sur <br />
-            <span className="text-gradient">Pre-AP French Studies Honors</span>
+          <h1 style={{ fontSize: '2.2rem', marginBottom: '1.2rem', color: 'var(--text-color)' }}>
+            Bienvenue sur votre plateforme <br />
+            <span className="text-gradient">Français Immersion 11</span>
           </h1>
-          <p style={{ fontSize: '1.2rem', lineHeight: '1.8', opacity: 0.9, marginBottom: '2rem' }}>
+          <p style={{ fontSize: '1.1rem', lineHeight: '1.8', opacity: 0.9, marginBottom: '2rem' }}>
             Bonjour à tous ! Ce site est votre plateforme d'apprentissage interactive. 
             Sélectionnez un <strong>module de cours</strong> dans le menu de gauche pour commencer à explorer les leçons de grammaire, 
             les exercices de vocabulaire, les pratiques d'écriture et nos simulations immersives.
@@ -38,3 +41,4 @@ export default function HomeDashboard() {
     </div>
   );
 }
+
