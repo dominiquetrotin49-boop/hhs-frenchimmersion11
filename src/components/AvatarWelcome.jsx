@@ -6,7 +6,7 @@ export default function AvatarWelcome() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSpeaker, setCurrentSpeaker] = useState(null);
   const [voices, setVoices] = useState([]);
-  
+  const audioRef = useRef(null);
   const isCancelledRef = useRef(false);
 
   useEffect(() => {
@@ -19,6 +19,9 @@ export default function AvatarWelcome() {
     
     return () => {
       window.speechSynthesis.cancel();
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
       isCancelledRef.current = true;
     };
   }, []);
@@ -30,24 +33,44 @@ export default function AvatarWelcome() {
     { speaker: 'hugo', text: "Il y a de la grammaire, du vocabulaire, et même des trucs pour écrire..." },
     { speaker: 'lea', text: "...et surtout des simulations hyper immersives !" },
     { speaker: 'hugo', text: "Bref, lance-toi vite dans une unité." },
-    { speaker: 'lea', text: "Et n'oublie pas, c'est bon les paupe tartes !" }
+    { speaker: 'lea', text: "Et n'oublie pas, c'est bon les PopTarts !" }
   ];
 
-  const playConversation = async (e) => {
-    if (e) e.stopPropagation();
+  const playAudioFile = () => {
+    return new Promise((resolve) => {
+      const audio = new Audio('/audio/intro_dialogue.mp3');
+      audioRef.current = audio;
 
-    if (isPlaying) {
-      window.speechSynthesis.cancel();
-      isCancelledRef.current = true;
-      setIsPlaying(false);
-      setCurrentSpeaker(null);
-      return;
-    }
-    
-    setIsPlaying(true);
-    isCancelledRef.current = false;
-    window.speechSynthesis.cancel();
-    
+      audio.onplay = () => {
+        setIsPlaying(true);
+        setCurrentSpeaker('lea');
+      };
+
+      audio.ontimeupdate = () => {
+        // Toggle active speaker visual based on time elapsed
+        const current = audio.currentTime;
+        if (current < 3 || (current >= 5.5 && current < 9.5) || current >= 12.5) {
+          setCurrentSpeaker('lea');
+        } else {
+          setCurrentSpeaker('hugo');
+        }
+      };
+
+      audio.onended = () => {
+        setIsPlaying(false);
+        setCurrentSpeaker(null);
+        resolve(true);
+      };
+
+      audio.onerror = () => {
+        resolve(false); // MP3 file not available, trigger fallback
+      };
+
+      audio.play().catch(() => resolve(false));
+    });
+  };
+
+  const playSpeechSynthesis = async () => {
     const frenchVoices = voices.filter(v => v.lang.startsWith('fr'));
     
     for (let i = 0; i < dialogue.length; i++) {
@@ -63,31 +86,60 @@ export default function AvatarWelcome() {
         if (line.speaker === 'lea') {
           utterance.pitch = 1.4; 
           utterance.rate = 1.0;
-          const femaleVoice = frenchVoices.find(v => v.name.includes('Amelie') || v.name.includes('Amélie'));
+          const femaleVoice = frenchVoices.find(v => v.name.includes('Amelie') || v.name.includes('Amélie') || v.name.includes('Audrey'));
           if (femaleVoice) utterance.voice = femaleVoice;
           else if (frenchVoices.length > 0) utterance.voice = frenchVoices[0];
         } else if (line.speaker === 'hugo') {
           utterance.pitch = 1.2;
           utterance.rate = 1.05;
-          const maleVoice = frenchVoices.find(v => /thomas|paul|bernard|male/i.test(v.name));
+          const maleVoice = frenchVoices.find(v => /thomas|paul|bernard|nicolas|male/i.test(v.name));
           if (maleVoice) utterance.voice = maleVoice;
           else if (frenchVoices.length > 1) utterance.voice = frenchVoices[1];
           else if (frenchVoices.length > 0) utterance.voice = frenchVoices[0];
         }
 
         utterance.onend = () => {
-          setTimeout(resolve, 250);
+          setTimeout(resolve, 300);
         };
         utterance.onerror = resolve; 
         
         window.speechSynthesis.speak(utterance);
       });
     }
+  };
+
+  const playConversation = async (e) => {
+    if (e) e.stopPropagation();
+
+    if (isPlaying) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      window.speechSynthesis.cancel();
+      isCancelledRef.current = true;
+      setIsPlaying(false);
+      setCurrentSpeaker(null);
+      return;
+    }
     
+    setIsPlaying(true);
+    isCancelledRef.current = false;
+    window.speechSynthesis.cancel();
+
+    // Try playing the high-quality MP3 audio file first
+    const playedMp3 = await playAudioFile();
+    
+    // If MP3 audio file is not found, fallback to browser SpeechSynthesis
+    if (!playedMp3 && !isCancelledRef.current) {
+      await playSpeechSynthesis();
+    }
+
     setIsPlaying(false);
     setCurrentSpeaker(null);
     isCancelledRef.current = false;
   };
+
 
   return (
     <div className="avatar-welcome-card glass-panel">
