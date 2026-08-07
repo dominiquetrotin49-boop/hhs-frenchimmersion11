@@ -3,6 +3,15 @@ import { UNIT_1_VOCAB, UNIT_2_VOCAB, UNIT_3_VOCAB, UNIT_4_VOCAB, generateQuestio
 import { Clock } from 'lucide-react';
 
 export default function EditorChallenge({ unitId, onBack }) {
+  const getBossTitle = () => {
+    switch(unitId) {
+      case '2': return "Le Professeur dit :";
+      case '3': return "Le Maître Hacker dit :";
+      case '4': return "Le Directeur de l'association dit :";
+      default: return "Le Rédacteur en chef dit :";
+    }
+  };
+
   const vocabData = unitId === '4' ? UNIT_4_VOCAB : unitId === '3' ? UNIT_3_VOCAB : unitId === '2' ? UNIT_2_VOCAB : UNIT_1_VOCAB;
   const [timeLeft, setTimeLeft] = useState(60);
   const [score, setScore] = useState(0);
@@ -65,7 +74,7 @@ export default function EditorChallenge({ unitId, onBack }) {
 
       {currentQuestion && (
         <div className="text-center mt-4">
-          <h3 style={{ marginBottom: '1rem', color: 'var(--text-accent)' }}>Le Rédacteur en chef dit :</h3>
+          <h3 style={{ marginBottom: '1rem', color: 'var(--text-accent)' }}>{getBossTitle()}</h3>
           <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>
             {isDefinition ? currentQuestion.definition : currentQuestion.sentence}
           </p>

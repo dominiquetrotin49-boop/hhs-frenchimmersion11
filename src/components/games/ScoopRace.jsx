@@ -3,6 +3,24 @@ import { UNIT_1_VOCAB, UNIT_2_VOCAB, UNIT_3_VOCAB, UNIT_4_VOCAB, generateQuestio
 import { Flag, Car, AlertCircle } from 'lucide-react';
 
 export default function ScoopRace({ unitId, onBack }) {
+  const getWinMessage = () => {
+    switch(unitId) {
+      case '2': return "Tu as réussi tes examens brillamment !";
+      case '3': return "Tu as publié ta technologie en premier !";
+      case '4': return "Tu as trouvé la solution pour l'association !";
+      default: return "Tu as publié le Scoop en premier !";
+    }
+  };
+
+  const getLossMessage = () => {
+    switch(unitId) {
+      case '2': return "Tes concurrents ont eu de meilleures notes...";
+      case '3': return "L'entreprise rivale a breveté l'idée avant toi.";
+      case '4': return "Le temps a manqué pour aider tout le monde...";
+      default: return "Le journal rival a publié le Scoop avant toi.";
+    }
+  };
+
   const vocabData = unitId === '4' ? UNIT_4_VOCAB : unitId === '3' ? UNIT_3_VOCAB : unitId === '2' ? UNIT_2_VOCAB : UNIT_1_VOCAB;
   const [playerPos, setPlayerPos] = useState(0);
   const [rivalPos, setRivalPos] = useState(0);
@@ -32,7 +50,7 @@ export default function ScoopRace({ unitId, onBack }) {
     return (
       <div className="game-shell flex-center">
         <h2>Victoire !</h2>
-        <p>Tu as publié le Scoop en premier !</p>
+        <p>{getWinMessage()}</p>
         <button className="play-btn btn-accent mt-4" onClick={onBack}>Retour</button>
       </div>
     );
@@ -42,7 +60,7 @@ export default function ScoopRace({ unitId, onBack }) {
     return (
       <div className="game-shell flex-center">
         <h2>Défaite...</h2>
-        <p>Le journal rival a publié le Scoop avant toi.</p>
+        <p>{getLossMessage()}</p>
         <button className="play-btn btn-danger mt-4" onClick={onBack}>Réessayer</button>
       </div>
     );

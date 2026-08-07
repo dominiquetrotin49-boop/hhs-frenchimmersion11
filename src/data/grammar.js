@@ -1063,8 +1063,150 @@ export const GRAMMAR_DATA_UNIT_3 = [
 
 export const GRAMMAR_DATA_UNIT_4 = [
   {
+    id: 'imparfait',
+    title: "1. L'Imparfait (Le Passé Continu)",
+    rules: [
+      "Les 3 Piliers de l'Imparfait : 1. La Description (Le Décor) 2. L'Habitude (La Routine) 3. L'Action Continue.",
+      "L'imparfait répond à la question : « Que se passait-il quand l'événement s'est produit ? »",
+      "Le Décor : Planter le décor dans le passé (Ex: Il faisait beau. Il y avait du bruit).",
+      "L'Habitude : Une action qui se répète (Ex: Le midi, il mangeait dans le parc).",
+      "Les Indicateurs : tous les jours, chaque matin, toujours, souvent, en général, autrefois, quand j'étais petit(e).",
+      "La Formule (Clé Maîtresse) : Prenez le présent avec « Nous » (ex: nous buvons) -> Retirez « -ons » (buv-) -> Ajoutez la terminaison.",
+      "Les Terminaisons Universelles : -ais, -ais, -ait, -ions, -iez, -aient.",
+      "Attention (Le Filtre Phonétique) : Pour les verbes en -ger et -cer, on garde le son doux (je mangeais, je commençais)."
+    ],
+    example: {
+      infinitive: 'Verbes Réguliers (-ER, -IR, -RE)',
+      conjugation: [
+        { pronoun: "Je / J'", verb: "aimais / finissais / mettais" },
+        { pronoun: "Tu", verb: "aimais / finissais / mettais" },
+        { pronoun: "Il/Elle", verb: "aimait / finissait / mettait" },
+        { pronoun: "Nous", verb: "aimions / finissions / mettions" },
+        { pronoun: "Vous", verb: "aimiez / finissiez / mettiez" },
+        { pronoun: "Ils/Elles", verb: "aimaient / finissaient / mettaient" }
+      ]
+    },
+    irregulars: [
+      {
+        infinitive: 'Les Fondations (Être et Avoir)',
+        conjugation: [
+          { pronoun: "J'", verb: "étais / avais" },
+          { pronoun: "Tu", verb: "étais / avais" },
+          { pronoun: "Il/Elle", verb: "était / avait" },
+          { pronoun: "Nous", verb: "étions / avions" },
+          { pronoun: "Vous", verb: "étiez / aviez" },
+          { pronoun: "Ils/Elles", verb: "étaient / avaient" }
+        ]
+      },
+      {
+        infinitive: 'Les Faux Irréguliers (Faire, Dire, Partir)',
+        conjugation: [
+          { pronoun: "Je", verb: "faisais (nous faisons)" },
+          { pronoun: "Tu", verb: "disais (nous disons)" },
+          { pronoun: "Il", verb: "partait (nous partons)" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'pc_avoir',
+    title: "2. Le Passé Composé avec AVOIR",
+    rules: [
+      "Le passé composé décrit une action unique, achevée et terminée dans le passé.",
+      "L'Équation Fondamentale : [Sujet] + [Auxiliaire au présent] + [Participe Passé] = Le Passé Composé.",
+      "Le Moteur Principal (AVOIR) : Utilisé par la grande majorité des verbes français (~90%).",
+      "La Machine de Conversion (Participe Passé) : Les verbes en -ER font -é (travailler -> travaillé).",
+      "Les verbes en -IR font -i (finir -> fini). Les verbes en -RE font -u (répondre -> répondu).",
+      "Règle d'Accord : AUCUN ACCORD par défaut. Le participe passé ne change pas en fonction du sujet avec Avoir."
+    ],
+    example: {
+      infinitive: 'Le Chemin Standard',
+      conjugation: [
+        { pronoun: "Ali", verb: "a joué au foot hier." },
+        { pronoun: "Nous", verb: "avons chanté." },
+        { pronoun: "Elle", verb: "a entendu." }
+      ]
+    },
+    irregulars: [
+      {
+        infinitive: 'Les Pièces Sur-Mesure (Participes Irréguliers)',
+        conjugation: [
+          { pronoun: "boire", verb: "-> bu" },
+          { pronoun: "faire", verb: "-> fait" },
+          { pronoun: "lire", verb: "-> lu" },
+          { pronoun: "écrire", verb: "-> écrit" },
+          { pronoun: "prendre", verb: "-> pris" },
+          { pronoun: "voir", verb: "-> vu" },
+          { pronoun: "dire", verb: "-> dit" },
+          { pronoun: "avoir", verb: "-> eu" }
+        ]
+      },
+      {
+        infinitive: "Le Court-Circuit (L'Exception du C.O.D)",
+        conjugation: [
+          { pronoun: "J'ai vu", verb: "tes amis. (Aucun accord)" },
+          { pronoun: "Tes amis, je les", verb: "ai vus. (Accord +s)" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'pc_etre',
+    title: "3. Le Passé Composé avec ÊTRE",
+    rules: [
+      "La Voie Spéciale (ÊTRE) : Réservé à une catégorie spécifique de verbes (~10%).",
+      "S'utilise pour les verbes de déplacement (aller, venir), de changement d'état (naître, mourir) et les verbes pronominaux (se laver).",
+      "Le Code d'Accès : DR & MRS VANDERTRAMP (Descendre, Rester, Monter, Retourner, Sortir, Venir, Aller, Naître, Devenir, Entrer, Rentrer, Tomber, Revenir, Arriver, Mourir, Partir, Passer).",
+      "La Loupe de l'Accord : ACCORD OBLIGATOIRE. Le participe passé agit comme un adjectif ; il doit s'accorder avec le sujet.",
+      "Sujet Féminin : on ajoute -e (ex: Elle est allée).",
+      "Sujet Pluriel : on ajoute -s (ex: Ils sont arrivés, Elles sont descendues)."
+    ],
+    example: {
+      infinitive: 'L\'Accord Obligatoire (Exemples)',
+      conjugation: [
+        { pronoun: "Il", verb: "est parti." },
+        { pronoun: "Elle", verb: "est partie." },
+        { pronoun: "Ils", verb: "sont partis." },
+        { pronoun: "Elles", verb: "sont parties." }
+      ]
+    },
+    irregulars: [
+      {
+        infinitive: 'Les Verbes Pronominaux (Toujours avec ÊTRE)',
+        conjugation: [
+          { pronoun: "Je", verb: "me suis lavé(e)" },
+          { pronoun: "Tu", verb: "t'es lavé(e)" },
+          { pronoun: "Il/Elle", verb: "s'est lavé(e)" },
+          { pronoun: "Nous", verb: "nous sommes lavé(e)s" },
+          { pronoun: "Vous", verb: "vous êtes lavé(e)(s)" },
+          { pronoun: "Ils/Elles", verb: "se sont lavé(e)s" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'imparfait_vs_pc',
+    title: '4. La Combinaison : Imparfait vs Passé Composé',
+    rules: [
+      "Le paysage narratif combine les deux temps pour raconter une histoire riche.",
+      "L'Imparfait décrit le CONTEXTE (Le Décor) : Ce qui se passait déjà, l'ambiance, la météo (Il pleuvait, il faisait beau).",
+      "L'Imparfait décrit l'ACTION CONTINUE : Ce qui était en train de se dérouler (Je lisais un livre).",
+      "Le Passé Composé décrit l'ÉVÉNEMENT SOUDAIN : Une action précise qui interrompt ou fait avancer l'histoire (soudain, le téléphone a sonné)."
+    ],
+    example: {
+      infinitive: 'Le Tableau de Bord en Action',
+      conjugation: [
+        { pronoun: "Contexte (Imparfait)", verb: "Il faisait beau et le soleil brillait." },
+        { pronoun: "Action (Imparfait)", verb: "Nous nous promenions dans le parc..." },
+        { pronoun: "Interruption (PC)", verb: "...quand soudain, un chien a volé notre pique-nique !" },
+        { pronoun: "Fin (PC)", verb: "Nous sommes rentrés à la maison." }
+      ]
+    },
+    irregulars: []
+  },
+  {
     id: 'connecteurs',
-    title: 'Les Connecteurs Logiques',
+    title: '5. Les Connecteurs Logiques',
     rules: [
       "Les connecteurs logiques servent à structurer un texte et à lier les idées entre elles.",
       "L'introduction des causes : d'abord, tout d'abord, premièrement, en premier lieu.",
@@ -1086,44 +1228,15 @@ export const GRAMMAR_DATA_UNIT_4 = [
     irregulars: []
   },
   {
-    id: 'imparfait_pc',
-    title: 'L\'imparfait et le Passé Composé',
-    rules: [
-      "L'imparfait décrit une situation passée, un contexte, une habitude ou un état (ex: Il faisait froid, elle habitait en ville).",
-      "Le passé composé exprime une action précise et terminée dans le passé (ex: L'usine a fermé, elle est partie).",
-      "Le passé composé se forme avec l'auxiliaire (Avoir ou Être) au présent + le participe passé du verbe.",
-      "Souvent, l'imparfait plante le décor et le passé composé interrompt avec une action soudaine."
-    ],
-    example: {
-      infinitive: 'Différence (Contexte vs Action)',
-      conjugation: [
-        { pronoun: "Imparfait", verb: "Avant, Madame Dubois travaillait (habitude) à l'usine." },
-        { pronoun: "Imparfait", verb: "L'usine était (état) la principale source d'emploi." },
-        { pronoun: "Passé Composé", verb: "Un jour, l'usine a fermé (action précise)." },
-        { pronoun: "Passé Composé", verb: "Elle est tombée (action soudaine) au chômage." }
-      ]
-    },
-    irregulars: [
-      {
-        infinitive: 'Avoir et Être au Passé Composé',
-        conjugation: [
-          { pronoun: "J'ai eu", verb: "(Avoir)" },
-          { pronoun: "J'ai été", verb: "(Être)" }
-        ]
-      }
-    ]
-  },
-  {
     id: 'reflechis',
-    title: 'Les Verbes Réfléchis et Réciproques',
+    title: '6. Les Verbes Réfléchis et Réciproques (Présent)',
     rules: [
       "Les verbes pronominaux se conjuguent avec un pronom réfléchi de la même personne que le sujet (me, te, se, nous, vous, se).",
       "Un verbe est réfléchi quand le sujet fait l'action sur lui-même (ex: je me lave, il se réveille).",
-      "Un verbe est réciproque quand l'action est mutuelle entre plusieurs personnes (ex: ils se regardent, nous nous aidons).",
-      "Au passé composé, TOUS les verbes pronominaux utilisent l'auxiliaire ÊTRE."
+      "Un verbe est réciproque quand l'action est mutuelle entre plusieurs personnes (ex: ils se regardent, nous nous aidons)."
     ],
     example: {
-      infinitive: 'Se battre (Réciproque/Réfléchi)',
+      infinitive: 'Se battre',
       conjugation: [
         { pronoun: "Je", verb: "me bats" },
         { pronoun: "Tu", verb: "te bats" },
@@ -1133,15 +1246,6 @@ export const GRAMMAR_DATA_UNIT_4 = [
         { pronoun: "Ils/Elles", verb: "se battent" }
       ]
     },
-    irregulars: [
-      {
-        infinitive: 'Au passé composé (avec ÊTRE)',
-        conjugation: [
-          { pronoun: "Elle", verb: "s'est réveillée" },
-          { pronoun: "Nous", verb: "nous sommes aidés" },
-          { pronoun: "Ils", verb: "se sont rencontrés" }
-        ]
-      }
-    ]
+    irregulars: []
   }
 ];

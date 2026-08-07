@@ -8,6 +8,8 @@ export default function GrammarSection({ unitId }) {
 
   const dataToUse = unitId === '4' ? GRAMMAR_DATA_UNIT_4 : unitId === '3' ? GRAMMAR_DATA_UNIT_3 : unitId === '2' ? GRAMMAR_DATA_UNIT_2 : GRAMMAR_DATA;
 
+  const sectionTitle = unitId === '4' ? "Le Passé" : unitId === '3' ? "Les Pronoms" : "Le Présent";
+
   const toggleFolder = (id) => {
     if (openFolderId === id) {
       setOpenFolderId(null);
@@ -18,7 +20,7 @@ export default function GrammarSection({ unitId }) {
 
   return (
     <div className="grammar-container">
-      <h3 className="mb-4">Dossiers de Grammaire: Le Présent</h3>
+      <h3 className="mb-4">Dossiers de Grammaire : {sectionTitle}</h3>
       
       <div className="folders-grid">
         {dataToUse.map((folder) => {

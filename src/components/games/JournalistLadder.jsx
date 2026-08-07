@@ -59,7 +59,16 @@ export default function JournalistLadder({ unitId, onBack }) {
     );
   }
 
-  const titles = ["Stagiaire", "Pigiste", "Rédacteur junior", "Journaliste", "Grand Reporter", "Chef de rubrique", "Rédacteur en Chef"];
+  const getTitles = () => {
+    switch(unitId) {
+      case '2': return ["Élève", "Étudiant", "Assistant", "Professeur", "Chercheur", "Doyen", "Recteur"];
+      case '3': return ["Débutant", "Technicien", "Développeur", "Ingénieur", "Expert Sécurité", "Architecte", "CTO"];
+      case '4': return ["Bénévole", "Stagiaire", "Assistant Social", "Travailleur Social", "Coordinateur", "Directeur", "Ministre de la Solidarité"];
+      default: return ["Stagiaire", "Pigiste", "Rédacteur junior", "Journaliste", "Grand Reporter", "Chef de rubrique", "Rédacteur en Chef"];
+    }
+  };
+
+  const titles = getTitles();
   const currentTitle = titles[Math.min(titles.length - 1, Math.floor(level / 2))];
 
   return (

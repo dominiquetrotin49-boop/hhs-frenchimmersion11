@@ -9,8 +9,10 @@ import PronunciationPractice from './PronunciationPractice';
 import PronounReplacement from './PronounReplacement';
 import PronounOrder from './PronounOrder';
 import PronounFill from './PronounFill';
+import GrammarFill from './GrammarFill';
 import Fishtopia from './Fishtopia';
 import { Grid3X3, PenTool, Volume2, Repeat, MoveHorizontal, Edit3, Gamepad2 } from 'lucide-react';
+import { IMPARFAIT_FILL_DATA, PC_FILL_DATA, MIXED_FILL_DATA } from '../../data/unit4GrammarGames';
 import './Games.css';
 
 const ER_PUZZLE = {
@@ -166,14 +168,78 @@ export default function PracticeMenu({ unitId }) {
   const [activeGame, setActiveGame] = useState(null);
   const [activeCategory, setActiveCategory] = useState('vocab');
 
+  const getGameTitles = () => {
+    switch(unitId) {
+      case '2':
+        return {
+          editor: "Le Défi du Professeur",
+          editorDesc: "Trouve le bon mot avant que le temps ne s'écoule.",
+          editorBtn: "Jouer (Contre la montre)",
+          ladder: "L'Ascension Universitaire",
+          ladderDesc: "Deviens un excellent professeur en répondant à des questions de plus en plus difficiles.",
+          ladderBtn: "Jouer (Progression)",
+          race: "Le Marathon des Examens",
+          raceDesc: "Bâts ton rival pour être le premier à réussir les examens !",
+          raceBtn: "Jouer (Course)",
+          writingTitle: "Créer une école innovante",
+          writingDesc: "Rédigez un paragraphe sur la création de votre école idéale en utilisant le présent !"
+        };
+      case '3':
+        return {
+          editor: "Le Défi du Hacker",
+          editorDesc: "Trouve le bon mot de passe avant que le temps ne s'écoule.",
+          editorBtn: "Jouer (Contre la montre)",
+          ladder: "L'Échelle du Développeur",
+          ladderDesc: "Deviens un expert en tech en répondant à des questions complexes.",
+          ladderBtn: "Jouer (Progression)",
+          race: "La Course à l'Innovation",
+          raceDesc: "Bâts l'entreprise rivale pour être le premier à publier ta technologie !",
+          raceBtn: "Jouer (Course)",
+          writingTitle: "Se protéger en ligne",
+          writingDesc: "Rédigez un paragraphe sur la cybersécurité en utilisant le présent !"
+        };
+      case '4':
+        return {
+          editor: "Le Défi du Travailleur Social",
+          editorDesc: "Trouve le mot juste pour aider avant que le temps ne s'écoule.",
+          editorBtn: "Jouer (Contre la montre)",
+          ladder: "Le Parcours Solidaire",
+          ladderDesc: "Deviens expert en aide sociale en répondant à des questions difficiles.",
+          ladderBtn: "Jouer (Progression)",
+          race: "Le Sprint Solidaire",
+          raceDesc: "Trouve une solution aux plus démunis avant qu'il ne soit trop tard !",
+          raceBtn: "Jouer (Course)",
+          writingTitle: "La pauvreté en France",
+          writingDesc: "Rédigez un paragraphe sur l'aide sociale en utilisant le présent !"
+        };
+      default: // Unit 1
+        return {
+          editor: "Le Défi du Rédacteur en Chef",
+          editorDesc: "Un jeu de vitesse ! Trouve le bon mot avant que le temps ne s'écoule.",
+          editorBtn: "Jouer (Contre la montre)",
+          ladder: "L'Échelle du Journaliste",
+          ladderDesc: "Deviens Rédacteur en Chef en répondant à des questions de plus en plus difficiles.",
+          ladderBtn: "Jouer (Progression)",
+          race: "La Course au Scoop",
+          raceDesc: "Bâts le journal rival pour être le premier à publier le scoop !",
+          raceBtn: "Jouer (Course)",
+          writingTitle: "Journaliste en Action",
+          writingDesc: "Rédigez un paragraphe sur votre rôle de journaliste en utilisant le présent !"
+        };
+    }
+  };
+
+  const titles = getGameTitles();
+
   if (activeGame === 'editor') return <EditorChallenge unitId={unitId} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'ladder') return <JournalistLadder unitId={unitId} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'race') return <ScoopRace unitId={unitId} onBack={() => setActiveGame(null)} />;
-  if (activeGame === 'crossword-er') return <Crossword {...ER_PUZZLE} onBack={() => setActiveGame(null)} />;
-  if (activeGame === 'crossword-ir') return <Crossword {...IR_PUZZLE} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'crossword-re') return <Crossword {...RE_PUZZLE} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'crossword-aux') return <Crossword {...AUX_PUZZLE} onBack={() => setActiveGame(null)} />;
-  
+  if (activeGame === 'grammar-fill-imparfait') return <GrammarFill data={IMPARFAIT_FILL_DATA} title="L'Imparfait" description="Complétez avec le verbe conjugué à l'imparfait." onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'grammar-fill-pc') return <GrammarFill data={PC_FILL_DATA} title="Le Passé Composé" description="Choisissez le bon auxiliaire et participe passé." onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'grammar-fill-mixed') return <GrammarFill data={MIXED_FILL_DATA} title="Imparfait vs Passé Composé" description="Choisissez le temps approprié pour chaque situation." onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'writing') return <WritingPractice unitId={unitId} onBack={() => setActiveGame(null)} />;
   // Unit 2 puzzles
   if (activeGame === 'crossword-irr1') return <Crossword {...IRR_PUZZLE_1} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'crossword-irr2') return <Crossword {...IRR_PUZZLE_2} onBack={() => setActiveGame(null)} />;
@@ -230,23 +296,23 @@ export default function PracticeMenu({ unitId }) {
 
             <div className="game-card glass-panel" onClick={() => setActiveGame('editor')}>
               <Clock className="game-icon text-danger" size={48} />
-              <h4>Le Défi du Rédacteur en Chef</h4>
-              <p>Un jeu de vitesse ! Trouve le bon mot avant que le temps ne s'écoule.</p>
-              <button className="play-btn btn-danger">Jouer (Contre la montre)</button>
+              <h4>{titles.editor}</h4>
+              <p>{titles.editorDesc}</p>
+              <button className="play-btn btn-danger">{titles.editorBtn}</button>
             </div>
 
             <div className="game-card glass-panel" onClick={() => setActiveGame('ladder')}>
               <TrendingUp className="game-icon text-success" size={48} />
-              <h4>L'Échelle du Journaliste</h4>
-              <p>Deviens Rédacteur en Chef en répondant à des questions de plus en plus difficiles.</p>
-              <button className="play-btn btn-success">Jouer (Progression)</button>
+              <h4>{titles.ladder}</h4>
+              <p>{titles.ladderDesc}</p>
+              <button className="play-btn btn-success">{titles.ladderBtn}</button>
             </div>
 
             <div className="game-card glass-panel" onClick={() => setActiveGame('race')}>
               <Flag className="game-icon text-accent" size={48} />
-              <h4>La Course au Scoop</h4>
-              <p>Bâts le journal rival pour être le premier à publier le scoop !</p>
-              <button className="play-btn btn-accent">Jouer (Course)</button>
+              <h4>{titles.race}</h4>
+              <p>{titles.raceDesc}</p>
+              <button className="play-btn btn-accent">{titles.raceBtn}</button>
             </div>
             
             {unitId === '4' && (
@@ -342,11 +408,36 @@ export default function PracticeMenu({ unitId }) {
           </>
         )}
 
+        {activeCategory === 'grammar' && unitId === '4' && (
+          <>
+            <div className="game-card glass-panel" onClick={() => setActiveGame('grammar-fill-imparfait')}>
+              <Edit3 className="game-icon text-success" size={48} />
+              <h4>Jeu 1: L'Imparfait</h4>
+              <p>Pratiquez les terminaisons et les irréguliers (être/avoir) à l'imparfait.</p>
+              <button className="play-btn btn-success">Jouer</button>
+            </div>
+
+            <div className="game-card glass-panel" onClick={() => setActiveGame('grammar-fill-pc')}>
+              <Edit3 className="game-icon text-accent" size={48} />
+              <h4>Jeu 2: Le Passé Composé</h4>
+              <p>Pratiquez le choix de l'auxiliaire (Avoir/Être) et l'accord du participe.</p>
+              <button className="play-btn btn-accent">Jouer</button>
+            </div>
+
+            <div className="game-card glass-panel" onClick={() => setActiveGame('grammar-fill-mixed')}>
+              <Gamepad2 className="game-icon" style={{ color: '#8b5cf6' }} size={48} />
+              <h4>Jeu 3: Imparfait vs Passé Composé</h4>
+              <p>Entraînez-vous à combiner le décor (imparfait) et l'action soudaine (PC).</p>
+              <button className="play-btn" style={{ background: '#8b5cf6', color: 'white' }}>Jouer</button>
+            </div>
+          </>
+        )}
+
         {activeCategory === 'ecriture' && (
           <div className="game-card glass-panel" onClick={() => setActiveGame('writing')}>
             <PenTool className="game-icon text-accent" size={48} />
-            <h4>Journaliste en Action</h4>
-            <p>Rédigez un paragraphe sur votre rôle de journaliste en utilisant le présent !</p>
+            <h4>{titles.writingTitle}</h4>
+            <p>{titles.writingDesc}</p>
             <button className="play-btn btn-accent">Commencer à écrire</button>
           </div>
         )}

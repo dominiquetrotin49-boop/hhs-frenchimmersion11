@@ -33,6 +33,8 @@ export default function UnitDashboard() {
   else if (unitId === '2') specificTitle = ' - L\'éducation';
   else if (unitId === '3') specificTitle = ' - La technologie';
   else if (unitId === '4') specificTitle = ' - La pauvreté';
+  else if (unitId === '5') specificTitle = ' - Les droits des femmes';
+  else if (unitId === '6') specificTitle = ' - Halte aux inégalités';
   const unitTitle = isFilm ? `Mini-unité Film ${unitId.replace('film', '')}` : `Unité ${unitId}${specificTitle}`;
 
   return (

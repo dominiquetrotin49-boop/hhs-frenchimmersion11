@@ -8,8 +8,8 @@ const units = [
   { id: '2', name: 'Unité 2', title: 'L\'éducation', icon: BookOpen },
   { id: '3', name: 'Unité 3', title: 'La technologie', icon: BookOpen },
   { id: '4', name: 'Unité 4', title: 'La pauvreté', icon: BookOpen },
-  { id: '5', name: 'Unité 5', title: 'La science', icon: BookOpen },
-  { id: '6', name: 'Unité 6', title: 'L\'avenir', icon: BookOpen },
+  { id: '5', name: 'Unité 5', title: 'Les droits des femmes', icon: BookOpen },
+  { id: '6', name: 'Unité 6', title: 'Halte aux inégalités', icon: BookOpen },
   { id: 'film1', name: 'Film 1', title: 'Mini-unité Film', icon: Film },
   { id: 'film2', name: 'Film 2', title: 'Mini-unité Film', icon: Film },
 ];
