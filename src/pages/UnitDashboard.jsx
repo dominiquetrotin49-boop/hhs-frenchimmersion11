@@ -43,33 +43,15 @@ export default function UnitDashboard() {
 
   return (
     <div className="dashboard-container">
-      <header className="dashboard-header glass-panel" style={{ 
-        display: 'flex', 
-        flexWrap: 'wrap', 
-        justify: 'space-between', 
-        alignItems: 'stretch', 
-        padding: '1.4rem 2rem', 
-        width: '100%',
-        minHeight: '150px',
-        boxSizing: 'border-box',
-        gap: '1.5rem'
-      }}>
-        {/* LEFT SIDE OF THE RECTANGLE: Top-Left Title, Bottom-Left Tabs */}
-        <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          justify: 'space-between', 
-          alignItems: 'flex-start', 
-          textAlign: 'left',
-          margin: 0,
-          padding: 0
-        }}>
-          <div style={{ textAlign: 'left', margin: 0, padding: 0 }}>
-            <p className="unit-subtitle" style={{ textAlign: 'left', margin: 0, marginBottom: '0.15rem' }}>Module de cours</p>
-            <h2 className="unit-title text-gradient" style={{ textAlign: 'left', margin: 0 }}>{unitTitle}</h2>
+      <header className="dashboard-header glass-panel">
+        {/* LEFT COLUMN: Title Top-Left, Tabs Bottom-Left */}
+        <div className="unit-header-left">
+          <div className="unit-title-group">
+            <p className="unit-subtitle">Module de cours</p>
+            <h2 className="unit-title text-gradient">{unitTitle}</h2>
           </div>
           
-          <div className="tabs-container" style={{ margin: 0, marginTop: '1rem', alignSelf: 'flex-start' }}>
+          <div className="tabs-container">
             {TABS.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -86,15 +68,8 @@ export default function UnitDashboard() {
           </div>
         </div>
 
-        {/* RIGHT SIDE OF THE RECTANGLE: Avatar Card moved to TOP RIGHT */}
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'flex-start',
-          alignSelf: 'flex-start', 
-          marginLeft: 'auto',
-          marginRight: 0,
-          paddingTop: 0
-        }}>
+        {/* RIGHT COLUMN: Avatar Card locked to TOP RIGHT corner */}
+        <div className="unit-header-right">
           {unitId === '1' && (
             <UnitAvatarSpeaker 
               avatar="lea" 

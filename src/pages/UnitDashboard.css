@@ -1,31 +1,53 @@
 .dashboard-container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
   height: 100%;
 }
 
 .dashboard-header {
-  padding: 2rem;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start; /* Lock top alignment */
+  gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.unit-header-left {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  align-items: flex-start;
+  gap: 0.8rem;
+  text-align: left;
+}
+
+.unit-title-group {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .unit-subtitle {
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-secondary);
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin: 0 0 0.15rem 0;
+  text-align: left;
 }
 
 .unit-title {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.02em;
+  margin: 0;
+  text-align: left;
 }
 
 .tabs-container {
@@ -34,17 +56,18 @@
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.5rem;
+  padding: 0.4rem;
   border-radius: var(--radius-lg);
   align-self: flex-start;
   flex-wrap: wrap;
+  margin: 0;
 }
 
 .tab-btn {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem 1rem;
+  gap: 0.6rem;
+  padding: 0.5rem 0.9rem;
   border-radius: var(--radius-md);
   background: transparent;
   color: var(--text-primary);
@@ -59,39 +82,26 @@
 }
 
 .tab-btn.active {
-  background: var(--accent-primary);
-  color: white;
-  box-shadow: var(--shadow-md), 0 0 15px rgba(231, 111, 81, 0.4);
+  background: white;
+  color: #1a1a1a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.unit-header-right {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  margin-left: auto;
+  align-self: flex-start; /* Lock to top-right corner */
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .dashboard-content {
   flex: 1;
+  min-height: 0;
 }
 
 .section-content {
   height: 100%;
-}
-
-.mt-2 {
-  margin-top: 0.5rem;
-}
-
-.text-secondary {
-  color: var(--text-secondary);
-}
-
-/* Animations */
-.animate-in {
-  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
