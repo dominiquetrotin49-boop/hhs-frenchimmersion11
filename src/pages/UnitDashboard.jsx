@@ -41,6 +41,8 @@ export default function UnitDashboard() {
   const leaUnit1Script = "Salut tout le monde ! Bienvenue dans l'Unité 1 consacrée à la liberté de la presse et au monde des médias ! Dans cette unité, tu vas te glisser dans la peau d'un vrai journaliste. Tu vas apprendre le vocabulaire des médias, réviser la conjugaison des verbes au présent, et découvrir comment exprimer ton opinion avec conviction. N'oublie pas de tester nos jeux interactifs comme le Scoop Race et la Rédaction en Action ! Alors, prêt à décrocher ton premier scoop ? Choisis une section ci-dessous pour démarrer !";
   const hugoUnit2Script = "Salut ! Bienvenue dans l'Unité 2 ! Cette fois, on s'attaque à un grand sujet : l'éducation et la vie scolaire. Dans ce module, on va explorer des différents systèmes éducatifs, mais surtout bétonner la grammaire avec les 25 verbes irréguliers indispensables au présent. Tu vas en avoir besoin pour briller dans les activités d'écriture ! Pense aussi à essayer l'Escape Game de l'Unité 2 pour tester tes réflexes. Allez, bon courage et lance-toi vite dans les leçons !";
 
+  const hugoUnit4Script = "Salut ! Bienvenue dans l'Unité 4 ! Dans ce module, on part à la découverte des arts, du cinéma, de la musique et du patrimoine culturel francophone. Côté grammaire, on va maîtriser les temps du passé en opposant le passé composé et l'imparfait, indispensable pour raconter des histoires et décrire des souvenirs. N'hésite pas à essayer nos jeux interactifs et les défis d'écriture pour tester tes connaissances. Allez, bon travail et explore vite les leçons !";
+
   return (
     <div className="dashboard-container">
       <header className="dashboard-header glass-panel">
@@ -93,6 +95,15 @@ export default function UnitDashboard() {
               avatar="duo" 
               audioSrc="/audio/unit3_intro_duo.mp3" 
               name="Léa & Hugo" 
+            />
+          )}
+
+          {unitId === '4' && (
+            <UnitAvatarSpeaker 
+              avatar="hugo" 
+              audioSrc="/audio/unit4_intro_hugo.mp3" 
+              name="Hugo" 
+              speechFallbackText={hugoUnit4Script}
             />
           )}
         </div>
