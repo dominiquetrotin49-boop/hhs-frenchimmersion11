@@ -86,13 +86,14 @@ export default function UnitDashboard() {
           </div>
         </div>
 
-        {/* RIGHT SIDE OF THE RECTANGLE: Avatar Card flush with the bottom baseline of tabs */}
+        {/* RIGHT SIDE OF THE RECTANGLE: Avatar Card moved to TOP RIGHT */}
         <div style={{ 
           display: 'flex', 
-          alignItems: 'flex-end', 
+          alignItems: 'flex-start',
+          alignSelf: 'flex-start', 
           marginLeft: 'auto',
           marginRight: 0,
-          paddingBottom: 0
+          paddingTop: 0
         }}>
           {unitId === '1' && (
             <UnitAvatarSpeaker 
