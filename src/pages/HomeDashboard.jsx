@@ -31,10 +31,34 @@ export default function HomeDashboard() {
             Sélectionnez un <strong>module de cours</strong> dans le menu de gauche pour commencer à explorer les leçons de grammaire, 
             les exercices de vocabulaire, les pratiques d'écriture et nos simulations immersives.
           </p>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: 'var(--primary-color)', fontWeight: 'bold' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: 'var(--primary-color)', fontWeight: 'bold', marginBottom: '2rem' }}>
             <Sparkles size={20} />
-            <span>Prêt à apprendre ? Choisissez une unité pour commencer !</span>
+            <span>Prêt à apprendre ? Choisissez une unité ou lisez notre roman interactif !</span>
             <Sparkles size={20} />
+          </div>
+
+          <div 
+            onClick={() => window.location.href = '/roman'}
+            style={{ 
+              background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.3))', 
+              border: '1px solid #f59e0b', 
+              padding: '1.5rem', 
+              borderRadius: '16px', 
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              textAlign: 'left'
+            }}
+          >
+            <div>
+              <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: '#fbbf24', fontWeight: 'bold' }}>📖 NOUVEAUTÉ — Roman Électronique</span>
+              <h3 style={{ margin: '0.2rem 0', color: '#f8fafc', fontSize: '1.2rem' }}>Le Secret du Manuscrit Francophone</h3>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: '#cbd5e1' }}>Suivez les aventures de Léa & Hugo à travers 6 chapitres audio interactifs avec fiches de vocabulaire et quiz !</p>
+            </div>
+            <button style={{ padding: '0.7rem 1.2rem', background: '#f59e0b', border: 'none', borderRadius: '10px', color: '#0f172a', fontWeight: 'bold', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+              Lire le Roman →
+            </button>
           </div>
         </div>
       </div>

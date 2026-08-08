@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import UnitDashboard from './pages/UnitDashboard';
 import HomeDashboard from './pages/HomeDashboard';
+import NovelReader from './components/NovelReader';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomeDashboard />} />
           <Route path="unit/:unitId" element={<UnitDashboard />} />
+          <Route path="roman" element={<NovelReader />} />
         </Route>
       </Routes>
     </BrowserRouter>

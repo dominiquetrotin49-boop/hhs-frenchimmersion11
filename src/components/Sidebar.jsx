@@ -25,6 +25,23 @@ export default function Sidebar() {
       </div>
       
       <nav className="sidebar-nav">
+        <p className="nav-section-title">Ressources Générales</p>
+        <ul className="nav-list" style={{ marginBottom: '1.2rem' }}>
+          <li>
+            <NavLink
+              to="/roman"
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              style={{ background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.25))', border: '1px solid #f59e0b' }}
+            >
+              <BookOpen className="nav-icon" style={{ color: '#fbbf24' }} size={20} />
+              <div className="nav-text">
+                <span className="unit-name" style={{ color: '#fbbf24', fontWeight: 'bold' }}>Roman Interactif</span>
+                <span className="unit-title" style={{ color: '#fcd34d' }}>Léa & Hugo (6 Chapitres)</span>
+              </div>
+            </NavLink>
+          </li>
+        </ul>
+
         <p className="nav-section-title">Modules de cours</p>
         <ul className="nav-list">
           {units.map((unit) => {
