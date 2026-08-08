@@ -7,65 +7,65 @@ const LOCATIONS = [
     id: 'paris',
     city: "Paris, France",
     landmark: "Musée du Louvre",
-    clueTitle: "Indice #1 : La Scène du Crime au Louvre",
-    story: "Un tableau inestimable de la Renaissance a disparu de la salle des chefs-d'œuvre. Sur la vitre de protection, le voleur a laissé une note manuscrite rédigée au passé...",
-    question: "Identifiez la phrase correcte à l'imparfait pour décrire le décor au moment du vol :",
+    clueTitle: "Indice #1 : Le Vol au Louvre",
+    story: "Un tableau très célèbre a disparu du musée du Louvre ! Sur la vitre de protection, le voleur a laissé une petite note au passé...",
+    question: "Quelle phrase à l'imparfait décrit bien le décor au moment du vol ?",
     options: [
-      "Il faisait nuit et les gardiens dormaient quand le voleur s'est introduit.",
-      "Il a fait nuit et les gardiens ont dormi quand le voleur s'est introduit.",
-      "Il fait nuit et les gardiens dorment quand le voleur s'est introduit."
+      "Il faisait nuit et les gardiens dormaient quand le voleur est entré.",
+      "Il a fait nuit et les gardiens ont dormi quand le voleur est entré.",
+      "Il fait nuit et les gardiens dorment quand le voleur est entré."
     ],
     correctIdx: 0,
-    explanation: "L'imparfait ('faisait', 'dormaient') plante le décor continu dans le passé, interrompu par le passé composé ('s'est introduit').",
-    suspectClue: "Indice découvert : Le suspect s'est enfui à bord d'un vol vers Montréal !"
+    explanation: "L'imparfait ('faisait', 'dormaient') décrit la situation de fond, et le passé composé ('est entré') raconte l'action soudaine.",
+    suspectClue: "Indice : Le suspect s'est enfui vers Montréal !"
   },
   {
     id: 'montreal',
     city: "Montréal, Canada",
-    landmark: "Quartier des Spectacles & Street Art",
-    clueTitle: "Indice #2 : La Fresque Suspecte à Montréal",
-    story: "Le suspect a été aperçu devant une fresque murale géante. L'inspecteur local vous tend un rapport d'interrogatoire à analyser...",
-    question: "Quelle phrase utilise correctement le vocabulaire du street art et le Passé Composé ?",
+    landmark: "Street Art à Montréal",
+    clueTitle: "Indice #2 : La Fresque à Montréal",
+    story: "À Montréal, un témoin a vu le suspect devant une grande fresque murale. L'inspecteur vous montre son rapport...",
+    question: "Quelle phrase utilise correctement le Passé Composé du verbe peindre ?",
     options: [
-      "L'artiste a peindu la fresque murale en trois jours.",
-      "L'artiste a peint la fresque murale et a attiré des milliers de curieux.",
-      "L'artiste est peigné la fresque murale hier soir."
+      "L'artiste a peindu la grande fresque murale.",
+      "L'artiste a peint la grande fresque murale en trois jours.",
+      "L'artiste est peigné la grande fresque murale."
     ],
     correctIdx: 1,
-    explanation: "Le participe passé du verbe 'peindre' avec l'auxiliaire AVOIR est 'peint' (a peint).",
-    suspectClue: "Indice découvert : Le voleur a laissé un billet d'avion pour Dakar avec une note sur le patrimoine immatériel !"
+    explanation: "Le participe passé de 'peindre' avec l'auxiliaire AVOIR est 'peint' (a peint).",
+    suspectClue: "Indice : Le voleur prend l'avion pour Dakar avec une note sur l'art !"
   },
   {
     id: 'dakar',
     city: "Dakar, Sénégal",
     landmark: "Musée des Civilisations Noires",
-    clueTitle: "Indice #3 : Le Mystère des Sculptures à Dakar",
-    story: "Au musée de Dakar, le gardien a aperçu un homme observant une sculpture traditionnelle. Il témoigne de ce qu'il a vu...",
-    question: "Choisissez la phrase où l'accord du participe passé avec ÊTRE est parfaitement respecté :",
+    clueTitle: "Indice #3 : La Sculpture à Dakar",
+    story: "Au musée de Dakar, le gardien a aperçu deux personnes suspectes devant une magnifique sculpture. Il explique la scène...",
+    question: "Quelle phrase respecte bien l'accord du participe passé avec ÊTRE au féminin pluriel ?",
     options: [
       "Les deux suspectes sont venus au musée à 14h.",
-      "Les deux suspectes sont venues au musée et sont parti rapidement.",
-      "Les deux suspectes sont venues au musée et sont parties avec un sac."
+      "Les deux suspectes sont venues au musée et sont parti vite.",
+      "Les deux suspectes sont venues au musée et sont parties très vite."
     ],
     correctIdx: 2,
-    explanation: "Avec l'auxiliaire ÊTRE, le participe passé s'accorde au féminin pluriel (-es) avec le sujet 'Les deux suspectes' -> venues, parties.",
-    suspectClue: "Indice découvert : Le suspect final se détend dans un théâtre à Bruxelles !"
+    explanation: "Avec l'auxiliaire ÊTRE, on ajoute -es au participe passé pour le féminin pluriel (venues, parties).",
+    suspectClue: "Indice : Le voleur se cache dans un théâtre à Bruxelles !"
   },
   {
     id: 'bruxelles',
     city: "Bruxelles, Belgique",
-    landmark: "Grand-Place & Palais des Beaux-Arts",
-    clueTitle: "Indice #4 : La Confrontation Finale à Bruxelles",
-    story: "Vous cernez enfin le faussaire dans les coulisses du théâtre de Bruxelles ! Il tente de justifier ses actes avec des connecteurs logiques...",
-    question: "Quelle phrase est la plus logique pour conclure l'enquête et confondre le voleur ?",
+    landmark: "Grand-Place de Bruxelles",
+    clueTitle: "Indice #4 : La Fin de l'Enquête à Bruxelles",
+    story: "Vous retrouvez le voleur dans un théâtre à Bruxelles ! Il essaie de s'expliquer devant vous...",
+    question: "Quelle phrase est la plus claire et logique pour conclure l'enquête ?",
     options: [
-      "D'abord, vous avez volé le chef-d'œuvre. En conclusion, vous irez en prison !",
-      "Cependant, le tableau est un chef-d'œuvre, par contre j'aime la peinture.",
-      "Par conséquent, le voleur dormait quand le tableau a disparu."
+      "D'abord, vous avez pris le tableau. En conclusion, vous avez fait une grosse erreur !",
+      "Cependant, la peinture est belle, par contre j'aime l'art.",
+      "Par conséquent, il dormait quand le tableau a disparu."
     ],
     correctIdx: 0,
-    explanation: "'D'abord' introduit les faits et 'En conclusion' ferme l'argumentation de manière logique.",
-    suspectClue: "CHEF-D'ŒUVRE RETROUVÉ ! Vous avez arrêté le faussaire et restitué la peinture au Louvre !"
+    explanation: "'D'abord' commence l'explication et 'En conclusion' termine la phrase de manière logique.",
+    suspectClue: "CHEF-D'ŒUVRE RETROUVÉ ! Vous avez arrêté le voleur et rapporté le tableau au Louvre !"
   }
 ];
 

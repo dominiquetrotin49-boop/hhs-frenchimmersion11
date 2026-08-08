@@ -203,17 +203,17 @@ export default function PracticeMenu({ unitId }) {
         };
       case '4':
         return {
-          editor: "Le Défi du Critique d'Art",
-          editorDesc: "Trouve le bon terme artistique ou culturel avant que le temps ne s'écoule !",
+          editor: "Le Défi des Mots d'Art",
+          editorDesc: "Trouvez le bon mot du vocabulaire artistique avant la fin du temps !",
           editorBtn: "Jouer (Contre la montre)",
-          ladder: "L'Échelle de l'Artiste",
-          ladderDesc: "Deviens un expert en cinéma, musique et patrimoine culturel francophone !",
+          ladder: "Le Parcours Culturel",
+          ladderDesc: "Devenez un expert en cinéma, musique et architecture en répondant aux questions !",
           ladderBtn: "Jouer (Progression)",
           race: "La Course du Festival de Cannes",
-          raceDesc: "Gagne le premier prix du meilleur film en répondant correctement à toutes les questions !",
+          raceDesc: "Gagnez la course au cinéma en répondant correctement à toutes les questions !",
           raceBtn: "Jouer (Course)",
-          writingTitle: "Critique de film & Récit culturel",
-          writingDesc: "Rédigez la critique d'un film ou le récit d'un souvenir culturel marquant au passé !"
+          writingTitle: "Critique de Film & Récit d'Art",
+          writingDesc: "Rédigez la critique d'un film ou le récit d'un souvenir culturel au passé !"
         };
       default: // Unit 1
         return {

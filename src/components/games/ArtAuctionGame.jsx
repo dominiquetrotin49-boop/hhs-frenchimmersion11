@@ -5,56 +5,56 @@ import './Games.css';
 const ARTWORKS = [
   {
     id: 1,
-    title: "Le Chef-d'Œuvre Impressionniste",
-    type: "Peinture sur toile",
+    title: "Le Chef-d'Œuvre du Musée",
+    type: "Peinture célèbe",
     origin: "Musée d'Orsay, Paris",
-    clueQuestion: "Quelle définition correspond exactement au mot 'Chef-d'œuvre' ?",
+    clueQuestion: "Quelle définition explique le mieux le mot 'Chef-d'œuvre' ?",
     options: [
-      "Une œuvre majeure et exemplaire d'un artiste ou d'une époque.",
-      "Une esquisse rapide réalisée au crayon.",
-      "Une copie industrielle reproduite en série."
+      "Une œuvre exceptionnelle réalisée par un grand artiste.",
+      "Un petit dessin rapide au crayon.",
+      "Une copie produite en plusieurs exemplaires."
     ],
     correctIdx: 0,
     value: 500
   },
   {
     id: 2,
-    title: "La Fresque Murale Contemporaine",
+    title: "La Fresque Murale de la Ville",
     type: "Street Art Urbain",
     origin: "Montréal, Canada",
-    clueQuestion: "Quelle phrase illustre le mieux l'utilisation d'une 'Fresque murale' au passé ?",
+    clueQuestion: "Quelle phrase utilise correctement le mot 'Fresque murale' au passé ?",
     options: [
-      "L'artiste peignait la fresque murale pendant que les passants l'observaient.",
+      "L'artiste peignait la fresque murale pendant que les gens l'observaient.",
       "La fresque murale a été détruit par la pluie.",
-      "Le fresque murale est un petit dessin sur papier."
+      "La fresque murale est un petit dessin sur du papier."
     ],
     correctIdx: 0,
     value: 600
   },
   {
     id: 3,
-    title: "Le Vestige d'Architecture Gothique",
-    type: "Monumant Historique",
+    title: "Le Bâtiment Historique",
+    type: "Architecture",
     origin: "Bruxelles, Belgique",
-    clueQuestion: "Que désigne exactement la 'Façade' d'un édifice ?",
+    clueQuestion: "Que signifie le mot 'Façade' d'un bâtiment ?",
     options: [
       "La face extérieure principale d'un bâtiment.",
-      "Le toit intérieur d'une maison.",
-      "La bande sonore d'un spectacle."
+      "Le toit à l'intérieur d'une maison.",
+      "La musique d'un film ou d'un spectacle."
     ],
     correctIdx: 0,
     value: 700
   },
   {
     id: 4,
-    title: "Le Grand Prix du Slam Poétique",
-    type: "Patrimoine Immatériel",
+    title: "Le Concert de Slam & Musique",
+    type: "Poésie orale",
     origin: "Dakar, Sénégal",
-    clueQuestion: "Quelle proposition associe correctement le vocabulaire 'Slam' et 'Virtuosité' ?",
+    clueQuestion: "Quelle phrase utilise correctement le mot 'Slam' ?",
     options: [
-      "Le poète a déclamé son slam avec une virtuosité exceptionnelle.",
-      "Le slam est un type de peinture à l'huile.",
-      "La virtuosité signifie hésiter souvent pendant son texte."
+      "Le poète a déclamé son slam sur scène devant un grand public.",
+      "Le slam est un style de peinture à l'huile.",
+      "Le slam est un monument historique ancien."
     ],
     correctIdx: 0,
     value: 800
