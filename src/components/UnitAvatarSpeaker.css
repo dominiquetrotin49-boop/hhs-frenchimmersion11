@@ -11,7 +11,7 @@
   user-select: none;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  align-self: flex-end; /* Base aligns flush with navigation tabs */
+  margin: 0;
 }
 
 .unit-avatar-speaker-card:hover {
@@ -20,7 +20,7 @@
   box-shadow: 0 8px 22px rgba(255, 94, 98, 0.25);
 }
 
-/* 96px x 96px avatar container */
+/* 80px x 80px avatar container */
 .unit-avatar-wrapper {
   position: relative;
   width: 80px;

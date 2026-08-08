@@ -43,14 +43,33 @@ export default function UnitDashboard() {
 
   return (
     <div className="dashboard-container">
-      <header className="dashboard-header glass-panel" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1.5rem', padding: '1.2rem 1.8rem', width: '100%' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0.8rem', textAlign: 'left', margin: 0, padding: 0 }}>
+      <header className="dashboard-header glass-panel" style={{ 
+        display: 'flex', 
+        flexWrap: 'wrap', 
+        justify: 'space-between', 
+        alignItems: 'stretch', 
+        padding: '1.4rem 2rem', 
+        width: '100%',
+        minHeight: '150px',
+        boxSizing: 'border-box',
+        gap: '1.5rem'
+      }}>
+        {/* LEFT SIDE OF THE RECTANGLE: Top-Left Title, Bottom-Left Tabs */}
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          justify: 'space-between', 
+          alignItems: 'flex-start', 
+          textAlign: 'left',
+          margin: 0,
+          padding: 0
+        }}>
           <div style={{ textAlign: 'left', margin: 0, padding: 0 }}>
             <p className="unit-subtitle" style={{ textAlign: 'left', margin: 0, marginBottom: '0.15rem' }}>Module de cours</p>
             <h2 className="unit-title text-gradient" style={{ textAlign: 'left', margin: 0 }}>{unitTitle}</h2>
           </div>
           
-          <div className="tabs-container" style={{ margin: 0, alignSelf: 'flex-start' }}>
+          <div className="tabs-container" style={{ margin: 0, marginTop: '1rem', alignSelf: 'flex-start' }}>
             {TABS.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -67,7 +86,14 @@ export default function UnitDashboard() {
           </div>
         </div>
 
-        <div style={{ marginLeft: 'auto', alignSelf: 'flex-end', display: 'flex', alignItems: 'flex-end' }}>
+        {/* RIGHT SIDE OF THE RECTANGLE: Avatar Card flush with the bottom baseline of tabs */}
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'flex-end', 
+          marginLeft: 'auto',
+          marginRight: 0,
+          paddingBottom: 0
+        }}>
           {unitId === '1' && (
             <UnitAvatarSpeaker 
               avatar="lea" 
