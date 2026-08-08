@@ -50,14 +50,14 @@ export default function AvatarWelcome() {
         // Toggle active speaker visual based on exact turn timestamps
         const current = audio.currentTime;
         if (
-          (current >= 0 && current < 3.7) ||            // Léa 1
-          (current >= 7.55 && current < 10.7) ||        // Léa 2
-          (current >= 15.05 && current < 18.2) ||       // Léa 3
-          (current >= 21.42)                            // Léa 4
+          (current >= 0 && current < 3.98) ||          // Léa 1
+          (current >= 7.76 && current < 10.86) ||      // Léa 2
+          (current >= 15.14 && current < 18.24) ||     // Léa 3
+          (current >= 21.41)                           // Léa 4
         ) {
           setCurrentSpeaker('lea');
         } else {
-          setCurrentSpeaker('hugo');                    // Hugo 1, 2, 3
+          setCurrentSpeaker('hugo');                   // Hugo 1, 2, 3
         }
       };
 
