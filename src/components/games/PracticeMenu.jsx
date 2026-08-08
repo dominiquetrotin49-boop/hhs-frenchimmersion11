@@ -200,17 +200,17 @@ export default function PracticeMenu({ unitId }) {
         };
       case '4':
         return {
-          editor: "Le Défi du Travailleur Social",
-          editorDesc: "Trouve le mot juste pour aider avant que le temps ne s'écoule.",
+          editor: "Le Défi du Critique d'Art",
+          editorDesc: "Trouve le bon terme artistique ou culturel avant que le temps ne s'écoule !",
           editorBtn: "Jouer (Contre la montre)",
-          ladder: "Le Parcours Solidaire",
-          ladderDesc: "Deviens expert en aide sociale en répondant à des questions difficiles.",
+          ladder: "L'Échelle de l'Artiste",
+          ladderDesc: "Deviens un expert en cinéma, musique et patrimoine culturel francophone !",
           ladderBtn: "Jouer (Progression)",
-          race: "Le Sprint Solidaire",
-          raceDesc: "Trouve une solution aux plus démunis avant qu'il ne soit trop tard !",
+          race: "La Course du Festival de Cannes",
+          raceDesc: "Gagne le premier prix du meilleur film en répondant correctement à toutes les questions !",
           raceBtn: "Jouer (Course)",
-          writingTitle: "La pauvreté en France",
-          writingDesc: "Rédigez un paragraphe sur l'aide sociale en utilisant le présent !"
+          writingTitle: "Critique de film & Récit culturel",
+          writingDesc: "Rédigez la critique d'un film ou le récit d'un souvenir culturel marquant au passé !"
         };
       default: // Unit 1
         return {

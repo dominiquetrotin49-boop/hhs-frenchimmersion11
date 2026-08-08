@@ -1208,21 +1208,21 @@ export const GRAMMAR_DATA_UNIT_4 = [
     id: 'connecteurs',
     title: '5. Les Connecteurs Logiques',
     rules: [
-      "Les connecteurs logiques servent à structurer un texte et à lier les idées entre elles.",
-      "L'introduction des causes : d'abord, tout d'abord, premièrement, en premier lieu.",
-      "L'ajout d'idées : ensuite, de plus, en outre.",
+      "Les connecteurs logiques servent à structurer une critique d'art, une analyse de film ou une argumentation.",
+      "L'introduction des idées : d'abord, tout d'abord, premièrement, en premier lieu.",
+      "L'ajout d'arguments : de plus, en outre, également, par ailleurs.",
       "L'opposition : cependant, par contre, néanmoins, en revanche, toutefois.",
-      "La conséquence : par conséquent, donc, c'est pourquoi.",
+      "La conséquence : par conséquent, donc, c'est pourquoi, ainsi.",
       "La conclusion : en conclusion, pour conclure, finalement, enfin."
     ],
     example: {
-      infinitive: 'Exemples d\'utilisation',
+      infinitive: 'Exemples d\'utilisation (Critique d\'art & de cinéma)',
       conjugation: [
-        { pronoun: "D'abord", verb: "il y a un manque de logements." },
-        { pronoun: "De plus", verb: "le coût de la vie augmente." },
-        { pronoun: "Cependant", verb: "des associations apportent leur aide." },
-        { pronoun: "Par conséquent", verb: "il faut agir rapidement." },
-        { pronoun: "En conclusion", verb: "la pauvreté reste un défi majeur." }
+        { pronoun: "D'abord", verb: "le film s'ouvre sur un plan-séquence spectaculaire." },
+        { pronoun: "De plus", verb: "la bande originale renforce l'intensité dramatique." },
+        { pronoun: "Cependant", verb: "certains critiques d'art ont émis des réserves." },
+        { pronoun: "Par conséquent", verb: "l'exposition a battu des records d'affluence." },
+        { pronoun: "En conclusion", verb: "ce chef-d'œuvre marque l'histoire du 7e art." }
       ]
     },
     irregulars: []
@@ -1232,18 +1232,18 @@ export const GRAMMAR_DATA_UNIT_4 = [
     title: '6. Les Verbes Réfléchis et Réciproques (Présent)',
     rules: [
       "Les verbes pronominaux se conjuguent avec un pronom réfléchi de la même personne que le sujet (me, te, se, nous, vous, se).",
-      "Un verbe est réfléchi quand le sujet fait l'action sur lui-même (ex: je me lave, il se réveille).",
-      "Un verbe est réciproque quand l'action est mutuelle entre plusieurs personnes (ex: ils se regardent, nous nous aidons)."
+      "Un verbe est réfléchi quand le sujet fait l'action sur lui-même (ex: je me passionne pour le cinéma).",
+      "Un verbe est réciproque quand l'action est mutuelle entre plusieurs personnes (ex: ils se rencontrent lors du vernissage)."
     ],
     example: {
-      infinitive: 'Se battre',
+      infinitive: 'Se passionner (pour l\'art)',
       conjugation: [
-        { pronoun: "Je", verb: "me bats" },
-        { pronoun: "Tu", verb: "te bats" },
-        { pronoun: "Il/Elle", verb: "se bat" },
-        { pronoun: "Nous", verb: "nous battons" },
-        { pronoun: "Vous", verb: "vous battez" },
-        { pronoun: "Ils/Elles", verb: "se battent" }
+        { pronoun: "Je", verb: "me passionne" },
+        { pronoun: "Tu", verb: "te passionnes" },
+        { pronoun: "Il/Elle", verb: "se passionne" },
+        { pronoun: "Nous", verb: "nous passionnons" },
+        { pronoun: "Vous", verb: "vous passionnez" },
+        { pronoun: "Ils/Elles", verb: "se passionnent" }
       ]
     },
     irregulars: []
