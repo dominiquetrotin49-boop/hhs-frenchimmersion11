@@ -44,37 +44,9 @@ export default function UnitDashboard() {
   return (
     <div className="dashboard-container">
       <header className="dashboard-header glass-panel" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem', flex: 1, minWidth: '300px' }}>
-          <div>
-            <p className="unit-subtitle">Module de cours</p>
-            <h2 className="unit-title text-gradient">{unitTitle}</h2>
-          </div>
-
-          {unitId === '1' && (
-            <UnitAvatarSpeaker 
-              avatar="lea" 
-              audioSrc="/audio/unit1_intro_lea.mp3" 
-              name="Léa" 
-              speechFallbackText={leaUnit1Script}
-            />
-          )}
-
-          {unitId === '2' && (
-            <UnitAvatarSpeaker 
-              avatar="hugo" 
-              audioSrc="/audio/unit2_intro_hugo.mp3" 
-              name="Hugo" 
-              speechFallbackText={hugoUnit2Script}
-            />
-          )}
-
-          {unitId === '3' && (
-            <UnitAvatarSpeaker 
-              avatar="duo" 
-              audioSrc="/audio/unit3_intro_duo.mp3" 
-              name="Léa & Hugo" 
-            />
-          )}
+        <div>
+          <p className="unit-subtitle">Module de cours</p>
+          <h2 className="unit-title text-gradient">{unitTitle}</h2>
         </div>
         
         <div className="tabs-container">
@@ -92,6 +64,32 @@ export default function UnitDashboard() {
             );
           })}
         </div>
+
+        {unitId === '1' && (
+          <UnitAvatarSpeaker 
+            avatar="lea" 
+            audioSrc="/audio/unit1_intro_lea.mp3" 
+            name="Léa" 
+            speechFallbackText={leaUnit1Script}
+          />
+        )}
+
+        {unitId === '2' && (
+          <UnitAvatarSpeaker 
+            avatar="hugo" 
+            audioSrc="/audio/unit2_intro_hugo.mp3" 
+            name="Hugo" 
+            speechFallbackText={hugoUnit2Script}
+          />
+        )}
+
+        {unitId === '3' && (
+          <UnitAvatarSpeaker 
+            avatar="duo" 
+            audioSrc="/audio/unit3_intro_duo.mp3" 
+            name="Léa & Hugo" 
+          />
+        )}
       </header>
 
       <div className="dashboard-content">
