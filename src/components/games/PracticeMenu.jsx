@@ -13,6 +13,9 @@ import GrammarFill from './GrammarFill';
 import Fishtopia from './Fishtopia';
 import { Grid3X3, PenTool, Volume2, Repeat, MoveHorizontal, Edit3, Gamepad2 } from 'lucide-react';
 import { IMPARFAIT_FILL_DATA, PC_FILL_DATA, MIXED_FILL_DATA } from '../../data/unit4GrammarGames';
+import ArtDetectiveGame from './ArtDetectiveGame';
+import FilmDirectorGame from './FilmDirectorGame';
+import ArtAuctionGame from './ArtAuctionGame';
 import './Games.css';
 
 const ER_PUZZLE = {
@@ -245,7 +248,11 @@ export default function PracticeMenu({ unitId }) {
   if (activeGame === 'crossword-irr2') return <Crossword {...IRR_PUZZLE_2} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'crossword-irr3') return <Crossword {...IRR_PUZZLE_3} onBack={() => setActiveGame(null)} />;
   
-  // Unit 4 puzzle
+  // Unit 4 Special Games
+  if (activeGame === 'art-detective') return <ArtDetectiveGame onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'film-director') return <FilmDirectorGame onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'art-auction') return <ArtAuctionGame onBack={() => setActiveGame(null)} />;
+
   if (activeGame === 'crossword-u4') return <Crossword {...UNIT_4_PUZZLE} onBack={() => setActiveGame(null)} />;
   
   if (activeGame === 'pronoun-replace') return <PronounReplacement onBack={() => setActiveGame(null)} />;
@@ -316,12 +323,35 @@ export default function PracticeMenu({ unitId }) {
             </div>
             
             {unitId === '4' && (
-              <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-u4')}>
-                <Grid3X3 className="game-icon text-success" size={48} />
-                <h4>Mots Croisés: La Pauvreté</h4>
-                <p>Révisez le vocabulaire de l'unité 4 en complétant cette grille !</p>
-                <button className="play-btn btn-success">Jouer (Mots Croisés)</button>
-              </div>
+              <>
+                <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-u4')}>
+                  <Grid3X3 className="game-icon text-success" size={48} />
+                  <h4>Mots Croisés: Les Arts & la Culture</h4>
+                  <p>Complétez la grille avec le vocabulaire et les notions culturelles de l'Unité 4 !</p>
+                  <button className="play-btn btn-success">Jouer (Mots Croisés)</button>
+                </div>
+
+                <div className="game-card glass-panel" onClick={() => setActiveGame('art-detective')}>
+                  <Gamepad2 className="game-icon" style={{ color: '#60a5fa' }} size={48} />
+                  <h4>🕵️‍♂️ Le Détective d'Art (Vol au Louvre)</h4>
+                  <p>Parcourez Paris, Montréal, Dakar et Bruxelles pour résoudre le mystère et retrouver le chef-d'œuvre !</p>
+                  <button className="play-btn" style={{ background: '#3b82f6', color: 'white' }}>Mener l'Enquête</button>
+                </div>
+
+                <div className="game-card glass-panel" onClick={() => setActiveGame('film-director')}>
+                  <Gamepad2 className="game-icon" style={{ color: '#c084fc' }} size={48} />
+                  <h4>🎬 Festival de Cannes : Dans la Peau du Réalisateur</h4>
+                  <p>Réalisez votre film, choisissez le cadrage, la bande originale et remportez la Palme d'Or !</p>
+                  <button className="play-btn" style={{ background: '#8b5cf6', color: 'white' }}>Tourner le Film</button>
+                </div>
+
+                <div className="game-card glass-panel" onClick={() => setActiveGame('art-auction')}>
+                  <Gamepad2 className="game-icon" style={{ color: '#10b981' }} size={48} />
+                  <h4>🏛️ L'Enchère des Arts & Galerie Virtuelle</h4>
+                  <p>Achetez des œuvres d'art lors d'enchères linguistiques et organisez votre propre vernissage !</p>
+                  <button className="play-btn" style={{ background: '#10b981', color: 'white' }}>Accéder aux Enchères</button>
+                </div>
+              </>
             )}
           </>
         )}
