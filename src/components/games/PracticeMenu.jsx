@@ -323,35 +323,12 @@ export default function PracticeMenu({ unitId }) {
             </div>
             
             {unitId === '4' && (
-              <>
-                <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-u4')}>
-                  <Grid3X3 className="game-icon text-success" size={48} />
-                  <h4>Mots Croisés: Les Arts & la Culture</h4>
-                  <p>Complétez la grille avec le vocabulaire et les notions culturelles de l'Unité 4 !</p>
-                  <button className="play-btn btn-success">Jouer (Mots Croisés)</button>
-                </div>
-
-                <div className="game-card glass-panel" onClick={() => setActiveGame('art-detective')}>
-                  <Gamepad2 className="game-icon" style={{ color: '#60a5fa' }} size={48} />
-                  <h4>🕵️‍♂️ Le Détective d'Art (Vol au Louvre)</h4>
-                  <p>Parcourez Paris, Montréal, Dakar et Bruxelles pour résoudre le mystère et retrouver le chef-d'œuvre !</p>
-                  <button className="play-btn" style={{ background: '#3b82f6', color: 'white' }}>Mener l'Enquête</button>
-                </div>
-
-                <div className="game-card glass-panel" onClick={() => setActiveGame('film-director')}>
-                  <Gamepad2 className="game-icon" style={{ color: '#c084fc' }} size={48} />
-                  <h4>🎬 Festival de Cannes : Dans la Peau du Réalisateur</h4>
-                  <p>Réalisez votre film, choisissez le cadrage, la bande originale et remportez la Palme d'Or !</p>
-                  <button className="play-btn" style={{ background: '#8b5cf6', color: 'white' }}>Tourner le Film</button>
-                </div>
-
-                <div className="game-card glass-panel" onClick={() => setActiveGame('art-auction')}>
-                  <Gamepad2 className="game-icon" style={{ color: '#10b981' }} size={48} />
-                  <h4>🏛️ L'Enchère des Arts & Galerie Virtuelle</h4>
-                  <p>Achetez des œuvres d'art lors d'enchères linguistiques et organisez votre propre vernissage !</p>
-                  <button className="play-btn" style={{ background: '#10b981', color: 'white' }}>Accéder aux Enchères</button>
-                </div>
-              </>
+              <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-u4')}>
+                <Grid3X3 className="game-icon text-success" size={48} />
+                <h4>Mots Croisés: Les Arts & la Culture</h4>
+                <p>Complétez la grille avec le vocabulaire et les notions culturelles de l'Unité 4 !</p>
+                <button className="play-btn btn-success">Jouer (Mots Croisés)</button>
+              </div>
             )}
           </>
         )}

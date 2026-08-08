@@ -4,7 +4,9 @@ import { BookOpen, Languages, PenTool, Gamepad2 } from 'lucide-react';
 import EscapeGame from '../components/EscapeGame';
 import Unit2EscapeGame from '../components/Unit2EscapeGame';
 import Unit3EscapeGame from '../components/Unit3EscapeGame';
-import Unit4RoleplayGame from '../components/games/Unit4RoleplayGame';
+import ArtDetectiveGame from '../components/games/ArtDetectiveGame';
+import FilmDirectorGame from '../components/games/FilmDirectorGame';
+import ArtAuctionGame from '../components/games/ArtAuctionGame';
 import PracticeMenu from '../components/games/PracticeMenu';
 import Fishtopia from '../components/games/Fishtopia';
 import DontLookDown from '../components/games/DontLookDown';
@@ -25,6 +27,7 @@ export default function UnitDashboard() {
   const [activeTab, setActiveTab] = useState('grammar');
   const [selectedGame1, setSelectedGame1] = useState(null); // 'escape' or 'fishtopia'
   const [selectedGame2, setSelectedGame2] = useState(null); // 'escape' or 'dld'
+  const [selectedGame4, setSelectedGame4] = useState(null); // 'detective', 'director', 'auction'
 
   const isFilm = unitId?.startsWith('film');
   
@@ -132,8 +135,41 @@ export default function UnitDashboard() {
 
             {activeTab === 'game' && (
               <div className="section-content animate-in">
-                {unitId === '4' ? <Unit4RoleplayGame /> :
-                 unitId === '3' ? <Unit3EscapeGame /> : 
+                {unitId === '4' ? (
+                  selectedGame4 === 'detective' ? (
+                    <ArtDetectiveGame onBack={() => setSelectedGame4(null)} />
+                  ) : selectedGame4 === 'director' ? (
+                    <FilmDirectorGame onBack={() => setSelectedGame4(null)} />
+                  ) : selectedGame4 === 'auction' ? (
+                    <ArtAuctionGame onBack={() => setSelectedGame4(null)} />
+                  ) : (
+                    <div>
+                      <h3 className="mb-4 text-center">Choisissez votre Jeu Interactif !</h3>
+                      <div className="game-cards-container">
+                        <div className="game-card glass-panel" onClick={() => setSelectedGame4('detective')}>
+                          <Gamepad2 className="game-icon" style={{ color: '#60a5fa' }} size={48} />
+                          <h4>🕵️‍♂️ Le Détective d'Art (Vol au Louvre)</h4>
+                          <p>Parcourez Paris, Montréal, Dakar et Bruxelles pour résoudre le mystère et retrouver le chef-d'œuvre !</p>
+                          <button className="play-btn" style={{ background: '#3b82f6', color: 'white' }}>Mener l'Enquête</button>
+                        </div>
+
+                        <div className="game-card glass-panel" onClick={() => setSelectedGame4('director')}>
+                          <Gamepad2 className="game-icon" style={{ color: '#c084fc' }} size={48} />
+                          <h4>🎬 Festival de Cannes : Réalisateur</h4>
+                          <p>Réalisez votre film, choisissez le cadrage, la bande originale et remportez la Palme d'Or !</p>
+                          <button className="play-btn" style={{ background: '#8b5cf6', color: 'white' }}>Tourner le Film</button>
+                        </div>
+
+                        <div className="game-card glass-panel" onClick={() => setSelectedGame4('auction')}>
+                          <Gamepad2 className="game-icon" style={{ color: '#10b981' }} size={48} />
+                          <h4>🏛️ L'Enchère des Arts & Galerie Virtuelle</h4>
+                          <p>Achetez des œuvres d'art lors d'enchères linguistiques et organisez votre propre vernissage !</p>
+                          <button className="play-btn" style={{ background: '#10b981', color: 'white' }}>Accéder aux Enchères</button>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                ) : unitId === '3' ? <Unit3EscapeGame /> : 
                  unitId === '2' ? (
                     selectedGame2 === 'escape' ? (
                       <div>
