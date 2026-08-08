@@ -149,18 +149,18 @@ const IRR_PUZZLE_3 = {
 };
 
 const UNIT_4_PUZZLE = {
-  title: "Mots Croisés: La Pauvreté",
-  description: "Remplissez la grille avec le vocabulaire de l'Unité 4.",
+  title: "Mots Croisés: Les Arts & la Culture",
+  description: "Remplissez la grille avec le vocabulaire et les notions culturelles de l'Unité 4.",
   numRows: 10,
   numCols: 10,
   puzzleData: [
-    { id: 1, word: "PRECARITE", r: 6, c: 1, dir: "across", clue: "Instabilité financière" },
-    { id: 2, word: "CHOMAGE", r: 0, c: 3, dir: "down", clue: "Absence d'emploi" },
-    { id: 3, word: "AIDES", r: 4, c: 3, dir: "across", clue: "Prestations sociales" },
-    { id: 4, word: "SEUIL", r: 5, c: 9, dir: "down", clue: "Limite de revenus" },
-    { id: 5, word: "SMIC", r: 0, c: 0, dir: "across", clue: "Salaire minimum" },
-    { id: 6, word: "SDF", r: 0, c: 0, dir: "down", clue: "Sans domicile fixe" },
-    { id: 7, word: "RSA", r: 6, c: 2, dir: "down", clue: "Aide financière" }
+    { id: 1, word: "EXPOSITION", r: 0, c: 4, dir: "down", clue: "Présentation publique d'œuvres d'art" },
+    { id: 2, word: "CINEMA", r: 0, c: 1, dir: "across", clue: "Le 7e art" },
+    { id: 3, word: "PRIX", r: 2, c: 4, dir: "across", clue: "Récompense attribuée lors d'un festival" },
+    { id: 4, word: "SLAM", r: 4, c: 4, dir: "across", clue: "Poésie orale déclamée en rythme" },
+    { id: 5, word: "THEATRE", r: 6, c: 0, dir: "across", clue: "Art de la représentation scénique" },
+    { id: 6, word: "NUANCE", r: 9, c: 4, dir: "across", clue: "Subtilité de sens ou de couleur" },
+    { id: 7, word: "SCENARIO", r: 1, c: 8, dir: "down", clue: "Texte écrit décrivant les scènes d'un film" }
   ]
 };
 

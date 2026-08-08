@@ -33,23 +33,23 @@ export default function WritingPractice({ unitId, onBack }) {
   const isUnit3 = unitId === '3';
   const isUnit4 = unitId === '4';
   const targetVocab = isUnit4 ? VOCAB_WORDS_UNIT_4 : isUnit3 ? VOCAB_WORDS_UNIT_3 : isUnit2 ? VOCAB_WORDS_UNIT_2 : VOCAB_WORDS_UNIT_1;
-  const promptSubject = isUnit4 ? "La pauvreté en France" : isUnit3 ? "Se protéger en ligne" : isUnit2 ? "Créer une école innovante" : "Journaliste en Action";
+  const promptSubject = isUnit4 ? "Critique d'Art & Récit Culturel" : isUnit3 ? "Se protéger en ligne" : isUnit2 ? "Créer une école innovante" : "Journaliste en Action";
   const promptText = isUnit4
-    ? "À partir de vos connaissances, rédigez un texte (au moins 50 mots) qui explore les causes, les conséquences et les solutions à la pauvreté en France. Vous devez utiliser des CONNECTEURS LOGIQUES (tout d'abord, ensuite, cependant, etc.), au moins un verbe à l'IMPARFAIT ou au PASSÉ COMPOSÉ, et au moins un VERBE RÉFLÉCHI."
+    ? "Rédigez la critique d'un film, d'une œuvre d'art ou le récit d'un souvenir culturel marquant (au moins 50 mots). Vous devez utiliser le PASSÉ COMPOSÉ et l'IMPARFAIT (décor vs événement), au moins un VERBE RÉFLÉCHI (se passionner, se dérouler...), et des CONNECTEURS LOGIQUES (tout d'abord, cependant, en conclusion)."
     : isUnit3
     ? "Écrivez un court e-mail (au moins 50 mots au PRÉSENT) à un ami pour lui expliquer comment vous protégez vos données sur Internet. Vous devez utiliser au moins 3 PRONOMS OBJETS (me, te, se, nous, vous, le, la, les, lui, leur, y, en) pour éviter les répétitions."
     : isUnit2 
     ? "Vous avez une opportunité unique de créer votre propre école innovante. Écrivez un court paragraphe (au moins 50 mots) au PRÉSENT pour décrire la vision de votre école, quelles matières sont enseignées, et comment vous aidez vos élèves."
     : "Vous êtes un jeune journaliste. Écrivez un court paragraphe (au moins 50 mots) au PRÉSENT pour décrire comment vous trouvez vos informations, comment vous écrivez vos articles, et pourquoi la liberté de la presse est importante.";
   const perfectScoreMsg = isUnit4
-    ? "Excellent texte ! Votre analyse de la pauvreté est claire et bien structurée. 🤝✨"
+    ? "Félicitations ! Votre critique artistique est magnifiquement rédigée au passé avec le vocabulaire de l'Unité 4 ! 🎨🎬✨"
     : isUnit3
     ? "Excellent e-mail ! Vos conseils en cybersécurité sont très clairs. 🛡️✨"
     : isUnit2
     ? "Excellent travail ! Votre école innovante semble fantastique. 🏫✨"
     : "Excellent travail ! Vous avez le talent d'un vrai journaliste. 📰✨";
   const vocabWarningMsg = isUnit4
-    ? "Essayez d'ajouter: précarité, inégalités, mal-logement, aides sociales, etc."
+    ? "Essayez d'ajouter: chef-d'œuvre, scénario, exposition, bande originale, fresque, etc."
     : isUnit3
     ? "Essayez d'ajouter: cybersécurité, hameçonnage, données, mot de passe, empreinte..."
     : isUnit2

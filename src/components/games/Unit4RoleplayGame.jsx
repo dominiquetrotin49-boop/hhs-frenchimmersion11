@@ -4,48 +4,47 @@ import './Games.css';
 
 const SCENARIOS = [
   {
-    id: 'dubois',
-    title: "La Demande d'Aide (Madame Dubois)",
-    description: "Madame Dubois (55 ans) a perdu son emploi après la fermeture de l'usine locale. Elle n'arrive plus à payer son loyer. Elle se présente à la commission pour demander une aide financière d'urgence et un accompagnement vers l'emploi.",
+    id: 'cinema',
+    title: "La Sélection du Grand Prix de Cinéma",
+    description: "Le jury du Festival du Film Francophone se réunit pour attribuer le premier prix. Les jurés débattent passionnément du scénario, de la mise en scène, de la bande originale et de la virtuosité des acteurs.",
     roles: [
-      { name: "Madame Dubois", objective: "Convaincre la commission qu'elle a besoin d'une aide financière immédiate.", vocab: ["chômage", "loyer", "désespoir", "factures"] },
-      { name: "Travailleur(se) Social(e)", objective: "Évaluer la situation de Madame Dubois et proposer un plan d'aide (RSA, etc.).", vocab: ["RSA", "aides sociales", "logement", "accompagnement"] },
-      { name: "Conseiller(ère) Pôle Emploi", objective: "Proposer des formations pour sa reconversion.", vocab: ["insertion professionnelle", "formation", "compétences"] },
-      { name: "Maire de la Ville", objective: "Rappeler les limites du budget municipal tout en montrant de l'empathie.", vocab: ["budget", "solidarité", "limites", "priorités"] },
-      { name: "Représentant(e) Association", objective: "Proposer une aide alimentaire d'urgence (ex: Restos du Cœur).", vocab: ["association caritative", "insécurité alimentaire", "bénévoles"] }
+      { name: "Président(e) du Jury", objective: "Évaluer l'esthétique et la portée émotionnelle du film au passé.", vocab: ["scénario", "mise en scène", "chef-d'œuvre", "7e art"] },
+      { name: "Réalisateur(trice)", objective: "Défendre son film et expliquer son inspiration et l'utilisation du plan-séquence.", vocab: ["inspiration", "cadrage", "plan-séquence", "authenticité"] },
+      { name: "Critique Cinéma", objective: "Analyser la bande originale, le synopsis et l'interprétation des acteurs.", vocab: ["bande originale", "synopsis", "interprétation", "critique d'art"] },
+      { name: "Producteur(trice)", objective: "Présenter le mécénat, le doublage et la diffusion internationale.", vocab: ["mécénat", "doublage", "exposition", "succès"] }
     ]
   },
   {
-    id: 'antoine',
-    title: "Le Dossier du Jeune Diplômé (Antoine)",
-    description: "Antoine (24 ans) a un master mais ne trouve pas de travail. Il vit de petits boulots (précarité) et n'arrive pas à louer un appartement car il n'a pas de garants. Il demande de l'aide pour un logement social.",
+    id: 'exposition',
+    title: "L'Exposition du Musée d'Art Moderne",
+    description: "Le comité d'acquisition d'un musée francophone décide quelles œuvres d'art et fresques murales contemporaines acheter pour la grande exposition temporaire.",
     roles: [
-      { name: "Antoine", objective: "Expliquer sa précarité et demander un accès prioritaire à un logement.", vocab: ["précarité", "CDD", "garants", "injustice"] },
-      { name: "Bailleur Social", objective: "Expliquer qu'il y a une liste d'attente de plusieurs années.", vocab: ["liste d'attente", "logement social", "dossier"] },
-      { name: "Membre de la Mairie", objective: "Tenter de trouver une solution temporaire (Foyer Jeunes Travailleurs).", vocab: ["solution temporaire", "jeunes", "foyer"] },
-      { name: "Travailleur(se) Social(e)", objective: "Orienter Antoine vers des aides spécifiques pour les jeunes.", vocab: ["aides au logement", "mission locale"] }
+      { name: "Conservateur(trice) du Musée", objective: "Plaider pour la préservation du patrimoine immatériel et le symbolisme des œuvres.", vocab: ["exposition", "patrimoine culturel", "symbolisme", "œuvre d'art"] },
+      { name: "Artiste Peintre / Street-Artiste", objective: "Expliquer sa démarche artistique, sa sensibilité et l'authenticité de sa fresque.", vocab: ["fresque murale", "sensibilité artistique", "authenticité", "créativité"] },
+      { name: "Mécène d'Art", objective: "Proposer un soutien financier et fixer les conditions du vernissage.", vocab: ["mécénat", "vernissage", "édifice", "collection"] },
+      { name: "Critique d'Art", objective: "Évaluer l'impact visuel et l'esthétique du mouvement artistique.", vocab: ["mouvement artistique", "esthétique", "nuance culturelle", "perspective"] }
     ]
   },
   {
-    id: 'diallo',
-    title: "Le Non-Recours et Logement Indigne (M. Diallo)",
-    description: "Monsieur Diallo (40 ans) travaille au SMIC, mais vit dans un logement insalubre avec ses deux enfants. Il ne savait pas qu'il avait droit à des aides. La commission doit l'aider à faire valoir ses droits et trouver un nouveau logement.",
+    id: 'slam',
+    title: "Le Grand Prix du Slam & de la Musique",
+    description: "Le jury d'un festival international de musique et de poésie urbaine décerne le prix de la meilleure création poétique et musicale francophone.",
     roles: [
-      { name: "Monsieur Diallo", objective: "Raconter ses conditions de vie difficiles et son ignorance des aides.", vocab: ["mal-logement", "SMIC", "insalubre", "enfants"] },
-      { name: "Inspecteur(trice) de l'Habitat", objective: "Confirmer que le logement actuel est dangereux et doit être fermé.", vocab: ["danger", "loi", "propriétaire", "amende"] },
-      { name: "Travailleur(se) Social(e)", objective: "Calculer les droits de M. Diallo et l'aider à remplir les dossiers.", vocab: ["droits", "formulaires", "allocations", "APL"] },
-      { name: "Membre d'une Association", objective: "Dénoncer les propriétaires qui profitent de la misère (marchands de sommeil).", vocab: ["inégalités", "loyer abusif", "justice"] }
+      { name: "Artiste Poète / Slammeur", objective: "Présenter son texte et expliquer la genèse de sa création au passé.", vocab: ["slam", "mélodie", "inspiration", "créativité"] },
+      { name: "Directeur(trice) de Festival", objective: "Évaluer la sonorité, la virtuosité et la réaction du public.", vocab: ["sonorité", "virtuosité", "répertoire", "interprétation"] },
+      { name: "Musicologue", objective: "Analyser les nuances culturelles et l'harmonie des instruments.", vocab: ["nuance culturelle", "harmonie", "patrimoine immatériel", "rythme"] },
+      { name: "Journaliste Culturel", objective: "Rédiger un compte-rendu en alternant Imparfait et Passé Composé.", vocab: ["critique d'art", "passé composé", "imparfait", "succès"] }
     ]
   },
   {
-    id: 'chen',
-    title: "Précarité et Micro-Entrepreneur (Mme Chen)",
-    description: "Madame Chen a créé sa petite entreprise, mais à cause de la hausse du coût de la vie, elle ne gagne plus assez pour vivre. Elle n'a pas le droit au chômage et risque de tout perdre. Elle demande un prêt d'honneur ou une subvention.",
+    id: 'patrimoine',
+    title: "Restauration du Patrimoine Architectural",
+    description: "Une municipalité francophone débat de la restauration d'un édifice historique et de sa façade pour créer un nouvel espace culturel et artistique.",
     roles: [
-      { name: "Madame Chen", objective: "Plaider pour une aide financière pour sauver son entreprise.", vocab: ["coût de la vie", "faillite", "travail dur", "inflation"] },
-      { name: "Conseiller(ère) Économique", objective: "Analyser les chiffres de l'entreprise et voir si elle est viable.", vocab: ["rentabilité", "chiffres", "dettes", "statistique"] },
-      { name: "Banquier(ère) (Partenaire de la Ville)", objective: "Refuser un prêt classique, mais proposer un microcrédit.", vocab: ["microcrédit", "risque", "garantie"] },
-      { name: "Travailleur(se) Social(e)", objective: "S'assurer que Mme Chen a de quoi manger en attendant (aide alimentaire).", vocab: ["urgence", "insécurité alimentaire", "secours"] }
+      { name: "Architecte en Chef", objective: "Présenter le projet d'urbanisme, la restauration de la façade et la perspective.", vocab: ["édifice", "façade", "urbanisme", "perspective"] },
+      { name: "Historien(ne) du Patrimoine", objective: "Insister sur la préservation des vestiges et de l'authenticité du monument.", vocab: ["vestige d'architecture", "authenticité", "patrimoine culturel", "histoire"] },
+      { name: "Adjoint(e) à la Culture", objective: "Proposer des ateliers artistiques pour encourager la créativité locale.", vocab: ["créativité", "atelier", "sensibilité artistique", "exposition"] },
+      { name: "Représentant(e) du Quartier", objective: "Exprimer les attentes des habitants quant à l'identité visuelle de la ville.", vocab: ["identité visuelle", "vernissage", "fresque murale", "communauté"] }
     ]
   }
 ];
