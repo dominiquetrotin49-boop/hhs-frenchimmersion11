@@ -16,8 +16,13 @@ export default function NovelReader({ onBack }) {
 
   const chapter = NOVEL_CHAPTERS[activeChapterIdx];
 
+  const [activeAudioObj, setActiveAudioObj] = useState(null);
+
   // Stop audio speech on chapter change or unmount
   useEffect(() => {
+    if (activeAudioObj) {
+      activeAudioObj.pause();
+    }
     window.speechSynthesis.cancel();
     setIsPlayingAudio(false);
     setCurrentLineIdx(null);
@@ -26,36 +31,61 @@ export default function NovelReader({ onBack }) {
     setQuizScore(0);
   }, [activeChapterIdx]);
 
-  // Audio Speech Synthesis with Léa & Hugo Pitch Factors
   const speakLine = (line, idx) => {
+    if (activeAudioObj) {
+      activeAudioObj.pause();
+      setActiveAudioObj(null);
+    }
     window.speechSynthesis.cancel();
+
     if (isPlayingAudio && currentLineIdx === idx) {
       setIsPlayingAudio(false);
       setCurrentLineIdx(null);
       return;
     }
 
-    const utterance = new SpeechSynthesisUtterance(line.audioText);
-    utterance.lang = 'fr-FR';
-    utterance.rate = line.speaker === 'lea' ? 0.92 : 0.95;
-    utterance.pitch = line.speaker === 'lea' ? 1.25 : 1.20; // Pitch shift for Léa & Hugo
-
-    utterance.onstart = () => {
+    if (line.audioSrc) {
+      const audio = new Audio(line.audioSrc);
+      setActiveAudioObj(audio);
       setIsPlayingAudio(true);
       setCurrentLineIdx(idx);
-    };
 
-    utterance.onend = () => {
-      setIsPlayingAudio(false);
-      setCurrentLineIdx(null);
-    };
+      audio.onended = () => {
+        setIsPlayingAudio(false);
+        setCurrentLineIdx(null);
+        setActiveAudioObj(null);
+      };
 
-    utterance.onerror = () => {
-      setIsPlayingAudio(false);
-      setCurrentLineIdx(null);
-    };
+      audio.onerror = () => {
+        setIsPlayingAudio(false);
+        setCurrentLineIdx(null);
+        setActiveAudioObj(null);
+      };
 
-    window.speechSynthesis.speak(utterance);
+      audio.play().catch(e => console.log("Audio play error:", e));
+    } else {
+      const utterance = new SpeechSynthesisUtterance(line.audioText);
+      utterance.lang = 'fr-FR';
+      utterance.rate = line.speaker === 'lea' ? 0.92 : 0.95;
+      utterance.pitch = line.speaker === 'lea' ? 1.25 : 1.20;
+
+      utterance.onstart = () => {
+        setIsPlayingAudio(true);
+        setCurrentLineIdx(idx);
+      };
+
+      utterance.onend = () => {
+        setIsPlayingAudio(false);
+        setCurrentLineIdx(null);
+      };
+
+      utterance.onerror = () => {
+        setIsPlayingAudio(false);
+        setCurrentLineIdx(null);
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
   };
 
   const handleSelectQuizOpt = (qId, optIdx) => {

@@ -12,35 +12,40 @@ export const NOVEL_CHAPTERS = [
         speaker: "lea",
         speakerName: "Léa",
         text: "Regarde Hugo ! Je viens de trouver ce vieux dossier derrière les armoires de la rédaction du journal. Il était caché sous une pile de journaux de 1985 !",
-        audioText: "Regarde Hugo ! Je viens de trouver ce vieux dossier derrière les armoires de la rédaction du journal. Il était caché sous une pile de journaux de 1985 !"
+        audioText: "Regarde Hugo ! Je viens de trouver ce vieux dossier derrière les armoires de la rédaction du journal. Il était caché sous une pile de journaux de 1985 !",
+        audioSrc: "/audio/novel_c1_p1.mp3"
       },
       {
         id: "p2",
         speaker: "hugo",
         speakerName: "Hugo",
         text: "Attends Léa, laisse-moi prendre une photo d'abord. À mon avis, ce n'est pas un dossier ordinaire. La couverture en cuir porte un symbole très étrange.",
-        audioText: "Attends Léa, laisse-moi prendre une photo d'abord. À mon avis, ce n'est pas un dossier ordinaire. La couverture en cuir porte un symbole très étrange."
+        audioText: "Attends Léa, laisse-moi prendre une photo d'abord. À mon avis, ce n'est pas un dossier ordinaire. La couverture en cuir porte un symbole très étrange.",
+        audioSrc: "/audio/novel_c1_p2.mp3"
       },
       {
         id: "p3",
         speaker: "lea",
         speakerName: "Léa",
         text: "D'après moi, c'est le carnet d'un ancien journaliste de notre lycée ! Écoute ce qu'il a écrit sur la première page : 'La vérité sur la ville de Harwood se trouve dans les cinq trésors du patrimoine...'",
-        audioText: "D'après moi, c'est le carnet d'un ancien journaliste de notre lycée ! Écoute ce qu'il a écrit sur la première page : La vérité sur la ville de Harwood se trouve dans les cinq trésors du patrimoine..."
+        audioText: "D'après moi, c'est le carnet d'un ancien journaliste de notre lycée ! Écoute ce qu'il a écrit sur la première page : La vérité sur la ville de Harwood se trouve dans les cinq trésors du patrimoine...",
+        audioSrc: "/audio/novel_c1_p3.mp3"
       },
       {
         id: "p4",
         speaker: "hugo",
         speakerName: "Hugo",
         text: "Je pense que nous tenons notre premier grand scoop pour l'édition de ce mois-ci ! Mais nous devons vérifier nos sources avant de publier l'article.",
-        audioText: "Je pense que nous tenons notre premier grand scoop pour l'édition de ce mois-ci ! Mais nous devons vérifier nos sources avant de publier l'article."
+        audioText: "Je pense que nous tenons notre premier grand scoop pour l'édition de ce mois-ci ! Mais nous devons vérifier nos sources avant de publier l'article.",
+        audioSrc: "/audio/novel_c1_p4.mp3"
       },
       {
         id: "p5",
         speaker: "lea",
         speakerName: "Léa",
         text: "Tu as raison Hugo. En tant que jeunes journalistes, nous respectons la liberté de la presse et la vérité. Regarde, le premier indice parle d'une école innovante et d'une fresque mystérieuse...",
-        audioText: "Tu as raison Hugo. En tant que jeunes journalistes, nous respectons la liberté de la presse et la vérité. Regarde, le premier indice parle d'une école innovante et d'une fresque mystérieuse..."
+        audioText: "Tu as raison Hugo. En tant que jeunes journalistes, nous respectons la liberté de la presse et la vérité. Regarde, le premier indice parle d'une école innovante et d'une fresque mystérieuse...",
+        audioSrc: "/audio/novel_c1_p5.mp3"
       }
     ],
     vocabList: [
