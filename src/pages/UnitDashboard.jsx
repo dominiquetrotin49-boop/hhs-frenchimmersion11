@@ -67,6 +67,14 @@ export default function UnitDashboard() {
               speechFallbackText={hugoUnit2Script}
             />
           )}
+
+          {unitId === '3' && (
+            <UnitAvatarSpeaker 
+              avatar="duo" 
+              audioSrc="/audio/unit3_intro_duo.mp3" 
+              name="Léa & Hugo" 
+            />
+          )}
         </div>
         
         <div className="tabs-container">
