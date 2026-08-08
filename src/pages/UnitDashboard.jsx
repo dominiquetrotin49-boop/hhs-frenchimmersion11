@@ -43,14 +43,14 @@ export default function UnitDashboard() {
 
   return (
     <div className="dashboard-container">
-      <header className="dashboard-header glass-panel" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1.2rem', padding: '1.2rem 2rem', width: '100%' }}>
-        <div style={{ textAlign: 'left', marginRight: 'auto', flexShrink: 0 }}>
-          <p className="unit-subtitle" style={{ textAlign: 'left', margin: 0, marginBottom: '0.2rem' }}>Module de cours</p>
-          <h2 className="unit-title text-gradient" style={{ textAlign: 'left', margin: 0 }}>{unitTitle}</h2>
-        </div>
-        
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1.2rem', flexWrap: 'wrap', marginLeft: 'auto' }}>
-          <div className="tabs-container" style={{ margin: 0, alignSelf: 'flex-end' }}>
+      <header className="dashboard-header glass-panel" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1.5rem', padding: '1.2rem 2rem', width: '100%' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2rem', flexWrap: 'wrap' }}>
+          <div style={{ textAlign: 'left', flexShrink: 0 }}>
+            <p className="unit-subtitle" style={{ textAlign: 'left', margin: 0, marginBottom: '0.2rem' }}>Module de cours</p>
+            <h2 className="unit-title text-gradient" style={{ textAlign: 'left', margin: 0 }}>{unitTitle}</h2>
+          </div>
+          
+          <div className="tabs-container" style={{ margin: 0 }}>
             {TABS.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -65,7 +65,9 @@ export default function UnitDashboard() {
               );
             })}
           </div>
+        </div>
 
+        <div style={{ marginLeft: 'auto', alignSelf: 'flex-end' }}>
           {unitId === '1' && (
             <UnitAvatarSpeaker 
               avatar="lea" 
