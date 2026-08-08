@@ -39,6 +39,7 @@ export default function UnitDashboard() {
   const unitTitle = isFilm ? `Mini-unité Film ${unitId.replace('film', '')}` : `Unité ${unitId}${specificTitle}`;
 
   const leaUnit1Script = "Salut tout le monde ! Bienvenue dans l'Unité 1 consacrée à la liberté de la presse et au monde des médias ! Dans cette unité, tu vas te glisser dans la peau d'un vrai journaliste. Tu vas apprendre le vocabulaire des médias, réviser la conjugaison des verbes au présent, et découvrir comment exprimer ton opinion avec conviction. N'oublie pas de tester nos jeux interactifs comme le Scoop Race et la Rédaction en Action ! Alors, prêt à décrocher ton premier scoop ? Choisis une section ci-dessous pour démarrer !";
+  const hugoUnit2Script = "Salut ! Bienvenue dans l'Unité 2 ! Cette fois, on s'attaque à un grand sujet : l'éducation et la vie scolaire. Dans ce module, on va explorer des différents systèmes éducatifs, mais surtout bétonner la grammaire avec les 25 verbes irréguliers indispensables au présent. Tu vas en avoir besoin pour briller dans les activités d'écriture ! Pense aussi à essayer l'Escape Game de l'Unité 2 pour tester tes réflexes. Allez, bon courage et lance-toi vite dans les leçons !";
 
   return (
     <div className="dashboard-container">
@@ -55,6 +56,15 @@ export default function UnitDashboard() {
               audioSrc="/audio/unit1_intro_lea.mp3" 
               name="Léa" 
               speechFallbackText={leaUnit1Script}
+            />
+          )}
+
+          {unitId === '2' && (
+            <UnitAvatarSpeaker 
+              avatar="hugo" 
+              audioSrc="/audio/unit2_intro_hugo.mp3" 
+              name="Hugo" 
+              speechFallbackText={hugoUnit2Script}
             />
           )}
         </div>
