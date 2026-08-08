@@ -43,53 +43,55 @@ export default function UnitDashboard() {
 
   return (
     <div className="dashboard-container">
-      <header className="dashboard-header glass-panel" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1.5rem' }}>
-        <div>
-          <p className="unit-subtitle">Module de cours</p>
-          <h2 className="unit-title text-gradient">{unitTitle}</h2>
+      <header className="dashboard-header glass-panel" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1.2rem', padding: '1.2rem 2rem' }}>
+        <div style={{ textAlign: 'left', flexShrink: 0 }}>
+          <p className="unit-subtitle" style={{ textAlign: 'left', margin: 0, marginBottom: '0.2rem' }}>Module de cours</p>
+          <h2 className="unit-title text-gradient" style={{ textAlign: 'left', margin: 0 }}>{unitTitle}</h2>
         </div>
         
-        <div className="tabs-container">
-          {TABS.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                <Icon size={18} />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1.2rem', flexWrap: 'wrap', marginLeft: 'auto' }}>
+          <div className="tabs-container" style={{ margin: 0, alignSelf: 'flex-end' }}>
+            {TABS.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  <Icon size={18} />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {unitId === '1' && (
+            <UnitAvatarSpeaker 
+              avatar="lea" 
+              audioSrc="/audio/unit1_intro_lea.mp3" 
+              name="Léa" 
+              speechFallbackText={leaUnit1Script}
+            />
+          )}
+
+          {unitId === '2' && (
+            <UnitAvatarSpeaker 
+              avatar="hugo" 
+              audioSrc="/audio/unit2_intro_hugo.mp3" 
+              name="Hugo" 
+              speechFallbackText={hugoUnit2Script}
+            />
+          )}
+
+          {unitId === '3' && (
+            <UnitAvatarSpeaker 
+              avatar="duo" 
+              audioSrc="/audio/unit3_intro_duo.mp3" 
+              name="Léa & Hugo" 
+            />
+          )}
         </div>
-
-        {unitId === '1' && (
-          <UnitAvatarSpeaker 
-            avatar="lea" 
-            audioSrc="/audio/unit1_intro_lea.mp3" 
-            name="Léa" 
-            speechFallbackText={leaUnit1Script}
-          />
-        )}
-
-        {unitId === '2' && (
-          <UnitAvatarSpeaker 
-            avatar="hugo" 
-            audioSrc="/audio/unit2_intro_hugo.mp3" 
-            name="Hugo" 
-            speechFallbackText={hugoUnit2Script}
-          />
-        )}
-
-        {unitId === '3' && (
-          <UnitAvatarSpeaker 
-            avatar="duo" 
-            audioSrc="/audio/unit3_intro_duo.mp3" 
-            name="Léa & Hugo" 
-          />
-        )}
       </header>
 
       <div className="dashboard-content">
