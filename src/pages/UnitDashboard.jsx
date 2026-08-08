@@ -43,8 +43,8 @@ export default function UnitDashboard() {
 
   return (
     <div className="dashboard-container">
-      <header className="dashboard-header glass-panel" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+      <header className="dashboard-header glass-panel" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem', flex: 1, minWidth: '300px' }}>
           <div>
             <p className="unit-subtitle">Module de cours</p>
             <h2 className="unit-title text-gradient">{unitTitle}</h2>
