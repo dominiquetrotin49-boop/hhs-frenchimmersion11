@@ -10,6 +10,7 @@ import Fishtopia from '../components/games/Fishtopia';
 import DontLookDown from '../components/games/DontLookDown';
 import VocabFillInTheBlank from '../components/VocabFillInTheBlank';
 import GrammarSection from '../components/GrammarSection';
+import UnitAvatarSpeaker from '../components/UnitAvatarSpeaker';
 import './UnitDashboard.css';
 
 const TABS = [
@@ -37,12 +38,25 @@ export default function UnitDashboard() {
   else if (unitId === '6') specificTitle = ' - Halte aux inégalités';
   const unitTitle = isFilm ? `Mini-unité Film ${unitId.replace('film', '')}` : `Unité ${unitId}${specificTitle}`;
 
+  const leaUnit1Script = "Salut tout le monde ! Bienvenue dans l'Unité 1 consacrée à la liberté de la presse et au monde des médias ! Dans cette unité, tu vas te glisser dans la peau d'un vrai journaliste. Tu vas apprendre le vocabulaire des médias, réviser la conjugaison des verbes au présent, et découvrir comment exprimer ton opinion avec conviction. N'oublie pas de tester nos jeux interactifs comme le Scoop Race et la Rédaction en Action ! Alors, prêt à décrocher ton premier scoop ? Choisis une section ci-dessous pour démarrer !";
+
   return (
     <div className="dashboard-container">
-      <header className="dashboard-header glass-panel">
-        <div>
-          <p className="unit-subtitle">Module de cours</p>
-          <h2 className="unit-title text-gradient">{unitTitle}</h2>
+      <header className="dashboard-header glass-panel" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div>
+            <p className="unit-subtitle">Module de cours</p>
+            <h2 className="unit-title text-gradient">{unitTitle}</h2>
+          </div>
+
+          {unitId === '1' && (
+            <UnitAvatarSpeaker 
+              avatar="lea" 
+              audioSrc="/audio/unit1_intro_lea.mp3" 
+              name="Léa" 
+              speechFallbackText={leaUnit1Script}
+            />
+          )}
         </div>
         
         <div className="tabs-container">
