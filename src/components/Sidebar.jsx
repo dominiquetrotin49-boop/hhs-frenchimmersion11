@@ -36,7 +36,7 @@ export default function Sidebar() {
               <BookOpen className="nav-icon" style={{ color: '#fbbf24' }} size={20} />
               <div className="nav-text">
                 <span className="unit-name" style={{ color: '#fbbf24', fontWeight: 'bold' }}>Roman Interactif</span>
-                <span className="unit-title" style={{ color: '#fcd34d' }}>Léa & Hugo (6 Chapitres)</span>
+                <span className="unit-title" style={{ color: '#fcd34d' }}>Le Secret du Manuscrit</span>
               </div>
             </NavLink>
           </li>
