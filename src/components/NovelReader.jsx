@@ -120,34 +120,8 @@ export default function NovelReader({ onBack }) {
           >
             <span className="chapter-num">{ch.number}</span>
             <span className="chapter-tab-title">{ch.title}</span>
-            <span className="narrator-mini-badge">
-              {ch.narrator === 'lea' ? '👩‍🎓 Léa' : '👨‍🎓 Hugo'}
-            </span>
           </button>
         ))}
-      </div>
-
-      {/* Chapter Header Banner */}
-      <div className="chapter-overview-box glass-panel">
-        <div className="narrator-banner">
-          <div className="narrator-avatar-box">
-            <img
-              src={isNarratorLea ? "/avatars/lea.jpg" : "/avatars/hugo.jpg"}
-              alt={chapter.narratorName}
-              className="narrator-img"
-            />
-            <div>
-              <span className="narrator-role-pill">
-                🎙️ Narré par {chapter.narratorName}
-              </span>
-              <p className="narrator-subtext">Récit immersif (3 Pages par chapitre)</p>
-            </div>
-          </div>
-          <div className="chapter-meta-tag">
-            <span className="meta-pill theme-pill">📌 {chapter.theme}</span>
-            <span className="meta-pill grammar-pill">💡 {chapter.grammarFocus}</span>
-          </div>
-        </div>
       </div>
 
       {/* Subtabs (Lecture, Vocabulaire, Quiz) */}
@@ -200,7 +174,7 @@ export default function NovelReader({ onBack }) {
                 onClick={playPageAudio}
               >
                 {isPlayingAudio ? <Pause size={18} /> : <Volume2 size={18} />}
-                <span>{isPlayingAudio ? "Pause" : `Écouter la page (Voix de ${chapter.narratorName})`}</span>
+                <span>{isPlayingAudio ? "Pause" : "Écouter la page"}</span>
               </button>
             </div>
 
