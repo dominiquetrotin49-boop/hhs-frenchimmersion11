@@ -178,6 +178,16 @@ export default function NovelReader({ onBack }) {
               </button>
             </div>
 
+            {activePageIdx === 0 && chapter.image && (
+              <div className="chapter-scene-image-box" style={{ marginBottom: '1.5rem', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
+                <img
+                  src={chapter.image}
+                  alt={`Scène clé du ${chapter.number}`}
+                  style={{ width: '100%', maxHeight: '420px', objectFit: 'cover', display: 'block' }}
+                />
+              </div>
+            )}
+
             <div className="page-body-text">
               <p>{currentPage.text}</p>
             </div>
