@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Volume2, VolumeX, CheckCircle, HelpCircle, ArrowRight, ArrowLeft, Award, Search, Sparkles, UserCheck, Play, Pause } from 'lucide-react';
+import { BookOpen, Volume2, VolumeX, CheckCircle, HelpCircle, ArrowRight, ArrowLeft, Award, Search, Sparkles, UserCheck, Play, Pause, ChevronRight, ChevronLeft } from 'lucide-react';
 import { NOVEL_CHAPTERS } from '../data/novelData';
 import './NovelReader.css';
 
 export default function NovelReader({ onBack }) {
   const [activeChapterIdx, setActiveChapterIdx] = useState(0);
+  const [activePageIdx, setActivePageIdx] = useState(0);
   const [activeTab, setActiveTab] = useState('reading'); // 'reading', 'vocab', 'quiz'
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [currentLineIdx, setCurrentLineIdx] = useState(null);
+  const [activeAudioObj, setActiveAudioObj] = useState(null);
   
   // Quiz state
   const [quizAnswers, setQuizAnswers] = useState({});
@@ -15,74 +16,63 @@ export default function NovelReader({ onBack }) {
   const [quizScore, setQuizScore] = useState(0);
 
   const chapter = NOVEL_CHAPTERS[activeChapterIdx];
+  const currentPage = chapter.pages[activePageIdx];
+  const isNarratorLea = chapter.narrator === 'lea';
 
-  const [activeAudioObj, setActiveAudioObj] = useState(null);
-
-  // Stop audio speech on chapter change or unmount
+  // Reset page and audio on chapter change
   useEffect(() => {
-    if (activeAudioObj) {
-      activeAudioObj.pause();
-    }
-    window.speechSynthesis.cancel();
-    setIsPlayingAudio(false);
-    setCurrentLineIdx(null);
+    stopAudio();
+    setActivePageIdx(0);
     setQuizAnswers({});
     setQuizSubmitted(false);
     setQuizScore(0);
   }, [activeChapterIdx]);
 
-  const speakLine = (line, idx) => {
+  // Reset audio on page change
+  useEffect(() => {
+    stopAudio();
+  }, [activePageIdx]);
+
+  const stopAudio = () => {
     if (activeAudioObj) {
       activeAudioObj.pause();
       setActiveAudioObj(null);
     }
     window.speechSynthesis.cancel();
+    setIsPlayingAudio(false);
+  };
 
-    if (isPlayingAudio && currentLineIdx === idx) {
-      setIsPlayingAudio(false);
-      setCurrentLineIdx(null);
+  const playPageAudio = () => {
+    if (isPlayingAudio) {
+      stopAudio();
       return;
     }
 
-    if (line.audioSrc) {
-      const audio = new Audio(line.audioSrc);
+    if (currentPage.audioSrc) {
+      const audio = new Audio(currentPage.audioSrc);
       setActiveAudioObj(audio);
       setIsPlayingAudio(true);
-      setCurrentLineIdx(idx);
 
       audio.onended = () => {
         setIsPlayingAudio(false);
-        setCurrentLineIdx(null);
         setActiveAudioObj(null);
       };
 
       audio.onerror = () => {
         setIsPlayingAudio(false);
-        setCurrentLineIdx(null);
         setActiveAudioObj(null);
       };
 
-      audio.play().catch(e => console.log("Audio play error:", e));
+      audio.play().catch(e => console.log("Audio playback error:", e));
     } else {
-      const utterance = new SpeechSynthesisUtterance(line.audioText);
+      const utterance = new SpeechSynthesisUtterance(currentPage.text);
       utterance.lang = 'fr-FR';
-      utterance.rate = line.speaker === 'lea' ? 0.92 : 0.95;
-      utterance.pitch = line.speaker === 'lea' ? 1.25 : 1.20;
+      utterance.rate = isNarratorLea ? 0.92 : 0.95;
+      utterance.pitch = isNarratorLea ? 1.25 : 1.20;
 
-      utterance.onstart = () => {
-        setIsPlayingAudio(true);
-        setCurrentLineIdx(idx);
-      };
-
-      utterance.onend = () => {
-        setIsPlayingAudio(false);
-        setCurrentLineIdx(null);
-      };
-
-      utterance.onerror = () => {
-        setIsPlayingAudio(false);
-        setCurrentLineIdx(null);
-      };
+      utterance.onstart = () => setIsPlayingAudio(true);
+      utterance.onend = () => setIsPlayingAudio(false);
+      utterance.onerror = () => setIsPlayingAudio(false);
 
       window.speechSynthesis.speak(utterance);
     }
@@ -109,9 +99,9 @@ export default function NovelReader({ onBack }) {
       {/* Novel Header */}
       <div className="novel-header">
         <div className="novel-header-info">
-          <span className="novel-badge">📖 Roman Interactif — French 11 Immersion</span>
-          <h1 className="novel-main-title">Le Secret du Manuscrit Francophone</h1>
-          <p className="novel-subtitle">Suivez les aventures de Léa & Hugo à travers 6 chapitres thématiques !</p>
+          <span className="novel-badge">📖 Roman Interactif — Le Secret du Manuscrit</span>
+          <h1 className="novel-main-title">{chapter.number} : {chapter.title}</h1>
+          <p className="novel-subtitle">Une aventure en 6 chapitres racontée à tour de rôle par Léa et Hugo</p>
         </div>
         {onBack && (
           <button className="novel-back-btn" onClick={onBack}>
@@ -120,7 +110,7 @@ export default function NovelReader({ onBack }) {
         )}
       </div>
 
-      {/* Chapter Navigation Tabs */}
+      {/* Chapter Navigation Bar */}
       <div className="chapter-selector-container">
         {NOVEL_CHAPTERS.map((ch, idx) => (
           <button
@@ -130,28 +120,44 @@ export default function NovelReader({ onBack }) {
           >
             <span className="chapter-num">{ch.number}</span>
             <span className="chapter-tab-title">{ch.title}</span>
+            <span className="narrator-mini-badge">
+              {ch.narrator === 'lea' ? '👩‍🎓 Léa' : '👨‍🎓 Hugo'}
+            </span>
           </button>
         ))}
       </div>
 
-      {/* Chapter Overview Box */}
+      {/* Chapter Header Banner */}
       <div className="chapter-overview-box glass-panel">
-        <div className="chapter-meta-tag">
-          <span className="meta-pill theme-pill">📌 {chapter.theme}</span>
-          <span className="meta-pill grammar-pill">💡 Grammaire : {chapter.grammarFocus}</span>
+        <div className="narrator-banner">
+          <div className="narrator-avatar-box">
+            <img
+              src={isNarratorLea ? "/avatars/lea.jpg" : "/avatars/hugo.jpg"}
+              alt={chapter.narratorName}
+              className="narrator-img"
+            />
+            <div>
+              <span className="narrator-role-pill">
+                🎙️ Narré par {chapter.narratorName}
+              </span>
+              <p className="narrator-subtext">Récit immersif (3 Pages par chapitre)</p>
+            </div>
+          </div>
+          <div className="chapter-meta-tag">
+            <span className="meta-pill theme-pill">📌 {chapter.theme}</span>
+            <span className="meta-pill grammar-pill">💡 {chapter.grammarFocus}</span>
+          </div>
         </div>
-        <h2 className="chapter-title">{chapter.number} : {chapter.title}</h2>
-        <p className="chapter-summary">{chapter.summary}</p>
       </div>
 
-      {/* Inner Subtabs (Lecture, Vocabulaire, Quiz) */}
+      {/* Subtabs (Lecture, Vocabulaire, Quiz) */}
       <div className="novel-subtabs">
         <button
           className={`subtab-btn ${activeTab === 'reading' ? 'active' : ''}`}
           onClick={() => setActiveTab('reading')}
         >
           <BookOpen size={18} />
-          <span>Lecture & Audio ({chapter.content.length} répliques)</span>
+          <span>Lecture ({activePageIdx + 1}/3 Pages)</span>
         </button>
         <button
           className={`subtab-btn ${activeTab === 'vocab' ? 'active' : ''}`}
@@ -165,57 +171,77 @@ export default function NovelReader({ onBack }) {
           onClick={() => setActiveTab('quiz')}
         >
           <HelpCircle size={18} />
-          <span>Questions de Compréhension</span>
+          <span>Quiz du Chapitre</span>
         </button>
       </div>
 
-      {/* SUBTAB 1 : READING & AUDIO */}
+      {/* SUBTAB 1 : READING & MULTI-PAGE NARRATIVE */}
       {activeTab === 'reading' && (
         <div className="novel-reading-section">
-          <div className="story-dialogue-list">
-            {chapter.content.map((line, idx) => {
-              const isLea = line.speaker === 'lea';
-              const isCurrentPlaying = isPlayingAudio && currentLineIdx === idx;
-              return (
-                <div
-                  key={line.id}
-                  className={`dialogue-card ${isLea ? 'lea-card' : 'hugo-card'} ${isCurrentPlaying ? 'playing-glow' : ''}`}
-                >
-                  <div className="avatar-side">
-                    <img
-                      src={isLea ? "/avatars/lea.jpg" : "/avatars/hugo.jpg"}
-                      alt={line.speakerName}
-                      className="speaker-avatar-img"
-                    />
-                    <span className={`speaker-badge ${isLea ? 'lea-badge' : 'hugo-badge'}`}>
-                      {line.speakerName}
-                    </span>
-                  </div>
-
-                  <div className="speech-content-side">
-                    <p className="speech-text">{line.text}</p>
-                    <button
-                      className={`audio-listen-btn ${isCurrentPlaying ? 'active-audio' : ''}`}
-                      onClick={() => speakLine(line, idx)}
-                    >
-                      {isCurrentPlaying ? <Pause size={16} /> : <Volume2 size={16} />}
-                      <span>{isCurrentPlaying ? "Pause" : `Écouter (${line.speakerName})`}</span>
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
+          {/* Page Switcher Tabs */}
+          <div className="page-switcher-bar">
+            {chapter.pages.map((p, pIdx) => (
+              <button
+                key={p.pageNumber}
+                className={`page-tab-btn ${activePageIdx === pIdx ? 'active' : ''}`}
+                onClick={() => setActivePageIdx(pIdx)}
+              >
+                <span>{p.title}</span>
+              </button>
+            ))}
           </div>
 
-          <div className="reading-actions">
-            {activeChapterIdx < NOVEL_CHAPTERS.length - 1 && (
+          {/* Book Page Card */}
+          <div className={`book-page-card glass-panel ${isPlayingAudio ? 'audio-active-glow' : ''}`}>
+            <div className="page-card-header">
+              <h3 className="page-heading">{currentPage.title}</h3>
               <button
-                className="next-chapter-btn"
-                onClick={() => setActiveChapterIdx(activeChapterIdx + 1)}
+                className={`page-audio-btn ${isPlayingAudio ? 'playing' : ''}`}
+                onClick={playPageAudio}
               >
-                <span>Chapitre Suivant : {NOVEL_CHAPTERS[activeChapterIdx + 1].title}</span>
-                <ArrowRight size={18} />
+                {isPlayingAudio ? <Pause size={18} /> : <Volume2 size={18} />}
+                <span>{isPlayingAudio ? "Pause" : `Écouter la page (Voix de ${chapter.narratorName})`}</span>
               </button>
+            </div>
+
+            <div className="page-body-text">
+              <p>{currentPage.text}</p>
+            </div>
+          </div>
+
+          {/* Bottom Page Navigation Controls */}
+          <div className="page-nav-controls">
+            <button
+              className="page-nav-btn"
+              onClick={() => setActivePageIdx(activePageIdx - 1)}
+              disabled={activePageIdx === 0}
+            >
+              <ChevronLeft size={20} />
+              <span>Page Précédente</span>
+            </button>
+
+            <span className="page-indicator">
+              Page {activePageIdx + 1} sur {chapter.pages.length}
+            </span>
+
+            {activePageIdx < chapter.pages.length - 1 ? (
+              <button
+                className="page-nav-btn primary"
+                onClick={() => setActivePageIdx(activePageIdx + 1)}
+              >
+                <span>Page Suivante</span>
+                <ChevronRight size={20} />
+              </button>
+            ) : (
+              activeChapterIdx < NOVEL_CHAPTERS.length - 1 && (
+                <button
+                  className="page-nav-btn accent"
+                  onClick={() => setActiveChapterIdx(activeChapterIdx + 1)}
+                >
+                  <span>Chapitre Suivant : {NOVEL_CHAPTERS[activeChapterIdx + 1].title}</span>
+                  <ArrowRight size={20} />
+                </button>
+              )
             )}
           </div>
         </div>
@@ -274,15 +300,15 @@ export default function NovelReader({ onBack }) {
               <p className="score-value">{quizScore} / {chapter.quiz.length * 100} pts</p>
               <p className="score-feedback">
                 {quizScore === chapter.quiz.length * 100
-                  ? "Félicitations ! Vous avez parfaitement compris le chapitre !"
-                  : "Bon travail ! Relisez le texte et la fiche de vocabulaire pour viser le 100%."}
+                  ? "Félicitations ! Vous avez parfaitement compris ce chapitre !"
+                  : "Bon travail ! Relisez les 3 pages pour réussir le quiz à 100%."}
               </p>
 
               <div className="quiz-review-list">
                 {chapter.quiz.map((q) => (
                   <div key={q.id} className="review-item text-left">
                     <p className="review-q"><strong>{q.id}. {q.question}</strong></p>
-                    <p className="review-explanation">💡 Explanation : {q.explanation}</p>
+                    <p className="review-explanation">💡 Explication : {q.explanation}</p>
                   </div>
                 ))}
               </div>
