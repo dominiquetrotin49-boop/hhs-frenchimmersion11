@@ -178,8 +178,14 @@ export default function NovelReader({ onBack }) {
               </button>
             </div>
 
+            {/* Centered Chapter Title Block matching PDF document layout */}
+            <div className="pdf-chapter-header">
+              <h2 className="pdf-chapter-num">{chapter.number}</h2>
+              <h3 className="pdf-chapter-title">{chapter.title}</h3>
+            </div>
+
             {activePageIdx === 0 && chapter.image && (
-              <div className="chapter-scene-image-box" style={{ marginBottom: '1.5rem', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
+              <div className="chapter-scene-image-box" style={{ margin: '1.5rem 0', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
                 <img
                   src={chapter.image}
                   alt={`Scène clé du ${chapter.number}`}
@@ -188,8 +194,21 @@ export default function NovelReader({ onBack }) {
               </div>
             )}
 
-            <div className="page-body-text">
-              <p>{currentPage.text}</p>
+            <div className="page-body-text pdf-prose">
+              {currentPage.text.split('\n\n').map((paragraph, pIdx) => {
+                // Highlight words in parentheses as bold blue like in the PDF
+                const parts = paragraph.split(/(\([a-zA-Z\s,-]+\))/g);
+                return (
+                  <p key={pIdx} className="pdf-paragraph">
+                    {parts.map((part, partIdx) => {
+                      if (part.startsWith('(') && part.endsWith(')')) {
+                        return <strong key={partIdx} className="inline-translation">{part}</strong>;
+                      }
+                      return part;
+                    })}
+                  </p>
+                );
+              })}
             </div>
           </div>
 

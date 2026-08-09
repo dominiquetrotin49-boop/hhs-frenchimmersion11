@@ -8,59 +8,46 @@ export const NOVEL_CHAPTERS = [
     image: "/images/novel_c1.jpg",
     theme: "Médias, Presse & Opinion",
     grammarFocus: "Présent de l'indicatif & Expressions d'opinion",
-    summary: "Raconte par Léa. Léa, Hugo et leurs amis Antoine et Camille découvrent un mystérieux carnet ancien dissimulé dans les archives secretes du journal du lycée.",
+    summary: "Un peu plus tard, Léa, Hugo, Antoine et Camille se retrouvent dans le local du journal du lycée pour ranger les archives et découvrent un carnet ancien.",
     pages: [
       {
         pageNumber: 1,
         title: "Page 1 : La Rédaction du Journal",
         audioSrc: "/audio/novel_c1_page1.mp3",
-        text: "Il est dix-sept heures trente un mardi après-midi particulièrement pluvieux. Les gouttes d'eau tapent régulièrement contre les hautes fenêtres du sous-sol du lycée Harwood. Je m'appelle Léa, je suis en classe de première immersion et j'occupe avec fierté le poste de rédactrice en chef du journal de notre école. Cet après-midi, l'ambiance dans notre local de rédaction est chaleureuse mais studieuse. La pièce sent bon le papier fraîchement imprimé, le café chaud et l'encre des vieux journaux.\n\nÀ côté de moi, mon meilleur ami Hugo ajuste soigneusement l'objectif de son nouvel appareil photo reflex. Il adore capturer des moments sur le vif pour illustrer nos futurs articles. En face de nous, Antoine, le génie de l'informatique du groupe, tape rapidement sur son clavier d'ordinateur en vérifiant la mise en page du prochain numéro. Notre amie Camille, une artiste au coup de crayon exceptionnel, dessine des illustrations pour la rubrique culturelle.\n\nPendant que l'équipe termine la relecture des pages de couverture, je décide d'effectuer un grand nettoyage dans le fond de la pièce. Derrière l'immense armoire en métal où nous conservons les archives, je remarque une vieille étagère en bois recouverte d'une épaisse couche de poussière. En déplaçant une lourde pile de journaux datant de 1985, mes doigts touchent soudain un coffret en bois sculpté, fermé par une petite serrure rouillée. Je m'exclame aussitôt : 'Regardez tous ! Venez voir ici ! À mon avis, personne n'a touché à ce coffret depuis au moins quarante ans !'"
+        text: "Un peu plus tard par un mardi après-midi particulièrement pluvieux, Léa, Hugo, Antoine et Camille se retrouvent dans le local du journal du lycée Harwood. Les gouttes d'eau tapent régulièrement contre les hautes fenêtres du sous-sol. La pièce sent bon le papier fraîchement imprimé, le café chaud et l'encre des vieux journaux.\n\nLéa est la rédactrice en chef du journal. Elle veut être sûre d'organiser une édition spéciale mémorable. À côté d'elle, son ami Hugo ajuste soigneusement l'objectif de son appareil photo. En face, Antoine, le spécialiste informatique, vérifie la mise en page numérique, tandis que Camille dessine des illustrations pour la rubrique culturelle.\n\nPendant que l'équipe termine la relecture, Léa décide d'effectuer un grand nettoyage dans le fond de la pièce. Derrière une lourde pile de journaux datant de 1985, ses doigts touchent soudain un coffret en bois sculpté, fermé par une petite serrure rouillée.\n\n- Regardez tous ! venez voir ici ! dit Léa. À mon avis, personne n'a touché à ce coffret depuis au moins quarante ans !\n\n- Ouah ! dit Camille. C'est assez intrigant. Je me demande ce qu'il contient !"
       },
       {
         pageNumber: 2,
         title: "Page 2 : La Légende du Journaliste Disparu",
         audioSrc: "/audio/novel_c1_page2.mp3",
-        text: "Hugo pose immédiatement son chocolat chaud, attrape son appareil et s'approche à grands pas pour prendre une série de photographies sous tous les angles. Antoine s'avance avec sa boîte à outils et, avec une habileté surprenante, réussit à débloquer le vieux cadenas rouillé sans abîmer le bois.\n\nPendant qu'Antoine manipule la serrure, Camille se rappelle une histoire passionnante : 'Vous souvenez-vous de la légende urbaine de notre lycée ? Dans les années 1990, un élève journaliste très talentueux enquêtait sur un grand projet de rénovation de la ville. Un jour, il a subitement arrêté de publier des articles après avoir découvert un secret important !'\n\nAntoine pousse un soupir de soulagement lorsque la serrure cède enfin avec un petit déclic. Le couvercle du coffret en bois s'ouvre doucement, libérant une légère odeur de vieux papier et de cire d'abeille. À l'intérieur, reposant sur un morceau de velours rouge fané par le temps, nous découvrons un magnifique carnet relié en cuir sombre. Sur la couverture, un symbole intrigant est gravé à la feuille d'or : une boussole dorée entrelacée avec une élégante plume d'écriture. Camille se penche pour observer les détails et s'écrie : 'D'après moi, ce n'est pas un simple cahier de cours, c'est le carnet secret de cet ancien journaliste !'"
+        text: "Hugo pose immédiatement son chocolat chaud et s'approche avec son appareil photo. Antoine s'avance avec sa boîte à outils pour tenter de débloquer le vieux cadenas (padlock) sans abîmer le bois.\n\nPendant qu'Antoine manipule la serrure, Camille se rappelle une histoire passionnante du passé.\n\n- Vous souvenez-vous de la légende urbaine de notre lycée ? demande Camille. Dans les années 1990, un élève journaliste très doué enquêtait sur un secret municipal. Un jour, il a subitement arrêté de publier après avoir découvert une piste majeure !\n\nAntoine pousse un soupir de soulagement lorsque la serrure cède enfin avec un petit déclic. Le couvercle s'ouvre doucement. À l'intérieur, reposant sur du velours rouge fané, se trouve un magnifique carnet relié en cuir sombre. Sur la couverture, un symbole est gravé à la feuille d'or : une boussole (compass) entrelacée avec une plume d'écriture.\n\n- D'après moi, dit Camille, ce n'est pas un simple cahier de cours, c'est le carnet secret de cet ancien journaliste !"
       },
       {
         pageNumber: 3,
         title: "Page 3 : La Lecture du Manuscrit Secret",
         audioSrc: "/audio/novel_c1_page3.mp3",
-        text: "Je tourne délicatement la première page jaunie par les années. L'écriture est fine, manuscrite et rédigée avec une encre bleue remarquable qui a conservé toute sa clarté. Je commence à lire le texte à voix haute devant mes camarades attentifs :\n\n'À ceux qui cherchent la vérité avec courage et curiosité : la mémoire de notre chère ville de Harwood est préservée dans cinq trésors du patrimoine culturel et naturel. Ceux qui sauront observer attentivement trouveront le chemin de la justice.'\n\nSous ce message inspirant se trouve une énigme rédigée en vers : 'Le premier secret repose là où la jeunesse imagine et construit l'école de demain...' Hugo s'approche de l'étagère et prend une photo de la page originale. Je regarde mes camarades avec beaucoup d'émotion. Selon moi, nous venons de découvrir le plus grand mystère de l'histoire de notre lycée et nous avons le devoir de comprendre ce qu'il s'est passé !"
+        text: "Léa tourne délicatement la première page jaunie par les années. L'écriture manuscrite est rédigée avec une encre bleue remarquable qui a conservé toute sa clarté.\n\n- Écoutez ce qui est écrit, dit Léa en lisant à voix haute : À ceux qui cherchent la vérité avec courage : la mémoire de notre ville de Harwood est préservée dans cinq trésors du patrimoine (heritage). Ceux qui sauront observer trouveront le chemin.\n\nSous ce message se trouve une énigme rédigée en vers : Le premier secret repose là où la jeunesse imagine et construit l'école de demain...\n\n- C'est incroyable ! dit Hugo en prenant une photo de la page. Je pense que nous tenons notre premier grand scoop (exclusive news) !\n\n- Je suis absolument d'accord avec Hugo, dit Antoine. Mais il faut procéder avec méthode et vérifier nos sources (sources)."
       },
       {
         pageNumber: 4,
         title: "Page 4 : La Décision et l'Éthique du Groupe",
         audioSrc: "/audio/novel_c1_page4.mp3",
-        text: "Hugo se tourne vers moi, les yeux pétillants d'enthousiasme : 'Léa, je pense que nous tenons notre tout premier grand scoop pour l'édition spéciale de notre journal ! Si nous résolvons cette énigme, nous pourrons publier une série de reportages fascinants !'\n\nAntoine ajoute avec prudence : 'Cependant, en tant que vrais journalistes, nous devons d'abord vérifier toutes nos sources avec rigueur. Nous ne pouvons pas publier des rumeurs sans preuves concrètes.' Je suis tout à fait d'accord avec Antoine. En tant que jeunes reporters passionnés, nous respectons scrupuleusement la liberté de la presse, le travail d'investigation rigoureux et l'éthique de la vérité.\n\nCamille lève le doigt avec assurance : 'Je sais où se trouve le premier indice ! C'est une référence évidente au tout nouveau campus éco-responsable qui vient d'ouvrir ses portes de l'autre côté de la ville !'\n\nNous nous tapons dans les mains avec enthousiasme. L'équipe est au complet et parfaitement organisée. Demain matin dès la première heure, notre grande investigation démarre sur le terrain !"
+        text: "Léa réfléchit un petit instant devant ses camarades passionnés.\n\n- En tant que jeunes reporters, dit Léa, nous devons respecter la liberté de la presse (freedom of the press) et l'éthique (ethics) du métier. Nous ne pouvons pas publier des rumeurs sans preuves concrètes.\n\n- C'est très juste ! dit Camille. Et j'ai une idée ! L'énigme parle de l'école de demain. C'est une référence évidente au tout nouveau campus éco-responsable qui vient d'ouvrir ses portes de l'autre côté de la ville !\n\n- Super ! répond Léa. Demain matin dès la première heure, notre investigation démarre sur le terrain.\n\n- Oui ! ajoute Hugo. Je vais préparer tous les objectifs de mon appareil photo pour capturer chaque indice.\n\n- Très bonne idée ! répond Léa avec enthousiasme."
       }
     ],
     vocabList: [
-      { word: "Un scoop", definition: "Une information exclusive et sensationnelle publiée en premier par un journaliste." },
-      { word: "La rédaction", definition: "L'équipe de journalistes et le bureau où est préparé le journal." },
-      { word: "À mon avis / D'après moi / Selon moi", definition: "Expressions essentielles pour exprimer son opinion personnelle avec nuance et précision." },
-      { word: "Vérifier ses sources", definition: "Confirmer l'exactitude d'une information auprès de témoins crédibles ou de documents certifiés." },
-      { word: "La liberté de la presse", definition: "Le droit fondamental des journalistes de diffuser la vérité sans censure ni intimidation." },
-      { word: "L'éthique journalistique", definition: "L'ensemble des règles morales qui guident le travail des médias (honnêteté, rigueur, vérité)." }
+      { word: "Un scoop (exclusive news)", definition: "Une information exclusive et sensationnelle publiée par un journaliste." },
+      { word: "La boussole (compass)", definition: "Un instrument de navigation indiquant la direction du nord." },
+      { word: "Le patrimoine (heritage)", definition: "L'ensemble des biens culturels et historiques transmis par les générations passées." },
+      { word: "La liberté de la presse (freedom of the press)", definition: "Le droit fondamental de diffuser la vérité sans censure." }
     ],
     quiz: [
       {
         id: 1,
-        question: "Combien de pages compte désormais le Chapitre 1 du roman ?",
-        options: ["1 page", "2 pages", "4 pages complètes"],
-        correctIdx: 2,
-        explanation: "Chaque chapitre du roman est composé de 4 pages de récit."
-      },
-      {
-        id: 2,
-        question: "Quelle légende urbaine du lycée Camille se rappelle-t-elle à la Page 2 ?",
-        options: [
-          "L'histoire d'un fantôme dans la cantine.",
-          "L'histoire d'un élève journaliste de 1990 qui enquêtait sur un grand secret de la ville.",
-          "L'histoire d'un voleur de vélos."
-        ],
-        correctIdx: 1,
-        explanation: "Camille raconte la légende de l'élève journaliste des années 1990."
+        question: "Qui découvre le coffret en bois dans le fond du local ?",
+        options: ["Léa", "Hugo", "Antoine"],
+        correctIdx: 0,
+        explanation: "Léa découvre le coffret dissimulé derrière les archives de 1985."
       }
     ]
   },
@@ -73,47 +60,45 @@ export const NOVEL_CHAPTERS = [
     image: "/images/novel_c2.jpg",
     theme: "Éducation & Projets d'Avenir",
     grammarFocus: "Verbes pronominaux & Conditionnel de souhait",
-    summary: "Raconte par Hugo. Hugo, Léa, Amadou et Zoé explorent le nouveau campus écologique pour retrouver le deuxième secret du carnet.",
+    summary: "Le lendemain matin, Hugo, Léa, Amadou et Zoé explorent le nouveau campus éco-responsable pour retrouver la stèle historique de 1990.",
     pages: [
       {
         pageNumber: 1,
         title: "Page 1 : L'Arrivée sur le Campus Futuriste",
         audioSrc: "/audio/novel_c2_page1.mp3",
-        text: "Bonjour à tous, ici Hugo ! C'est mon tour de prendre le micro et de vous raconter la suite de notre folle enquête. Dès le mercredi matin à huit heures, notre groupe se retrouve devant la grande grille du nouveau campus éco-responsable de Harwood. Le bâtiment est d'une beauté architecturale impressionnante : des murs végétalisés, d'immenses baies vitrées captant la lumière naturelle et de grands panneaux solaires étincelants sur les toits.\n\nPour cette visite sur le terrain, nous sommes accompagnés par Amadou, notre ami passionné d'écologie et de sciences naturelles, et Zoé, la présidente du club de théâtre de notre lycée. En traversant le hall d'entrée, nous observons avec émerveillement l'organisation des lieux. Les élèves se déplacent calmement, se saluent chaleureusement et s'installent dans de confortables espaces de travail modulables.\n\nSi j'avais la chance d'étudier ici, j'aimerais profiter des laboratoires de médias et des studios de photographie ultramodernes ! Tout le monde s'entraide spontanément et se passionne pour des projets d'innovation. Pendant que Léa ajuste son carnet de notes et qu'Amadou examine les installations écologiques, je prépare mon objectif photo pour immortaliser ce modèle d'école du futur."
+        text: "Dès le lendemain matin à huit heures, Hugo, Léa, Amadou et Zoé se retrouvent devant la grande grille du nouveau campus éco-responsable de Harwood. Le bâtiment est d'une beauté architecturale impressionnante, avec des murs végétalisés et de grands panneaux solaires (solar panels) sur les toits.\n\nAmadou est passionné d'écologie, tandis que Zoé est la présidente du club de théâtre. Les élèves se déplacent calmement dans les couloirs et s'entraident (help each other) avec le sourire.\n\n- Si j'avais la chance d'étudier ici, dit Hugo, j'aimerais profiter des laboratoires de médias et des studios de photographie ultramodernes !\n\n- C'est un endroit magnifique, répond Léa. Tout le monde semble très enthousiaste."
       },
       {
         pageNumber: 2,
         title: "Page 2 : La Rencontre avec le Professeur d'Histoire",
         audioSrc: "/audio/novel_c2_page2.mp3",
-        text: "En déambulant dans les couloirs lumineux, nous croisons Monsieur Dubois, le professeur d'histoire senior qui enseignait déjà dans l'ancien établissement. Zoé s'approche de lui avec aisance : 'Bonjour Monsieur Dubois ! Auriez-vous un instant à nous accorder pour notre journal ? Nous aimerions en savoir plus sur l'histoire de la reconstruction du lycée.'\n\nMonsieur Dubois sourit tristement et nous raconte : 'Ah, l'ancienne école de 1990 ! C'était un bâtiment ancien rempli de charme. Je me souviens particulièrement d'un jeune élève reporter qui posait toujours des questions passionnantes sur l'architecture de la ville. Avant la démolition de l'ancien bâtiment, la municipalité a conservé la stèle originale pour la placer au cœur de la nouvelle cour.'\n\nLéa échange un regard complice avec moi. Cette anecdote confirme exactement l'indice de notre carnet ! Nous remercions chaleureusement Monsieur Dubois pour son témoignage inspirant."
+        text: "En déambulant dans les couloirs lumineux, l'équipe croise Monsieur Dubois, un professeur d'histoire senior qui enseignait déjà dans l'ancien établissement.\n\n- Bonjour Monsieur Dubois ! lance Zoé avec aisance. Auriez-vous un instant à nous accorder ? Nous aimerions en savoir plus sur l'histoire de la reconstruction du lycée.\n\nMonsieur Dubois réfléchit un petit instant puis sourit chaleureusement.\n\n- Ah, l'ancienne école de 1990 ! dit Monsieur Dubois. C'était un bâtiment rempli de charme. Je me souviens particulièrement d'un jeune élève reporter qui posait toujours des questions sur la mémoire de la ville. Avant la démolition, la municipalité a conservé la stèle (stone monument) originale au centre de la cour intérieure.\n\n- Merci infiniment ! répond Léa. C'est une piste précieuse !"
       },
       {
         pageNumber: 3,
-        title: "Page 3 : Le Jardin Botanique & la Stèle Historique",
+        title: "Page 3 : Le Jardin Botanique et la Stèle Historique",
         audioSrc: "/audio/novel_c2_page3.mp3",
-        text: "Guidés par les indications du professeur, nous nous dirigeons vers la cour centrale où se trouve le jardin botanique. C'est un véritable havre de paix bordé d'arbres rares et de magnifiques serres fleuries.\n\nAu milieu de l'allée centrale, nous découvrons la célèbre stèle en pierre grise de 1990. Je m'agenouille immédiatement sur l'herbe fraîche pour examiner et photographier de très près les gravures de la sculpture. Sous une légère couche de mousse végétale que nous nettoyons doucement, la gravure de la boussole et de la plume d'écriture apparaît avec une clarté remarquable.\n\nAmadou remarque une petite fente sur le côté droit de la pierre : 'Regardez ici ! Si nous appuyions délicatement sur le centre du symbole, peut-être que le mécanisme s'activerait ?'"
+        text: "Guidés par les indications du professeur, les quatre amis se dirigent vers le jardin botanique situé au cœur de la cour. C'est un havre de paix bordé d'arbres rares et de serres fleuries.\n\nAu milieu de l'allée, ils découvrent la stèle en pierre grise de 1990. Hugo s'agenouille sur l'herbe pour photographier les détails. Sous une légère couche de mousse végétale, la gravure de la boussole et de la plume d'écriture apparaît clairement.\n\n- Regardez ici ! dit Amadou en désignant une petite fente sur le côté. Si nous appuyions délicatement sur le centre du symbole, peut-être que le mécanisme s'activerait ?\n\n- Essayons tout de suite ! dit Zoé."
       },
       {
         pageNumber: 4,
         title: "Page 4 : Le Déclic du Mécanisme et la Clé USB",
         audioSrc: "/audio/novel_c2_page4.mp3",
-        text: "Léa pose doucement son pouce au centre de la boussole gravée et pousse fermement. Soudain, un petit déclic métallique retentit au cœur de la roche et une trappe secrète se déverrouille au bas du monument !\n\nÀ l'intérieur de la cavité scellée, nous trouvons une clé USB ancienne en métal argenté ainsi qu'un parchemin manuscrit rédigé au passé. Léa s'exclame avec enthousiasme : 'Bravo toute l'équipe ! Nous avons réussi la deuxième étape de notre grand mystère !'\n\nAmadou nous avertit : 'Branchez cette clé avec grande précaution sur un ordinateur sécurisé.' Nous quittons le campus avec le sentiment exaltant que notre scoop devient de plus en plus captivant. Prochaine étape : la salle informatique du lycée pour décoder la clé !"
+        text: "Léa pose doucement son pouce au centre de la boussole et pousse fermement. Soudain, un petit déclic métallique retentit et une trappe secrète se déverrouille au bas de la pierre !\n\nÀ l'intérieur de la cavité scellée, ils trouvent une clé USB (USB flash drive) ancienne en métal ainsi qu'un parchemin rédigé au passé.\n\n- Bravo toute l'équipe ! s'exclame Léa. Nous avons réussi la deuxième étape !\n\n- Attention, prévient Amadou. Il faut brancher cette clé sur un ordinateur sécurisé pour éviter tout risque de piratage.\n\n- Très bonne remarque ! répond Hugo. Direction la salle informatique du lycée !"
       }
     ],
     vocabList: [
-      { word: "S'entraider", definition: "S'aider mutuellement avec solidarité dans une tâche ou un projet." },
-      { word: "Se passionner", definition: "Éprouver un intérêt très vif et enthousiaste pour un sujet." },
-      { word: "Un campus éco-responsable", definition: "Un établissement scolaire conçu pour respecter et préserver l'environnement." },
-      { word: "J'aimerais / Aimeriez-vous", definition: "Formes du mode conditionnel pour exprimer poliment un souhait ou une hypothèse." },
-      { word: "Une stèle en pierre", definition: "Un monument de pierre sculpté portant des inscriptions ou des symboles historiques." }
+      { word: "S'entraider (help each other)", definition: "S'aider mutuellement avec solidarité." },
+      { word: "Une stèle (stone monument)", definition: "Un monument de pierre gravé d'inscriptions ou de symboles." },
+      { word: "Une clé USB (USB flash drive)", definition: "Un petit périphérique de stockage de données informatiques." }
     ],
     quiz: [
       {
         id: 1,
-        question: "Combien de pages compte le Chapitre 2 ?",
-        options: ["2 pages", "4 pages complètes", "1 page"],
-        correctIdx: 1,
-        explanation: "Le Chapitre 2 compte 4 pages détaillées de récit."
+        question: "Où se trouve la stèle en pierre de 1990 ?",
+        options: ["Au centre du jardin botanique", "Dans la cafétéria", "Dans le bureau du maire"],
+        correctIdx: 0,
+        explanation: "La stèle a été préservée et placée au cœur du jardin botanique de la cour."
       }
     ]
   },
@@ -126,45 +111,45 @@ export const NOVEL_CHAPTERS = [
     image: "/images/novel_c3.jpg",
     theme: "Cybersécurité & Empreinte Numérique",
     grammarFocus: "Pronoms Objets Directs et Indirects (COD/COI)",
-    summary: "Raconte par Léa. Léa et Antoine luttent contre une cyberattaque en direct pour protéger les données de la clé USB et aider Hugo.",
+    summary: "De retour au lycée, Léa et Antoine luttent contre une cyberattaque en direct pour sauvegarder les données de la clé USB.",
     pages: [
       {
         pageNumber: 1,
         title: "Page 1 : La Menace dans la Salle Informatique",
         audioSrc: "/audio/novel_c3_page1.mp3",
-        text: "De retour au lycée, l'atmosphère devient soudainement tendue. C'est Léa qui vous raconte cette étape décisive ! Nous sommes tous réunis dans la salle informatique autour du poste d'Antoine pour analyser le contenu de la clé USB trouvée sous la stèle. Hugo insère délicatement le périphérique dans le port USB.\n\nÀ l'instant même où le dossier s'ouvre, l'écran d'ordinateur se met à clignoter frénétiquement en rouge ! Une boîte de dialogue alarmante apparaît avec un compte à rebours : 'Avertissement de sécurité : Intrusion à distance détectée. Suppression automatique des données dans 180 secondes...'\n\nHugo pâlit et crie en désignant l'écran : 'Léa, Antoine ! Mes photos et tous nos dossiers d'investigation sont en train d'être effacés ! Que devons-nous faire ?' Antoine garde son sang-froid, pose ses mains sur le clavier et me dit : 'Léa, pas de panique ! Nous pouvons le bloquer si nous agissons immédiatement !'"
+        text: "De retour au lycée, Léa, Hugo, Antoine et Camille se réunissent rapidement dans la salle informatique. L'atmosphère devient soudainement très tendue. Hugo insère délicatement la clé USB dans l'ordinateur d'Antoine.\n\nÀ l'instant même où le dossier s'ouvre, l'écran se met à clignoter frénétiquement en rouge ! Une boîte de dialogue alarmante apparaît avec un compte à rebours : Intrusion à distance (remote breach) détectée. Effacement automatique dans 180 secondes...\n\n- Attention ! crie Hugo. Nos données d'investigation vont disparaître !\n\n- Pas de panique ! répond Antoine en posant ses mains sur le clavier. Je peux bloquer l'attaque !"
       },
       {
         pageNumber: 2,
         title: "Page 2 : Le Combat Cyber d'Antoine et Léa",
         audioSrc: "/audio/novel_c3_page2.mp3",
-        text: "Antoine commence à taper des lignes de code à une vitesse prodigieuse. Je m'adresse à Hugo pour le rassurer : 'Ne te déconnecte pas brutalement ! Je vais LUI prêter main-forte en sécurisant le serveur secondaire.' Je demande à Antoine : 'Peux-tu LES isoler dans un pare-feu chiffré ?' Antoine me répond avec assurance : 'Oui, je LES protège tout de suite !'\n\nNous expliquons à toute l'équipe l'importance cruciale de la cybersécurité : le hameçonnage et les logiciels malveillants visent à dérober nos données personnelles et nos secrets d'enquête. Pour éviter qu'un hacker mystérieux NE NOUS vole notre travail, nous modifions instantanément nos mots de passe en générant des clés de sécurité complexes à double facteur."
+        text: "Antoine commence à taper des lignes de code à une vitesse prodigieuse. Léa s'approche pour l'épauler.\n\n- Je vais LUI prêter main-forte, dit Léa à Hugo. Antoine, peux-tu LES isoler dans un pare-feu (firewall) chiffré ?\n\n- Oui, je LES protège tout de suite ! répond Antoine.\n\nAntoine explique qu'il s'agit d'une tentative de hameçonnage (phishing) lancée à distance par un utilisateur anonyme. Pour éviter qu'un hacker ne leur vole leurs secrets, ils génèrent instantanément des clés de sécurité complexes à double facteur (two-factor authentication).\n\n- C'est presque fini ! dit Antoine. Encore quelques secondes !"
       },
       {
         pageNumber: 3,
         title: "Page 3 : Le Message Décodé du Reporter",
         audioSrc: "/audio/novel_c3_page3.mp3",
-        text: "Grâce aux compétences d'Antoine et à notre réactivité, le compte à rebours s'arrête net à seulement cinq secondes de la fin ! Les fichiers de la clé USB sont intégralement sauvegardés sur un disque dur externe chiffré.\n\nUne fois le système entièrement sécurisé, nous ouvrons enfin le fichier vidéo protégé. Sur l'écran apparaît le visage d'un ancien journaliste senior du lycée, s'adressant directement à la caméra dans un enregistrement datant de plusieurs années."
+        text: "Grâce aux compétences d'Antoine et à la réactivité de Léa, le compte à rebours s'arrête net à seulement cinq secondes de la fin ! Les fichiers sont intégralement sauvegardés sur un disque dur externe chiffré.\n\nUne fois le système sécurisé, l'équipe ouvre le fichier vidéo contenu dans le dossier. Sur l'écran apparaît le visage d'un ancien élève journaliste s'adressant à la caméra.\n\n- Bravo jeunes reporters ! dit la voix du vidéo. Si vous visionnez ce message, vous avez prouvé votre maîtrise de la cybersécurité (cybersecurity). Votre prochain rendez-vous aura lieu au Grand Festival du Film Francophone !\n\n- C'est génial ! dit Camille. Le cinéma !"
       },
       {
         pageNumber: 4,
         title: "Page 4 : La Préparation pour le Festival du Film",
         audioSrc: "/audio/novel_c3_page4.mp3",
-        text: "Il déclare d'une voix posée : 'Bravo jeunes reporters ! Si vous visionnez CE message, cela signifie que vous avez su protéger VOS données et prouver votre maîtrise du monde numérique. Votre prochain rendez-vous se déroulera lors du Grand Festival du Film Francophone. C'est au milieu des œuvres d'art et des projecteurs du cinéma que se trouve la vérité sur le passé.'\n\nHugo, Camille, Antoine et moi poussons un cri de joie. Notre investigation nous emmène désormais au cœur du prestigieux festival culturel de la ville !"
+        text: "Le message vidéo continue en révélant qu'un chef-d'œuvre du patrimoine artistique sera exposé pendant la soirée d'ouverture du festival.\n\n- Il faut préparer nos badges de presse (press passes) sans tarder, dit Léa.\n\n- Absolument ! dit Hugo. Je vais m'assurer que tous mes objectifs photo soient rechargés.\n\n- Et moi, ajoute Camille, je vais me renseigner sur la programmation des courts-métrages.\n\n- Parfait ! conclut Léa. L'enquête continue au festival de cinéma !"
       }
     ],
     vocabList: [
-      { word: "La cybersécurité", definition: "La protection des systèmes informatiques et des données contre le piratage." },
-      { word: "Le hameçonnage", definition: "Une technique frauduleuse pour voler des mots de passe ou des données." },
-      { word: "Pronoms COD/COI (lui, les, nous, vous)", definition: "Mots grammaticaux remplaçant des noms pour rendre les phrases fluides et éviter les répétitions." }
+      { word: "La cybersécurité (cybersecurity)", definition: "La protection des données et systèmes contre les attaques informatiques." },
+      { word: "Le hameçonnage (phishing)", definition: "Une fraude numérique visant à dérober des données confidentielles." },
+      { word: "Un pare-feu (firewall)", definition: "Un système de protection contrôlant l'accès à un réseau informatique." }
     ],
     quiz: [
       {
         id: 1,
-        question: "Combien de pages compte le Chapitre 3 ?",
-        options: ["4 pages complètes", "2 pages", "1 page"],
+        question: "Qui parvient à bloquer l'attaque informatique ?",
+        options: ["Antoine", "Hugo", "Monsieur Dubois"],
         correctIdx: 0,
-        explanation: "Le Chapitre 3 est composé de 4 pages de récit."
+        explanation: "Antoine utilise ses compétences en programmation pour sécuriser le système."
       }
     ]
   },
@@ -177,45 +162,44 @@ export const NOVEL_CHAPTERS = [
     image: "/images/novel_c4.jpg",
     theme: "Arts, Cinéma & Patrimoine Culturel",
     grammarFocus: "Passé Composé vs Imparfait & Connecteurs logiques",
-    summary: "Raconte par Hugo. Hugo, Léa et Camille enquêtent sur un mystérieux vol d'œuvre d'art survenu pendant la grande soirée du cinéma.",
+    summary: "Hugo, Léa et Camille assistent à la soirée du Festival du Film Francophone lorsque la célèbre fresque murale disparaît mystérieusement.",
     pages: [
       {
         pageNumber: 1,
         title: "Page 1 : Le Tapis Rouge du Festival",
         audioSrc: "/audio/novel_c4_page1.mp3",
-        text: "Ici Hugo pour le chapitre 4 ! C'était un vendredi soir absolument magique devant le grand théâtre de la ville. Les projecteurs dorés éclairaient le tapis rouge et une foule enthousiaste se pressait pour admirer les affiches du Festival du Film Francophone. La musique de la bande originale jouait doucement dans les haut-parleurs tandis que les invités discutaient de cinéma, de cadrage et de street-art.\n\nLéa, Camille et moi portant fièrement nos badges de presse autour du cou. Camille observait l'esthétique des décors avec admiration pendant que je réglais les paramètres d'exposition de mon appareil photo. Nous étions extrêmement vigilants car le message vidéo indiquait qu'une œuvre majeure du patrimoine culturel courait un grave danger ce soir-là."
+        text: "C'était un vendredi soir absolument magique devant le grand théâtre de la ville. Les projecteurs dorés éclairaient le tapis rouge et la foule admirait les affiches du Festival du Film Francophone.\n\nHugo, Léa et Camille portaient leurs badges de presse autour du cou. La musique de la bande originale jouait doucement pendant que les invités discutaient de cinéma et d'œuvres d'art.\n\n- Regardez cette ambiance ! dit Camille avec émerveillement. L'architecture du bâtiment est splendide.\n\n- Soyons très attentifs, rappelle Léa. Le message vidéo indiquait qu'un chef-d'œuvre (masterpiece) courait un danger ce soir."
       },
       {
         pageNumber: 2,
         title: "Page 2 : La Rencontre avec la Réalisatrice",
         audioSrc: "/audio/novel_c4_page2.mp3",
-        text: "Dans le hall d'honneur, nous avons la chance d'interroger Madame Laurent, une célèbre réalisatrice de documentaires. Camille s'approche d'elle : 'Madame Laurent, que représente pour vous la sauvegarde du patrimoine artistique francophone ?'\n\nLa réalisatrice répond avec passion : 'L'art est la mémoire vivante d'un peuple ! Dans les années 1990, mon premier court-métrage a été inspiré par les jeunes journalistes de Harwood qui luttaient pour protéger nos musées.' Léa et moi prenons des notes rapides en échangeant un regard complice."
+        text: "Dans le hall d'honneur, l'équipe croise Madame Laurent, une célèbre réalisatrice de documentaires.\n\n- Madame Laurent ! lance Camille. Que représente pour vous la sauvegarde du patrimoine artistique ?\n\n- L'art est la mémoire vivante d'un peuple ! répond la réalisatrice. Dans les années 1990, mon premier film a été inspiré par des élèves reporters de Harwood qui défendaient nos musées.\n\n- C'est fascinant ! dit Hugo en prenant plusieurs photos.\n\nSoudain, à vingt-et-une heures précises, les lumières de la galerie principale s'éteignent (turn off) brusquement !"
       },
       {
         pageNumber: 3,
         title: "Page 3 : La Panne de Courant et la Disparition",
         audioSrc: "/audio/novel_c4_page3.mp3",
-        text: "Soudain, à vingt-et-une heures précises, un événement incroyable s'est produit. Toutes les lumières de la galerie principale d'exposition se sont éteintes brusquement ! Les gardiens dormaient à moitié près des portes quand un choc retentissant s'est fait entendre dans le noir.\n\nTout d'abord, la foule a poussé un grand cri de stupeur. Ensuite, l'alarme stridente du musée s'est déclenchée dans tout le bâtiment. Quand les projecteurs de secours se sont finalement rallumés, nous avons découvert avec effroi que la fameuse fresque murale miniature du patrimoine avait été dérobée !"
+        text: "Un choc retentissant se fait entendre dans le noir complet. Tout d'abord, la foule pousse un grand cri de surprise. Ensuite, l'alarme stridente du musée se déclenche dans tout le bâtiment.\n\nQuand les projecteurs de secours se rallument enfin, ils découvrent avec effroi que la célèbre fresque murale (mural painting) a disparu !\n\n- Regardez sur le socle ! s'exclame Léa. Le voleur a laissé une pellicule de film entourée d'un ruban noir !"
       },
       {
         pageNumber: 4,
-        title: "Page 4 : L'Analyse des Indices et la forêt",
+        title: "Page 4 : L'Analyse des Indices et la Forêt",
         audioSrc: "/audio/novel_c4_page4.mp3",
-        text: "Je me suis immédiatement précipité vers le socle pour photographier les indices au sol. En examinant la pellicule de film avec une loupe, Camille et Léa ont découvert un détail fascinant : le reflet d'un arbre centenaire était gravé dans l'angle du dernier plan-séquence !\n\nEn conclusion, l'alternance entre les événements du passé (imparfait pour le décor, passé composé pour le vol) nous permet de comprendre l'intention du voleur. Il ne veut pas détruire l'art, il cherche à nous guider vers le cinquième secret dissimulé au cœur de la réserve naturelle régionale ! Léa me regarde avec un clin d'œil : 'Hugo, prépare ton appareil photo, en route pour la forêt !'"
+        text: "Hugo se précipite immédiatement vers le socle pour photographier la pièce à conviction. En examinant la pellicule de film avec une loupe, Camille repère un détail crucial.\n\n- Regardez dans l'angle du cadrage ! dit Camille. On aperçoit le reflet d'un arbre centenaire !\n\n- En conclusion, explique Léa, le voleur cherche à nous guider vers le dernier secret situé au cœur de la réserve naturelle de la forêt !\n\n- Préparez vos sacs à dos ! lance Hugo. En route pour l'aventure écologique !"
       }
     ],
     vocabList: [
-      { word: "Un chef-d'œuvre", definition: "Une œuvre d'art exceptionnelle dans l'histoire culturelle." },
-      { word: "Une fresque murale", definition: "Une peinture d'envergure réalisée sur un support mural." },
-      { word: "L'imparfait vs Le passé composé", definition: "Combinaison des temps du passé pour opposer le décor continu et l'action soudaine." }
+      { word: "Un chef-d'œuvre (masterpiece)", definition: "Une œuvre d'art remarquable réalisée par un artiste." },
+      { word: "Une fresque murale (mural painting)", definition: "Une peinture d'envergure effectuée sur un mur." }
     ],
     quiz: [
       {
         id: 1,
-        question: "Combien de pages compte le Chapitre 4 ?",
-        options: ["4 pages complètes", "3 pages", "1 page"],
+        question: "Que laisse le voleur sur le socle de la fresque ?",
+        options: ["Une pellicule de film", "Une clé USB", "Un chapeau"],
         correctIdx: 0,
-        explanation: "Le Chapitre 4 compte 4 pages rédigées au passé."
+        explanation: "Le voleur laisse une pellicule de film contenant le reflet de l'indice suivant."
       }
     ]
   },
@@ -228,45 +212,44 @@ export const NOVEL_CHAPTERS = [
     image: "/images/novel_c5.jpg",
     theme: "Environnement & Développement Durable",
     grammarFocus: "Le Futur Simple & le Futur Antérieur",
-    summary: "Raconte par Léa. Léa et Amadou s'engagent avec passion pour protéger la forêt centenaire menacée par un projet industriel.",
+    summary: "Léa, Hugo et Amadou s'enfoncent dans la forêt centenaire pour stopper un projet industriel polluant et retrouver le coffre final.",
     pages: [
       {
         pageNumber: 1,
         title: "Page 1 : La Forêt Centenaire en Danger",
         audioSrc: "/audio/novel_c5_page1.mp3",
-        text: "C'est Léa qui reprend le fil de notre journal de bord pour cette cinquième étape palpitante ! Dès le samedi matin à l'aube, Hugo, Amadou et moi arrivons à l'orée de la majestueuse forêt centenaire de Harwood. C me un véritable poumon vert, abritant une biodiversité végétale et animale extraordinaire.\n\nCependant, à l'entrée du sentier, nous découvrons avec colère un grand panneau de chantier annonçant le déboisement imminent de la zone pour la construction d'un complexe industriel polluant. Amadou, notre spécialiste de l'environnement, s'indigne : 'C'est une catastrophe pour l'écosystème local ! Si nous n'agissons pas, des centaines d'espèces disparaîtront !'"
+        text: "Tôt le samedi matin à l'aube, Léa, Hugo et Amadou arrivent à l'entrée de la forêt centenaire de Harwood. C'est un véritable poumon vert qui abrite une biodiversité (biodiversity) extraordinaire.\n\nCependant, un grand panneau de chantier annonce la construction imminente d'une usine polluante et le déboisement de la zone.\n\n- C'est inacceptable ! s'indigne Amadou. Si nous n'agissons pas, cet écosystème sera détruit !\n\n- Demain, affirme Léa, nous informerons les citoyens et nous préserverons ce patrimoine naturel !"
       },
       {
         pageNumber: 2,
         title: "Page 2 : L'Affrontement avec le Chef de Chantier",
         audioSrc: "/audio/novel_c5_page2.mp3",
-        text: "Amadou et moi décidons d'interroger le chef de chantier présent sur place. Je m'avance fermement : 'Monsieur, savez-vous que cette forêt abrite des arbres centenaires protégés par la loi ?'\n\nLe chef de chantier hésite, puis répond : 'Nous avons un permis de construire municipal.' Amadou réplique avec des arguments scientifiques irréfutables : 'Ce projet détruira la biodiversité et contaminera les nappes phréatiques. Nous publierons notre rapport d'investigation et l'opinion publique s'opposera à votre usine !'"
+        text: "Amadou et Léa s'avancent vers le chef de chantier présent près des engins de terrassement.\n\n- Monsieur, dit Léa avec fermeté, savez-vous que cette forêt abrite des espèces protégées par la loi ?\n\n- Nous avons des autorisations, répond le chef de chantier avec hésitation.\n\n- Votre projet contaminera les nappes phréatiques, réplique Amadou. Lorsque nous aurons publié notre dossier d'investigation, l'opinion publique exigera l'arrêt des travaux !\n\nLe chef de chantier semble très contrarié (upset) par la détermination des étudiants."
       },
       {
         pageNumber: 3,
         title: "Page 3 : Le Trésor au Pied du Grand Chêne",
         audioSrc: "/audio/novel_c5_page3.mp3",
-        text: "En nous enfonçant sous les frondaisons épaisses des grands chênes, nous suivons les indications finales du carnet. Au pied de l'arbre le plus ancien de la réserve, Amadou repère des racines formant une cavité naturelle. En creusant doucement dans la terre humide, nous découvrons un coffre en bois imputrescible marqué du sceau de la boussole.\n\nÀ l'intérieur, nous trouvons le décret original d'archives de 1990 certifiant que cette forêt est classée réserve naturelle inaliénable ! Hugo s'exclame : 'Quand nous aurons publié ce document historique dans notre journal et sur les réseaux sociaux, la municipalité annulera définitivement les travaux !'"
+        text: "En s'enfonçant sous les frondaisons épaisses des grands chênes, ils suivent les dernières indications du carnet. Au pied du plus ancien arbre, Amadou repère des racines formant une cavité.\n\nEn creusant doucement dans la terre, ils découvrent un coffre en bois sculpté marqué du symbole de la boussole.\n\n- Regardez ! dit Hugo. Il contient le décret d'archives original de 1990 classant cette forêt comme réserve naturelle inaliénable !\n\n- C'est la preuve irréfutable ! s'exclame Léa."
       },
       {
         pageNumber: 4,
         title: "Page 4 : La Victoire Écologique et l'Invitation à Paris",
         audioSrc: "/audio/novel_c5_page4.mp3",
-        text: "La publication de notre reportage photo et de notre article écologique provoque une vague de solidarité impressionnante dans toute la région. Des centaines de citoyens et d'élèves se rassemblent devant la mairie. Face à cette mobilisation exemplaire, le conseil municipal vote à l'unanimité l'abandon du projet d'usine et la protection permanente de la forêt.\n\nAu fond du coffre écologique, nous découvrons le dernier pli scellé : une invitation officielle adressée à notre équipe pour présenter notre travail d'investigation au Sommet International de la Francophonie à Paris ! L'aboutissement de notre aventure approche !"
+        text: "La publication de leur article écologique provoque une formidable vague de solidarité. Le conseil municipal vote à l'unanimité l'arrêt définitif du projet d'usine et la protection permanente de la forêt.\n\nAu fond du coffre, ils découvrent une invitation officielle adressée à leur équipe pour présenter leur travail au Sommet International de la Francophonie à Paris !\n\n- Bravo à tous ! dit Amadou avec joie. Direction Paris !\n\n- En avant pour la grande finale ! conclut Léa."
       }
     ],
     vocabList: [
-      { word: "La biodiversité", definition: "La richesse et la variété des espèces vivantes habitant un écosystème." },
-      { word: "Le développement durable", definition: "Une approche globale préservant les ressources de la planète pour l'avenir." },
-      { word: "Le futur simple & futur antérieur", definition: "Temps verbaux pour affirmer des projets futurs et anticiper leur réussite." }
+      { word: "La biodiversité (biodiversity)", definition: "La variété des espèces végétales et animales dans un environnement." },
+      { word: "Contrarié (upset)", definition: "Mécontent, agacé ou préoccupé par une situation." }
     ],
     quiz: [
       {
         id: 1,
-        question: "Combien de pages compte le Chapitre 5 ?",
-        options: ["4 pages complètes", "2 pages", "1 page"],
+        question: "Que prouve le décret d'archives trouvé dans la forêt ?",
+        options: ["Que la forêt est une réserve naturelle protégée", "Que l'usine est gratuite", "Que le chêne meure"],
         correctIdx: 0,
-        explanation: "Le Chapitre 5 compte 4 pages consacrées à la biodiversité."
+        explanation: "Le décret de 1990 prouve que la forêt est classée réserve naturelle inaliénable."
       }
     ]
   },
@@ -279,45 +262,44 @@ export const NOVEL_CHAPTERS = [
     image: "/images/novel_c6.jpg",
     theme: "Citoyenneté & Engagement Francophone",
     grammarFocus: "Le Subjonctif Présent & Conclusion du Récit",
-    summary: "Raconte par Hugo. Hugo, Léa et toute leur équipe (Antoine, Camille, Amadou, Zoé) présentent leur chef-d'œuvre journalistique à Paris et résolvent l'ultime secret du manuscrit.",
+    summary: "À Paris, toute la bande d'amis présente son enquête au Sommet de la Francophonie et découvre le grand secret final du carnet.",
     pages: [
       {
         pageNumber: 1,
         title: "Page 1 : L'Arrivée à Paris et la Ville Lumière",
         audioSrc: "/audio/novel_c6_page1.mp3",
-        text: "C'est Hugo qui a l'honneur de conclure ce magnifique récit ! Nous voici tous arrivés à Paris pour le Grand Sommet International de la Jeunesse Francophone. La Ville Lumière brille de mille feux et la Tour Eiffel s'illumine sous un ciel d'étoiles.\n\nToute notre équipe est réunie : Léa, Antoine, Camille, Amadou, Zoé et moi-même. En entrant dans le prestigieux grand amphithéâtre rempli de délégués venus de tous les continents francophones, l'émotion est à son comble. Dans les coulisses avant de monter sur scène, Léa me prend la main et chuchote avec passion : 'Hugo, il faut que nous soyons convaincants et que nous exprimions nos valeurs de vérité et de solidarité avec tout notre cœur !'"
+        text: "Toute la bande d'amis — Léa, Hugo, Antoine, Camille, Amadou et Zoé — arrive enfin à Paris pour le Sommet International de la Jeunesse Francophone. La Tour Eiffel s'illumine sous un magnifique ciel étoilé.\n\nEn entrant dans le prestigieux grand amphithéâtre rempli de délégués venus du monde entier, l'émotion est intense.\n\n- Hugo, chuchote Léa avec passion dans les coulisses, il faut que nous soyons convaincants et que nous exprimions nos valeurs avec fierté !\n\n- Nous sommes prêts ! répond Hugo avec assurance."
       },
       {
         pageNumber: 2,
         title: "Page 2 : Les Répétitions dans la Coulisse",
         audioSrc: "/audio/novel_c6_page2.mp3",
-        text: "Pendant les minutes précédant notre passage, Zoé révise nos exercices de diction théâtrale : 'Respirez profondément, articulez chaque mot et projetez votre voix jusqu'au dernier rang !'\n\nAntoine vérifie la connexion des projecteurs et Camille ajuste les illustrations géantes affichées sur l'écran central. Amadou révise les chiffres clés sur l'environnement. Nous ressentons un esprit d'équipe indestructible qui nous donne une force immense."
+        text: "Pendant les dernières minutes avant de monter sur scène, Zoé révise leurs exercices de diction : Articulez bien et projetez votre voix !\n\nAntoine vérifie la projection des diapositives tandis que Camille réajuste les illustrations sur l'écran géant. Amadou révise les données scientifiques.\n\n- L'esprit d'équipe est notre plus grande force ! dit Zoé.\n\n- Tout à fait d'accord ! répond toute la bande."
       },
       {
         pageNumber: 3,
         title: "Page 3 : Le Discours Engagé devant l'Amphithéâtre",
         audioSrc: "/audio/novel_c6_page3.mp3",
-        text: "Sous les applaudissements du public, nous nous installons devant le pupitre principal. Camille projette ses illustrations magnifiques, Amadou présente les données environnementales, Antoine gère la diffusion en direct et Zoé pose sa voix théâtrale pour introduire le sujet.\n\nJe prends la parole devant le micro avec assurance : 'Bien que ce soit parfois difficile de surmonter les obstacles, il faut que les jeunes fassent entendre leur voix. La liberté de la presse, le respect du patrimoine et la protection de la planète sont les vrais trésors de notre société.' Léa conclut notre présentation sous une ovation debout de toute la salle !"
+        text: "Sous les applaudissements du public, ils s'installent devant le micro principal. Hugo prend la parole avec fermeté.\n\n- Bien que ce soit difficile de changer le monde seuls, dit Hugo, il faut que les jeunes fassent entendre leur voix pour la liberté de la presse et la protection de la planète !\n\nLéa conclut le discours sous une ovation debout (standing ovation) de toute l'assemblée !"
       },
       {
         pageNumber: 4,
         title: "Page 4 : La Révélation Ultime du Grand-Père",
         audioSrc: "/audio/novel_c6_page4.mp3",
-        text: "À la fin de la cérémonie, le jury international nous décerne la Médaille d'Or du meilleur journalisme d'investigation jeune. Mais la plus grande surprise survient lorsque le président du comité nous remet la clé d'origine du carnet de 1985...\n\nEn ouvrant l'ultime page cachée sous la reliure de cuir, nous découvrons la signature du journaliste mystère : il s'agissait du propre grand-père de Léa, ancien rédacteur du lycée devenu célèbre reporter ! Léa verse des larmes de fierté et d'émotion en embrassant notre équipe.\n\nEn conclusion, ce voyage extraordinaire nous a appris la persévérance, la valeur de l'amitié et la puissance de la langue française. Merci infiniment à vous tous de nous avoir accompagnés dans 'Le Secret du Manuscrit' !"
+        text: "À la fin de la cérémonie, le jury décortique le travail d'investigation et leur décerne la Médaille d'Or des jeunes reporters !\n\nEn ouvrant la toute dernière page de la reliure de cuir, ils découvrent la signature de l'auteur mystère de 1990 : il s'agissait du grand-père de Léa, ancien élève devenu un grand journaliste international !\n\n- C'était mon grand-père ! dit Léa en versant des larmes de fierté.\n\n- Quelle incroyable aventure ! conclut Hugo. Merci à tous de nous avoir suivis dans Le Secret du Manuscrit !"
       }
     ],
     vocabList: [
-      { word: "Le subjonctif présent", definition: "Mode verbal exprimant la nécessité, le souhait ou l'obligation morale (il faut que nous soyons, qu'on agisse)." },
-      { word: "L'engagement citoyen", definition: "L'implication active et responsable d'un individu au service du bien commun de la société." },
-      { word: "La francophonie", definition: "La communauté internationale des peuples et des cultures qui partagent et enrichissent la langue française." }
+      { word: "Le subjonctif présent", definition: "Mode verbal exprimant l'obligation, la volonté ou le souhait (il faut que nous soyons)." },
+      { word: "Une ovation debout (standing ovation)", definition: "Des applaudissements enthousiastes où tout le public se lève." }
     ],
     quiz: [
       {
         id: 1,
-        question: "Combien de pages compte le Chapitre 6 final ?",
-        options: ["4 pages complètes", "2 pages", "1 page"],
+        question: "Qui était l'auteur du carnet de 1990 ?",
+        options: ["Le grand-père de Léa", "Monsieur Dubois", "Le chef de chantier"],
         correctIdx: 0,
-        explanation: "Le Chapitre 6 compte 4 pages concluant en beauté 'Le Secret du Manuscrit'."
+        explanation: "L'auteur du manuscrit était le propre grand-père de Léa."
       }
     ]
   }

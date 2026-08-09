@@ -286,11 +286,47 @@
   color: white;
 }
 
-.page-body-text {
-  font-size: 1.1rem;
-  line-height: 1.85;
+/* PDF Document Layout Styling */
+.pdf-chapter-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+}
+
+.pdf-chapter-num {
+  font-family: 'Georgia', 'Garamond', serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 1.6rem;
   color: #f8fafc;
-  letter-spacing: 0.2px;
+  margin: 0 0 0.3rem 0;
+}
+
+.pdf-chapter-title {
+  font-family: 'Georgia', 'Garamond', serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: #fbbf24;
+  margin: 0;
+}
+
+.pdf-prose {
+  font-family: 'Georgia', 'Garamond', serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.9;
+  color: #f8fafc;
+}
+
+.pdf-paragraph {
+  margin-bottom: 1.2rem;
+}
+
+.inline-translation {
+  color: #60a5fa; /* Bold blue like in the PDF */
+  font-weight: bold;
+  font-style: normal;
 }
 
 /* Page Navigation Controls */
