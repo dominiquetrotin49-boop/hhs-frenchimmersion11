@@ -10,23 +10,23 @@ const HEIGHT = ROWS * TILE;
 
 // Tile types
 const GRASS = 0;
-const WATER = 1;
+const WATER = 1; // Impassable Lake
 const TREE = 2; // Impassable Woods
 const MARKET = 3; // Impassable Fish Market
-const TEMPLE = 4; // Impassable Temple Building & Perimeter Walls
+const TEMPLE = 4; // Impassable Temple Building & Wall Enclosure
 const PIER = 5; // Walkable Fishing Pier
 
-// Build map with solid Woods boundaries and Walled Temple Compound with a single Entrance Gate at row 4, col 3
+// Exact collision map matching the visual painted artwork of the Temple compound and Woods
 const map = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,2],
-  [2,4,4,4,4,4,2,2,2,2,0,1,1,1,1,1,1,1,0,2], // Rows 2 & 3: Walled Temple Compound
-  [2,4,4,4,4,4,2,2,2,2,0,1,1,1,1,1,1,1,0,2],
-  [2,4,4,0,4,4,2,2,2,2,0,1,1,1,1,1,1,1,0,2], // Row 4: Walls on cols 1,2,4,5. ENTRANCE GATE at col 3 (0=walkable)
-  [2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
-  [2,0,0,0,0,0,0,0,0,0,0,0,5,5,0,1,1,1,0,2],
-  [2,2,2,0,0,0,0,0,3,0,0,0,0,0,0,1,1,1,0,2], // Market outside walls at col 8
-  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,2],
+  [2,4,4,4,4,4,4,4,2,2,0,1,1,1,1,1,1,1,0,2], // Rows 2-6: Entire Temple Building & Side Walls (Impassable 4)
+  [2,4,4,4,4,4,4,4,2,2,0,1,1,1,1,1,1,1,0,2],
+  [2,4,4,4,4,4,4,4,2,2,0,1,1,1,1,1,1,1,0,2],
+  [2,4,4,4,4,4,4,4,2,2,0,1,1,1,1,1,1,1,0,2],
+  [2,4,4,4,4,4,4,4,2,2,0,0,5,5,0,1,1,1,0,2],
+  [2,4,4,0,4,4,4,4,3,0,0,0,0,0,0,1,1,1,0,2], // Row 7: Outer Wall (Cols 1-2 & 4-7 = 4). Single Entrance Gate at Col 3 (0)
+  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,2], // Row 8: Open Pathway in front of Entrance Gate
   [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,1,1,1,0,2],
   [2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
   [2,2,2,2,2,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
@@ -115,8 +115,8 @@ export default function Fishtopia({ onBack }) {
 
   // Hamster Player Entity (Size: 24)
   const playerRef = useRef({
-    x: 3.5 * TILE, // Spawn right in front of Entrance Gate!
-    y: 5.5 * TILE,
+    x: 3.5 * TILE, // Spawn directly in front of Entrance Gate!
+    y: 8.5 * TILE,
     vx: 0,
     vy: 0,
     speed: 3,
@@ -147,7 +147,7 @@ export default function Fishtopia({ onBack }) {
 
   useEffect(() => {
     playerRef.current.x = 3.5 * TILE;
-    playerRef.current.y = 5.5 * TILE;
+    playerRef.current.y = 8.5 * TILE;
 
     const handleKeyDown = (e) => {
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
@@ -329,82 +329,20 @@ export default function Fishtopia({ onBack }) {
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
-    // --- OVERLAY ZELDA GAME OBJECTS & COMPOUND WALLS ---
+    // --- OVERLAY ZELDA GAME OBJECTS & ENTRANCE GATE PILLARS ---
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
         const tile = map[r][c];
         const x = c * TILE;
         const y = r * TILE;
 
-        if (tile === TEMPLE) {
-          // Draw Main Master Sanctuary Temple Building at top-left of compound (cols 2,3,4, rows 2,3)
-          if (c === 2 && r === 2) {
-            ctx.save();
-            const tW = 3 * TILE; // 120px wide
-            const tH = 2 * TILE; // 80px high
-            
-            // Temple Base Shadow
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            ctx.beginPath();
-            ctx.roundRect(x, y + 10, tW, tH, 12);
-            ctx.fill();
-
-            // Ancient Stone Wall
-            ctx.fillStyle = '#64748b';
-            ctx.beginPath();
-            ctx.roundRect(x, y, tW, tH, 10);
-            ctx.fill();
-
-            // Golden Roof Trim
-            ctx.fillStyle = '#f59e0b';
-            ctx.fillRect(x + 4, y, tW - 8, 8);
-
-            // Entrance Archway
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath();
-            ctx.arc(x + tW/2, y + tH - 10, 18, Math.PI, 0);
-            ctx.fillRect(x + tW/2 - 18, y + tH - 10, 36, 18);
-            ctx.fill();
-
-            // Glowing Altar Rune Light inside entrance
-            const pulse = Math.sin(time / 200) * 0.3 + 0.7;
-            ctx.fillStyle = `rgba(56, 189, 248, ${pulse})`;
-            ctx.beginPath();
-            ctx.arc(x + tW/2, y + tH - 10, 8, 0, Math.PI*2);
-            ctx.fill();
-
-            // Golden Triforce Crest emblem on forehead of Temple
-            ctx.fillStyle = '#facc15';
-            ctx.beginPath();
-            ctx.moveTo(x + tW/2, y + 14);
-            ctx.lineTo(x + tW/2 - 12, y + 32);
-            ctx.lineTo(x + tW/2 + 12, y + 32);
-            ctx.closePath();
-            ctx.fill();
-
-            // Pillar Accents
-            ctx.fillStyle = '#94a3b8';
-            ctx.fillRect(x + 8, y + 10, 8, tH - 15);
-            ctx.fillRect(x + tW - 16, y + 10, 8, tH - 15);
-
-            ctx.restore();
-          } 
-          // Draw Walled Compound Perimeter Walls (cols 1 & 5 on rows 2,3,4, and cols 2,4 on row 4)
-          else if ((c === 1 || c === 5) || (r === 4 && (c === 2 || c === 4))) {
-            ctx.save();
-            ctx.fillStyle = '#475569';
-            ctx.fillRect(x, y, TILE, TILE);
-            ctx.strokeStyle = '#334155';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(x + 2, y + 2, TILE - 4, TILE - 4);
-            // Wall cap
-            ctx.fillStyle = '#64748b';
-            ctx.fillRect(x, y, TILE, 8);
-            ctx.restore();
-          }
-        } else if (r === 4 && c === 3) {
-          // Draw Entrance Gate Pillars over walkable Entrance Gate (row 4, col 3)
+        if (r === 7 && c === 3) {
+          // Draw Entrance Gate Pillars over walkable Entrance Gate (row 7, col 3)
           ctx.save();
+          const pulse = Math.sin(time / 200) * 0.3 + 0.7;
+          ctx.fillStyle = `rgba(56, 189, 248, ${pulse})`;
+          ctx.fillRect(x + 6, y + 10, TILE - 12, 10);
+
           ctx.fillStyle = '#f59e0b';
           ctx.fillRect(x, y, 6, TILE);
           ctx.fillRect(x + TILE - 6, y, 6, TILE);
@@ -763,7 +701,7 @@ export default function Fishtopia({ onBack }) {
       </div>
       
       <div className="mt-4 text-center max-w-[800px] text-gray-600">
-        <p><strong>Objectif :</strong> Passez la porte d'entrée de l'enceinte pour entrer dans le grand <strong>Sanctuaire des Questions 🏛️</strong>. Répondez aux quiz pour gagner des appâts, pêchez au ponton et vendez vos poissons au Marché 🏪 !</p>
+        <p><strong>Objectif :</strong> Avancez jusqu'à la <strong>Porte d'Entrée (Rangée 7, Colonne 3)</strong> pour poser vos questions au grand <strong>Sanctuaire 🏛️</strong>. Répondez aux quiz pour gagner des appâts, pêchez au ponton et vendez vos poissons au Marché 🏪 !</p>
       </div>
     </div>
   );
