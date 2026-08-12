@@ -119,7 +119,7 @@ export default function Fishtopia({ onBack }) {
     vx: 0,
     vy: 0,
     speed: 3,
-    size: 48,
+    size: 24,
     color: '#f59e0b'
   });
 
