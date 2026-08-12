@@ -12,81 +12,81 @@ const HEIGHT = ROWS * TILE;
 const GRASS = 0; // Walkable Grass / Sand / Path
 const WATER = 1; // Impassable Water
 const TREE = 2; // Impassable Forest (STRICTLY OFF LIMITS!)
-const MARKET = 3; // Impassable Fish Market Stall
-const TEMPLE = 4; // Impassable Question Booth
+const MARKET = 3; // Impassable Fish Market Stall (col 11-12, row 4-5)
+const TEMPLE = 4; // Impassable Question Booth (col 8-9, row 4-5)
 const PIER = 5; // Walkable Fishing Pier
 
-// Level 1 Map (Question Booth at col 9-10 row 3-4, Market at col 14-15 row 7, Pier at col 15-18 row 9)
+// Level 1 Map (Lake Grasslands)
 const MAP_LEVEL_1 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-  [2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-  [2,2,0,0,2,2,2,2,2,4,4,2,2,2,2,1,1,1,1,2],
-  [2,2,2,0,2,2,2,2,2,4,4,2,2,2,2,1,1,1,1,2], // Question Booth at col 9-10, row 3-4
-  [2,2,2,0,0,0,0,0,0,0,0,2,2,1,1,1,1,1,1,2], // Entrance path in front of Question Booth
-  [2,2,2,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,2],
-  [2,2,2,0,0,0,0,0,0,0,0,0,0,0,3,3,1,1,1,2], // Market at col 14-15
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,1,1,2],
+  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2], // Question Booth at col 8-9 row 4, Market at col 11-12 row 4
+  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2], // Question Booth at col 8-9 row 5, Market at col 11-12 row 5
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Entrance path in front at row 6
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,2], // Pier at col 15-18
-  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,2],
-  [2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,1,2], // Pier at col 14-17 row 8
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,1,2], // Pier at col 14-17 row 9
+  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
+  [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
-// Level 2 Map (Brittany - Clean cliffs, Question Booth at col 7-8 row 4-5, Market at col 10-11 row 5, Pier at col 13-15 row 7)
+// Level 2 Map (Brittany Cliffs)
 const MAP_LEVEL_2 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
-  [2,2,2,2,2,2,2,4,4,2,2,2,2,2,2,2,1,1,1,2], // Question Booth at col 7-8, row 4-5
-  [2,2,2,2,2,2,2,4,4,2,3,3,2,2,2,2,1,1,1,2], // Market at col 10-11, row 5
-  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Entrance path in front of Question Booth
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,1,1,1,2], // Pier at col 13-15
-  [2,2,2,2,0,0,0,0,0,0,0,0,0,5,5,5,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
+  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2], // Question Booth at col 8-9, Market at col 11-12
+  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Entrance path in front at row 6
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,1,1,2], // Pier at col 13-16 row 8
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,1,1,2],
+  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
-  [2,2,2,2,2,2,2,2,0,0,0,0,0,0,1,1,1,1,1,2],
-  [2,2,2,2,2,2,2,2,2,2,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
-// Level 3 Map (Cape Cod Sand Dunes, Question Booth at col 12-13 row 6-7, Market at col 13-14 row 10, Pier at col 15-18 row 9)
+// Level 3 Map (Cape Cod Dunes)
 const MAP_LEVEL_3 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-  [2,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
-  [2,2,0,0,0,0,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
-  [2,2,2,2,0,0,0,0,0,2,2,2,2,2,2,2,1,1,1,2],
-  [2,2,2,2,2,2,0,0,0,0,0,0,2,2,2,2,1,1,1,2],
-  [2,2,2,2,2,2,2,2,0,0,0,0,4,4,2,2,1,1,1,2], // Question Booth at col 12-13, row 6-7
-  [2,2,2,2,2,2,0,0,0,0,0,0,4,4,2,2,1,1,1,2],
-  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,5,1,1,1,2], // Entrance path in front of Question Booth
-  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,2], // Pier at col 15-18
-  [2,2,2,2,2,2,0,0,0,0,0,0,0,3,3,1,1,1,1,2], // Market at col 13-14
-  [2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
+  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2], // Question Booth at col 8-9, Market at col 11-12
+  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Entrance path in front at row 6
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,1,2], // Pier at col 14-17 row 8
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,1,2],
+  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
+  [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
-// Level 4 Map (Tahiti Lagoon, Question Booth at col 8-9 row 4-5, Market at col 10-11 row 4-5, Pier at col 11-16 row 8)
+// Level 4 Map (Tahiti Lagoon)
 const MAP_LEVEL_4 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-  [2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
-  [2,2,0,0,0,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
-  [2,2,2,0,0,0,2,2,4,4,3,3,2,2,2,2,1,1,1,2], // Question Booth at col 8-9, Market at col 10-11
-  [2,2,2,2,0,0,0,0,4,4,3,3,2,2,2,2,1,1,1,2],
-  [2,2,2,2,2,0,0,0,0,0,0,0,0,2,2,2,1,1,1,2], // Entrance path in front of Question Booth
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
+  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2], // Question Booth at col 8-9, Market at col 11-12
+  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Entrance path in front at row 6
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,1,1,2], // Pier at col 11-16 row 8
+  [2,2,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,1,1,2],
   [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
-  [2,2,2,2,0,0,0,0,0,0,0,5,5,5,5,5,5,1,1,2], // Pier at col 11-16
-  [2,2,2,2,2,0,0,0,0,0,0,5,5,5,5,5,5,1,1,2],
   [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
-  [2,2,2,2,2,2,2,2,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -167,8 +167,8 @@ export default function Fishtopia({ onBack }) {
 
   // Hamster Player Entity (Size: 24)
   const playerRef = useRef({
-    x: 9.5 * TILE,
-    y: 5.5 * TILE,
+    x: 8.5 * TILE, // Spawns directly facing Question Booth entrance at col 8-9 row 6
+    y: 6.5 * TILE,
     vx: 0,
     vy: 0,
     speed: 3,
@@ -198,12 +198,9 @@ export default function Fishtopia({ onBack }) {
   }, []);
 
   useEffect(() => {
-    // Set spawn point per level directly facing entrance of Question Booth
-    const lvl = rodLevel;
-    if (lvl === 2) { playerRef.current.x = 7.5 * TILE; playerRef.current.y = 6.5 * TILE; }
-    else if (lvl === 3) { playerRef.current.x = 12.5 * TILE; playerRef.current.y = 8.5 * TILE; }
-    else if (lvl === 4) { playerRef.current.x = 8.5 * TILE; playerRef.current.y = 6.5 * TILE; }
-    else { playerRef.current.x = 9.5 * TILE; playerRef.current.y = 5.5 * TILE; }
+    // Spawn player in front of Question Booth (col 8.5, row 6.5)
+    playerRef.current.x = 8.5 * TILE;
+    playerRef.current.y = 6.5 * TILE;
 
     const handleKeyDown = (e) => {
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
@@ -320,10 +317,10 @@ export default function Fishtopia({ onBack }) {
     // Check tile directly ABOVE (North / facing building entrance) of the hamster
     const tileInFront = getTile(p.x, p.y - TILE * 0.75);
     
-    // ONLY available when hamster is standing directly in front of the Question Booth entrance facing North!
+    // Question Booth prompt is ONLY available when hamster is standing directly in front of the entrance facing North!
     if (tileInFront === TEMPLE) return 'station';
 
-    // ONLY available when hamster is standing directly in front of the Fish Market stall counter facing North!
+    // Market interaction is ONLY available when hamster is standing directly in front of the fish market counter facing North!
     if (tileInFront === MARKET) return 'market';
 
     // Fishing Pier / Water interaction (standing on pier facing water or on pier tile)
@@ -383,7 +380,7 @@ export default function Fishtopia({ onBack }) {
     else setInteractionHint(null);
   };
 
-  // --- DRAW FUNCTION (CLEAN BG IMAGE & HAMSTER SPRITE) ---
+  // --- DRAW FUNCTION (CLEAN BG IMAGE, DYNAMIC BUILDINGS & HAMSTER SPRITE) ---
   const draw = (ctx, time) => {
     const rLevel = stateRef.current.rodLevel;
     
@@ -399,6 +396,116 @@ export default function Fishtopia({ onBack }) {
       ctx.fillStyle = '#15803d';
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
     }
+
+    // --- DRAW DYNAMIC QUESTION BOOTH BUILDING (TEMPLE = 4 at col 8-9, row 4-5) ---
+    const boothX = 8 * TILE;
+    const boothY = 4 * TILE;
+    const boothW = 2 * TILE;
+    const boothH = 2 * TILE;
+
+    // Building Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.beginPath();
+    ctx.ellipse(boothX + boothW/2, boothY + boothH - 2, boothW/2 + 6, 10, 0, 0, Math.PI*2);
+    ctx.fill();
+
+    // Wooden Cabin Walls
+    ctx.fillStyle = '#78350f';
+    ctx.fillRect(boothX + 4, boothY + 20, boothW - 8, boothH - 20);
+    ctx.strokeStyle = '#451a03';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(boothX + 4, boothY + 20, boothW - 8, boothH - 20);
+
+    // Doorway / Counter Archway
+    ctx.fillStyle = '#1c1917';
+    ctx.fillRect(boothX + 24, boothY + 40, 32, 40);
+    ctx.fillStyle = '#d97706';
+    ctx.fillRect(boothX + 20, boothY + 52, 40, 6); // Counter shelf
+
+    // Thatch Roof
+    ctx.fillStyle = '#d97706';
+    ctx.beginPath();
+    ctx.moveTo(boothX - 4, boothY + 24);
+    ctx.lineTo(boothX + boothW/2, boothY - 6);
+    ctx.lineTo(boothX + boothW + 4, boothY + 24);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#92400e';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Glowing '?' Sign
+    const glowBob = Math.sin(time / 200) * 3;
+    ctx.save();
+    ctx.translate(boothX + boothW/2, boothY - 18 + glowBob);
+    ctx.fillStyle = '#facc15';
+    ctx.shadowColor = '#facc15';
+    ctx.shadowBlur = 15;
+    ctx.beginPath();
+    ctx.arc(0, 0, 14, 0, Math.PI*2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#78350f';
+    ctx.font = 'bold 18px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('?', 0, 1);
+    ctx.restore();
+
+    // Banner Text below roof
+    ctx.fillStyle = '#fef08a';
+    ctx.fillRect(boothX + 10, boothY + 22, 60, 14);
+    ctx.fillStyle = '#78350f';
+    ctx.font = 'bold 9px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('QUESTIONS', boothX + boothW/2, boothY + 32);
+
+
+    // --- DRAW DYNAMIC FISH MARKET STALL (MARKET = 3 at col 11-12, row 4-5) ---
+    const marketX = 11 * TILE;
+    const marketY = 4 * TILE;
+    const marketW = 2 * TILE;
+    const marketH = 2 * TILE;
+
+    // Market Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.beginPath();
+    ctx.ellipse(marketX + marketW/2, marketY + marketH - 2, marketW/2 + 6, 10, 0, 0, Math.PI*2);
+    ctx.fill();
+
+    // Wooden Stall Frame
+    ctx.fillStyle = '#b45309';
+    ctx.fillRect(marketX + 6, marketY + 24, marketW - 12, marketH - 24);
+    ctx.strokeStyle = '#78350f';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(marketX + 6, marketY + 24, marketW - 12, marketH - 24);
+
+    // Front Display Counter
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillRect(marketX + 4, marketY + 44, marketW - 8, 20);
+    ctx.fillStyle = '#78350f';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🐟 🦀 🐡', marketX + marketW/2, marketY + 58);
+
+    // Red & White Striped Canopy
+    const stripeW = marketW / 5;
+    for (let i = 0; i < 5; i++) {
+      ctx.fillStyle = (i % 2 === 0) ? '#ef4444' : '#ffffff';
+      ctx.fillRect(marketX + i * stripeW, marketY + 4, stripeW, 22);
+    }
+    ctx.strokeStyle = '#78350f';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(marketX, marketY + 4, marketW, 22);
+
+    // Market Sign Banner
+    ctx.fillStyle = '#fef08a';
+    ctx.fillRect(marketX + 10, marketY + 28, 60, 14);
+    ctx.fillStyle = '#78350f';
+    ctx.font = 'bold 9px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('MARCHÉ', marketX + marketW/2, marketY + 38);
+
 
     // --- DRAW HAMSTER (KEEP EXACT SAME CHARACTER) ---
     const p = playerRef.current;
