@@ -92,15 +92,16 @@ const MAP_LEVEL_4 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
+// ADJUSTED ECONOMY: Reduced fish sales values (~3x lower) so students must answer more questions!
 const FISH_TYPES = [
-  { name: "Sardine", rarity: "Common", value: 2, icon: "🐟" },
-  { name: "Petit Crabe", rarity: "Common", value: 4, icon: "🦀" },
-  { name: "Poisson-Clown", rarity: "Rare", value: 15, icon: "🐠" },
-  { name: "Poisson-Globe", rarity: "Rare", value: 20, icon: "🐡" },
-  { name: "Requin Blanc", rarity: "Epic", value: 60, icon: "🦈" },
-  { name: "Pieuvre Géante", rarity: "Epic", value: 80, icon: "🐙" },
-  { name: "Kraken des Abysses", rarity: "Legendary", value: 250, icon: "🦑" },
-  { name: "Léviathan Doré", rarity: "Legendary", value: 500, icon: "🐉" }
+  { name: "Sardine", rarity: "Common", value: 1, icon: "🐟" },
+  { name: "Petit Crabe", rarity: "Common", value: 2, icon: "🦀" },
+  { name: "Poisson-Clown", rarity: "Rare", value: 5, icon: "🐠" },
+  { name: "Poisson-Globe", rarity: "Rare", value: 7, icon: "🐡" },
+  { name: "Requin Blanc", rarity: "Epic", value: 20, icon: "🦈" },
+  { name: "Pieuvre Géante", rarity: "Epic", value: 25, icon: "🐙" },
+  { name: "Kraken des Abysses", rarity: "Legendary", value: 80, icon: "🦑" },
+  { name: "Léviathan Doré", rarity: "Legendary", value: 150, icon: "🐉" }
 ];
 
 const RODS = [
@@ -159,13 +160,7 @@ export default function Fishtopia({ onBack }) {
   const [activeModal, setActiveModal] = useState(null);
   const [caughtFish, setCaughtFish] = useState(null);
   
-  const getPlayerLevel = () => {
-    if (coins >= 400) return 4;
-    if (coins >= 150) return 3;
-    if (coins >= 50) return 2;
-    return 1;
-  };
-  const playerLevel = getPlayerLevel();
+  const playerLevel = rodLevel; // Player level reflects current Fishing Rod unlocked
   
   const [currentQ, setCurrentQ] = useState(null);
   const [qState, setQState] = useState(null);
@@ -716,7 +711,7 @@ export default function Fishtopia({ onBack }) {
                       disabled={coins < rod.cost || rodLevel >= rod.id}
                       style={{ background: rodLevel >= rod.id ? '#10b981' : '' }}
                     >
-                      {rodLevel >= rod.id ? 'Possédé' : 'Acheter'}
+                      {rodLevel >= rod.id ? 'Possédé' : 'Débloquer Niveau ' + rod.id}
                     </button>
                   </div>
                 ))}
@@ -730,12 +725,12 @@ export default function Fishtopia({ onBack }) {
         {activeModal === 'victory' && caughtFish && (
           <div className="game-overlay" onClick={() => setActiveModal(null)}>
             <div className="modal-content fish-alert cursor-pointer" style={{ border: '4px solid #f59e0b', boxShadow: '0 0 50px #f59e0b' }}>
-              <h2 className="text-amber-500 text-3xl font-black">🏆 VICTOIRE D'HYRULE ! 🏆</h2>
-              <p>Vous avez attrapé la créature légendaire...</p>
-              <div className="fish-icon" style={{ fontSize: '100px' }}>{caughtFish.icon}</div>
-              <h3 className="text-4xl font-bold rarity-Legendary mb-4">{caughtFish.name}</h3>
-              <p className="text-lg font-bold">Félicitations, vous êtes le Héros Légendaire de Francotopia !</p>
-              <p className="text-sm italic mt-4 opacity-75">(Cliquez pour continuer à jouer)</p>
+              <h2 className="text-amber-500 text-3xl font-black">👑 GRAND MAÎTRE PÊCHEUR ! 👑</h2>
+              <p className="font-bold text-lg text-emerald-700 mt-2">Quête d'Hyrule Accomplie !</p>
+              <div className="fish-icon" style={{ fontSize: '90px', margin: '10px 0' }}>{caughtFish.icon}</div>
+              <h3 className="text-3xl font-bold rarity-Legendary mb-2">{caughtFish.name}</h3>
+              <p className="text-base text-gray-700">Félicitations ! Vous avez capturé le poisson légendaire suprême du Niveau 4. Vous avez répondu aux questions avec succès et êtes proclamé le <strong>Grand Maître Pêcheur de Francotopia</strong> !</p>
+              <p className="text-xs italic mt-4 opacity-75">(Cliquez pour continuer)</p>
             </div>
           </div>
         )}
@@ -743,7 +738,7 @@ export default function Fishtopia({ onBack }) {
       </div>
       
       <div className="mt-4 text-center max-w-[800px] text-gray-600">
-        <p><strong>Objectif :</strong> Avancez directement devant l'entrée du <strong>Kiosque des Questions ❓</strong> pour ouvrir les quiz (Espace ou Clic) ! Vendez vos poissons au Marché 🏪 et pêchez sur le ponton ! *(La forêt est strictement interdite)*</p>
+        <p><strong>Objectif :</strong> Répondez aux questions devant le Kiosque ❓ pour obtenir des appâts. Pêchez et revendez vos poissons au Marché 🏪 pour acheter de nouvelles cannes et débloquer les niveaux 2, 3 et 4 jusqu'à capturer le poisson légendaire !</p>
       </div>
     </div>
   );
