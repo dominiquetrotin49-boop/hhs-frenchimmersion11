@@ -16,19 +16,19 @@ const MARKET = 3;
 const TEMPLE = 4; // Single Central Master Sanctuary Temple for Questions!
 const PIER = 5;
 
-// Build map with ONE single central Master Sanctuary Temple at cols 2-4, rows 2-3
+// Build map with ONE single central Master Sanctuary Temple at cols 2-4, rows 2-3 enclosed by solid woods
 const map = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-  [2,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,2],
-  [2,0,4,4,4,0,0,0,2,0,0,1,1,1,1,1,1,1,0,2], // Master Sanctuary Temple (3x2 tiles)
-  [2,0,4,4,4,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
-  [2,0,0,0,2,2,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
+  [2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,2],
+  [2,2,4,4,4,2,2,2,2,2,0,1,1,1,1,1,1,1,0,2],
+  [2,2,4,4,4,2,2,2,2,2,0,1,1,1,1,1,1,1,0,2],
+  [2,2,2,2,2,2,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
   [2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
   [2,0,0,0,0,0,0,0,0,0,0,0,5,5,0,1,1,1,0,2],
-  [2,2,2,0,0,0,3,0,0,0,0,0,0,0,0,1,1,1,0,2],
+  [2,2,2,0,0,0,0,0,3,0,0,0,0,0,0,1,1,1,0,2],
   [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,2],
   [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,1,1,1,0,2],
-  [2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2], // (Removed lower station)
+  [2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
   [2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
   [2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
   [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
@@ -221,15 +221,19 @@ export default function Fishtopia({ onBack }) {
   };
 
   const checkCollision = (px, py, size) => {
-    const colSize = size * 0.7; 
-    const corners = [
+    const colSize = size * 0.85; 
+    const points = [
       { x: px - colSize/2, y: py - colSize/2 },
       { x: px + colSize/2, y: py - colSize/2 },
       { x: px - colSize/2, y: py + colSize/2 },
-      { x: px + colSize/2, y: py + colSize/2 }
+      { x: px + colSize/2, y: py + colSize/2 },
+      { x: px, y: py - colSize/2 },
+      { x: px, y: py + colSize/2 },
+      { x: px - colSize/2, y: py },
+      { x: px + colSize/2, y: py },
     ];
 
-    for (let c of corners) {
+    for (let c of points) {
       const tile = getTile(c.x, c.y);
       if (tile === TREE || tile === WATER || tile === MARKET || tile === TEMPLE) {
         return true;
