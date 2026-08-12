@@ -16,14 +16,14 @@ const MARKET = 3; // Impassable Fish Market Stall
 const TEMPLE = 4; // Impassable Question Booth
 const PIER = 5; // Walkable Fishing Pier
 
-// Level 1 Map (No buildings/walls, Question Booth at col 9-10, Market at col 14-15, Pier at col 15-18)
+// Level 1 Map (Question Booth at col 9-10 row 3-4, Market at col 14-15 row 7, Pier at col 15-18 row 9)
 const MAP_LEVEL_1 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,0,0,2,2,2,2,2,4,4,2,2,2,2,1,1,1,1,2],
   [2,2,2,0,2,2,2,2,2,4,4,2,2,2,2,1,1,1,1,2], // Question Booth at col 9-10, row 3-4
-  [2,2,2,0,0,0,0,0,0,0,0,2,2,1,1,1,1,1,1,2], // Entrance in front of Question Booth at col 9-10
+  [2,2,2,0,0,0,0,0,0,0,0,2,2,1,1,1,1,1,1,2], // Entrance path in front of Question Booth
   [2,2,2,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,2],
   [2,2,2,0,0,0,0,0,0,0,0,0,0,0,3,3,1,1,1,2], // Market at col 14-15
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2],
@@ -35,15 +35,15 @@ const MAP_LEVEL_1 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
-// Level 2 Map (Brittany Rocks - Clean cliffs without rocks, Question Booth at col 7-8, Market at col 10-11, Pier at col 13-16)
+// Level 2 Map (Brittany - Clean cliffs, Question Booth at col 7-8 row 4-5, Market at col 10-11 row 5, Pier at col 13-15 row 7)
 const MAP_LEVEL_2 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
   [2,2,2,2,2,2,2,4,4,2,2,2,2,2,2,2,1,1,1,2], // Question Booth at col 7-8, row 4-5
-  [2,2,2,2,2,2,2,4,4,2,3,3,2,2,2,2,1,1,1,2], // Market at col 10-11
-  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Entrance in front of Question Booth at col 7-8
+  [2,2,2,2,2,2,2,4,4,2,3,3,2,2,2,2,1,1,1,2], // Market at col 10-11, row 5
+  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Entrance path in front of Question Booth
   [2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,1,1,1,2], // Pier at col 13-15
   [2,2,2,2,0,0,0,0,0,0,0,0,0,5,5,5,1,1,1,2],
   [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
@@ -54,7 +54,7 @@ const MAP_LEVEL_2 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
-// Level 3 Map (Cape Cod Sand Dunes, Question Booth at col 12-13, Market at col 13-14, Pier at col 15-18)
+// Level 3 Map (Cape Cod Sand Dunes, Question Booth at col 12-13 row 6-7, Market at col 13-14 row 10, Pier at col 15-18 row 9)
 const MAP_LEVEL_3 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -64,7 +64,7 @@ const MAP_LEVEL_3 = [
   [2,2,2,2,2,2,0,0,0,0,0,0,2,2,2,2,1,1,1,2],
   [2,2,2,2,2,2,2,2,0,0,0,0,4,4,2,2,1,1,1,2], // Question Booth at col 12-13, row 6-7
   [2,2,2,2,2,2,0,0,0,0,0,0,4,4,2,2,1,1,1,2],
-  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,5,1,1,1,2], // Entrance in front of Question Booth at col 12-13
+  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,5,1,1,1,2], // Entrance path in front of Question Booth
   [2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,2], // Pier at col 15-18
   [2,2,2,2,2,2,0,0,0,0,0,0,0,3,3,1,1,1,1,2], // Market at col 13-14
   [2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,1,1,1,1,2],
@@ -73,7 +73,7 @@ const MAP_LEVEL_3 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
-// Level 4 Map (Tahiti Lagoon, Question Booth at col 8-9, Market at col 10-11, Pier at col 11-17)
+// Level 4 Map (Tahiti Lagoon, Question Booth at col 8-9 row 4-5, Market at col 10-11 row 4-5, Pier at col 11-16 row 8)
 const MAP_LEVEL_4 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -81,7 +81,7 @@ const MAP_LEVEL_4 = [
   [2,2,0,0,0,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
   [2,2,2,0,0,0,2,2,4,4,3,3,2,2,2,2,1,1,1,2], // Question Booth at col 8-9, Market at col 10-11
   [2,2,2,2,0,0,0,0,4,4,3,3,2,2,2,2,1,1,1,2],
-  [2,2,2,2,2,0,0,0,0,0,0,0,0,2,2,2,1,1,1,2], // Entrance in front of Question Booth at col 8-9
+  [2,2,2,2,2,0,0,0,0,0,0,0,0,2,2,2,1,1,1,2], // Entrance path in front of Question Booth
   [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,0,0,0,0,0,0,0,5,5,5,5,5,5,1,1,2], // Pier at col 11-16
   [2,2,2,2,2,0,0,0,0,0,0,5,5,5,5,5,5,1,1,2],
@@ -172,7 +172,7 @@ export default function Fishtopia({ onBack }) {
 
   // Hamster Player Entity (Size: 24)
   const playerRef = useRef({
-    x: 10.5 * TILE,
+    x: 9.5 * TILE,
     y: 5.5 * TILE,
     vx: 0,
     vy: 0,
@@ -203,12 +203,12 @@ export default function Fishtopia({ onBack }) {
   }, []);
 
   useEffect(() => {
-    // Set spawn point per level in front of Question Booth
+    // Set spawn point per level directly facing entrance of Question Booth
     const lvl = rodLevel;
     if (lvl === 2) { playerRef.current.x = 7.5 * TILE; playerRef.current.y = 6.5 * TILE; }
-    else if (lvl === 3) { playerRef.current.x = 13.5 * TILE; playerRef.current.y = 8.5 * TILE; }
+    else if (lvl === 3) { playerRef.current.x = 12.5 * TILE; playerRef.current.y = 8.5 * TILE; }
     else if (lvl === 4) { playerRef.current.x = 8.5 * TILE; playerRef.current.y = 6.5 * TILE; }
-    else { playerRef.current.x = 10.5 * TILE; playerRef.current.y = 5.5 * TILE; }
+    else { playerRef.current.x = 9.5 * TILE; playerRef.current.y = 5.5 * TILE; }
 
     const handleKeyDown = (e) => {
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
@@ -218,7 +218,8 @@ export default function Fishtopia({ onBack }) {
       const key = e.key.toLowerCase();
       keys.current[key] = true;
       
-      if (e.code === 'Space' && !stateRef.current.activeModal) {
+      const isSpace = e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar';
+      if (isSpace && !stateRef.current.activeModal) {
         handleInteract();
       }
     };
@@ -320,25 +321,26 @@ export default function Fishtopia({ onBack }) {
 
   const getInteractionTarget = () => {
     const p = playerRef.current;
+    const checkDist = TILE * 1.4;
     
-    // Check tile directly in front (North / above) of the hamster
-    const tileAbove = getTile(p.x, p.y - TILE * 0.8);
-    
-    // Question Booth prompt is ONLY available when hamster is standing directly in front of the entrance facing North!
-    if (tileAbove === TEMPLE) return 'station';
-
-    // Market interaction (standing in front of market)
-    const tileMarketCheck = [
-      getTile(p.x, p.y - TILE * 0.8),
-      getTile(p.x, p.y + TILE * 0.8),
-      getTile(p.x - TILE * 0.8, p.y),
-      getTile(p.x + TILE * 0.8, p.y),
+    // Check points around player (North, South, West, East, Center)
+    const pointsAround = [
+      getTile(p.x, p.y - checkDist), // North / facing building entrance
+      getTile(p.x, p.y - TILE * 0.5),
+      getTile(p.x, p.y + checkDist),
+      getTile(p.x - checkDist, p.y),
+      getTile(p.x + checkDist, p.y),
+      getTile(p.x, p.y),
     ];
-    if (tileMarketCheck.includes(MARKET)) return 'market';
+    
+    // Facing Question Booth entrance
+    if (pointsAround.includes(TEMPLE)) return 'station';
 
-    // Fishing pier interaction (standing on pier facing water)
-    if (getTile(p.x, p.y) === PIER && tileMarketCheck.includes(WATER)) return 'fish';
-    if (getTile(p.x, p.y) === PIER) return 'fish';
+    // Facing Market stall
+    if (pointsAround.includes(MARKET)) return 'market';
+
+    // Fishing Pier / Water
+    if (getTile(p.x, p.y) === PIER || pointsAround.includes(WATER)) return 'fish';
 
     return null;
   };
@@ -387,9 +389,9 @@ export default function Fishtopia({ onBack }) {
     }
 
     const target = getInteractionTarget();
-    if (target === 'station') setInteractionHint("ESPACE pour poser une question au Kiosque !");
-    else if (target === 'market') setInteractionHint("ESPACE pour ouvrir le Marché de Poisson");
-    else if (target === 'fish') setInteractionHint("ESPACE pour pêcher dans l'Eau (Coûte 1 Appât)");
+    if (target === 'station') setInteractionHint("🏛️ CLIQUEZ OU APPUYEZ SUR ESPACE POUR POSER UNE QUESTION");
+    else if (target === 'market') setInteractionHint("🏪 CLIQUEZ OU APPUYEZ SUR ESPACE POUR OUVRIR LE MARCHÉ");
+    else if (target === 'fish') setInteractionHint("🎣 CLIQUEZ OU APPUYEZ SUR ESPACE POUR PÊCHER (COÛTE 1 APPÂT)");
     else setInteractionHint(null);
   };
 
@@ -642,7 +644,7 @@ export default function Fishtopia({ onBack }) {
         </div>
 
         {interactionHint && !activeModal && (
-          <div className="interaction-hint">
+          <div className="interaction-hint cursor-pointer" onClick={handleInteract}>
             {interactionHint}
           </div>
         )}
@@ -741,7 +743,7 @@ export default function Fishtopia({ onBack }) {
       </div>
       
       <div className="mt-4 text-center max-w-[800px] text-gray-600">
-        <p><strong>Objectif :</strong> Placez-vous directement devant l'entrée du <strong>Kiosque des Questions ❓</strong> pour répondre aux quiz ! Pêchez sur le ponton et revendez vos poissons au Marché 🏪 ! *(Forêt strictement interdite)*</p>
+        <p><strong>Objectif :</strong> Avancez directement devant l'entrée du <strong>Kiosque des Questions ❓</strong> pour ouvrir les quiz (Espace ou Clic) ! Vendez vos poissons au Marché 🏪 et pêchez sur le ponton ! *(La forêt est strictement interdite)*</p>
       </div>
     </div>
   );
