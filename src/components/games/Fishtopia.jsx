@@ -9,30 +9,87 @@ const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
 
 // Tile types
-const GRASS = 0; // Walkable Grass / Dirt Path
-const WATER = 1; // Impassable Lake
+const GRASS = 0; // Walkable Grass / Sand / Path
+const WATER = 1; // Impassable Water
 const TREE = 2; // Impassable Forest (STRICTLY OFF LIMITS!)
 const MARKET = 3; // Impassable Fish Market Stall
 const TEMPLE = 4; // Impassable Question Booth
 const PIER = 5; // Walkable Fishing Pier
 
-// Precise collision map matching the new Level 1 Zelda artwork: Forest (2), Water (1), Question Booth (4), Market (3) are strictly impassable.
-const map = [
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2], // Row 0: Solid Forest (Off Limits)
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2], // Row 1: Solid Forest (Off Limits)
-  [2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2], // Row 2: Forest with upper path at col 2-3
-  [2,2,0,0,2,2,2,2,2,4,4,2,2,2,2,1,1,1,1,2], // Row 3: Question Booth framing
-  [2,2,2,0,2,2,2,2,2,4,4,2,2,2,2,1,1,1,1,2], // Row 4: Question Booth (4) at col 9-10
-  [2,2,2,0,0,0,0,0,0,0,0,2,2,1,1,1,1,1,1,2], // Row 5: Open Dirt Path in front of Question Booth
-  [2,2,2,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,2], // Row 6: Open Flowery Path
-  [2,2,2,0,0,0,0,0,0,0,0,0,0,0,3,3,1,1,1,2], // Row 7: Fish Market Stall (3) at col 14-15
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Row 8: Open Path to Pier
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,2], // Row 9: Fishing Pier (5) at cols 15-18
-  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,2], // Row 10: Fishing Pier (5)
-  [2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,1,1,1,1,2], // Row 11: Forest Bottom-Left & Lake
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2], // Row 12: Solid Forest (Off Limits)
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2], // Row 13: Solid Forest (Off Limits)
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2], // Row 14: Solid Forest (Off Limits)
+// Level 1 Map (No buildings/walls, Question Booth at col 9-10, Market at col 14-15, Pier at col 15-18)
+const MAP_LEVEL_1 = [
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,0,0,2,2,2,2,2,4,4,2,2,2,2,1,1,1,1,2],
+  [2,2,2,0,2,2,2,2,2,4,4,2,2,2,2,1,1,1,1,2], // Question Booth at col 9-10, row 3-4
+  [2,2,2,0,0,0,0,0,0,0,0,2,2,1,1,1,1,1,1,2], // Entrance in front of Question Booth at col 9-10
+  [2,2,2,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,2],
+  [2,2,2,0,0,0,0,0,0,0,0,0,0,0,3,3,1,1,1,2], // Market at col 14-15
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,2], // Pier at col 15-18
+  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,2],
+  [2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+];
+
+// Level 2 Map (Brittany Rocks - Clean cliffs without rocks, Question Booth at col 7-8, Market at col 10-11, Pier at col 13-16)
+const MAP_LEVEL_2 = [
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
+  [2,2,2,2,2,2,2,4,4,2,2,2,2,2,2,2,1,1,1,2], // Question Booth at col 7-8, row 4-5
+  [2,2,2,2,2,2,2,4,4,2,3,3,2,2,2,2,1,1,1,2], // Market at col 10-11
+  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Entrance in front of Question Booth at col 7-8
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,1,1,1,2], // Pier at col 13-15
+  [2,2,2,2,0,0,0,0,0,0,0,0,0,5,5,5,1,1,1,2],
+  [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,0,0,0,0,1,1,1,1,1,2],
+  [2,2,2,2,2,2,2,2,2,2,0,0,0,0,1,1,1,1,1,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+];
+
+// Level 3 Map (Cape Cod Sand Dunes, Question Booth at col 12-13, Market at col 13-14, Pier at col 15-18)
+const MAP_LEVEL_3 = [
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
+  [2,2,0,0,0,0,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
+  [2,2,2,2,0,0,0,0,0,2,2,2,2,2,2,2,1,1,1,2],
+  [2,2,2,2,2,2,0,0,0,0,0,0,2,2,2,2,1,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,0,0,4,4,2,2,1,1,1,2], // Question Booth at col 12-13, row 6-7
+  [2,2,2,2,2,2,0,0,0,0,0,0,4,4,2,2,1,1,1,2],
+  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,5,1,1,1,2], // Entrance in front of Question Booth at col 12-13
+  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,2], // Pier at col 15-18
+  [2,2,2,2,2,2,0,0,0,0,0,0,0,3,3,1,1,1,1,2], // Market at col 13-14
+  [2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+];
+
+// Level 4 Map (Tahiti Lagoon, Question Booth at col 8-9, Market at col 10-11, Pier at col 11-17)
+const MAP_LEVEL_4 = [
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
+  [2,2,0,0,0,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
+  [2,2,2,0,0,0,2,2,4,4,3,3,2,2,2,2,1,1,1,2], // Question Booth at col 8-9, Market at col 10-11
+  [2,2,2,2,0,0,0,0,4,4,3,3,2,2,2,2,1,1,1,2],
+  [2,2,2,2,2,0,0,0,0,0,0,0,0,2,2,2,1,1,1,2], // Entrance in front of Question Booth at col 8-9
+  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
+  [2,2,2,2,0,0,0,0,0,0,0,5,5,5,5,5,5,1,1,2], // Pier at col 11-16
+  [2,2,2,2,2,0,0,0,0,0,0,5,5,5,5,5,5,1,1,2],
+  [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,0,0,0,0,1,1,1,1,1,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
 const FISH_TYPES = [
@@ -115,7 +172,7 @@ export default function Fishtopia({ onBack }) {
 
   // Hamster Player Entity (Size: 24)
   const playerRef = useRef({
-    x: 10.5 * TILE, // Spawn on dirt path right in front of Question Booth!
+    x: 10.5 * TILE,
     y: 5.5 * TILE,
     vx: 0,
     vy: 0,
@@ -146,8 +203,12 @@ export default function Fishtopia({ onBack }) {
   }, []);
 
   useEffect(() => {
-    playerRef.current.x = 10.5 * TILE;
-    playerRef.current.y = 5.5 * TILE;
+    // Set spawn point per level in front of Question Booth
+    const lvl = rodLevel;
+    if (lvl === 2) { playerRef.current.x = 7.5 * TILE; playerRef.current.y = 6.5 * TILE; }
+    else if (lvl === 3) { playerRef.current.x = 13.5 * TILE; playerRef.current.y = 8.5 * TILE; }
+    else if (lvl === 4) { playerRef.current.x = 8.5 * TILE; playerRef.current.y = 6.5 * TILE; }
+    else { playerRef.current.x = 10.5 * TILE; playerRef.current.y = 5.5 * TILE; }
 
     const handleKeyDown = (e) => {
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
@@ -169,7 +230,7 @@ export default function Fishtopia({ onBack }) {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, []);
+  }, [rodLevel]);
 
   const audioElRef = useRef(null);
 
@@ -214,11 +275,20 @@ export default function Fishtopia({ onBack }) {
     return () => cancelAnimationFrame(gameLoopRef.current);
   }, []);
 
+  const getMapForLevel = () => {
+    const lvl = stateRef.current?.rodLevel || 1;
+    if (lvl === 2) return MAP_LEVEL_2;
+    if (lvl === 3) return MAP_LEVEL_3;
+    if (lvl === 4) return MAP_LEVEL_4;
+    return MAP_LEVEL_1;
+  };
+
   const getTile = (x, y) => {
     const col = Math.floor(x / TILE);
     const row = Math.floor(y / TILE);
     if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return 2; // Forest out of bounds!
-    return map[row][col];
+    const activeMap = getMapForLevel();
+    return activeMap[row][col];
   };
 
   // Hamster CAN ONLY walk on GRASS (0) or PIER (5). Forest (2), Water (1), Question Booth (4), Market (3) are STRICTLY IMPASSABLE!
@@ -250,19 +320,26 @@ export default function Fishtopia({ onBack }) {
 
   const getInteractionTarget = () => {
     const p = playerRef.current;
-    const checkDist = TILE * 1.5;
-    const tilesToCheck = [
-      getTile(p.x, p.y - checkDist),
-      getTile(p.x, p.y + checkDist),
-      getTile(p.x - checkDist, p.y),
-      getTile(p.x + checkDist, p.y),
+    
+    // Check tile directly in front (North / above) of the hamster
+    const tileAbove = getTile(p.x, p.y - TILE * 0.8);
+    
+    // Question Booth prompt is ONLY available when hamster is standing directly in front of the entrance facing North!
+    if (tileAbove === TEMPLE) return 'station';
+
+    // Market interaction (standing in front of market)
+    const tileMarketCheck = [
+      getTile(p.x, p.y - TILE * 0.8),
+      getTile(p.x, p.y + TILE * 0.8),
+      getTile(p.x - TILE * 0.8, p.y),
+      getTile(p.x + TILE * 0.8, p.y),
     ];
-    
-    if (tilesToCheck.includes(TEMPLE)) return 'station';
-    if (tilesToCheck.includes(MARKET)) return 'market';
-    if (tilesToCheck.includes(WATER) && getTile(p.x, p.y) === PIER) return 'fish';
-    if (tilesToCheck.includes(WATER)) return 'fish';
-    
+    if (tileMarketCheck.includes(MARKET)) return 'market';
+
+    // Fishing pier interaction (standing on pier facing water)
+    if (getTile(p.x, p.y) === PIER && tileMarketCheck.includes(WATER)) return 'fish';
+    if (getTile(p.x, p.y) === PIER) return 'fish';
+
     return null;
   };
 
@@ -312,7 +389,7 @@ export default function Fishtopia({ onBack }) {
     const target = getInteractionTarget();
     if (target === 'station') setInteractionHint("ESPACE pour poser une question au Kiosque !");
     else if (target === 'market') setInteractionHint("ESPACE pour ouvrir le Marché de Poisson");
-    else if (target === 'fish') setInteractionHint("ESPACE pour pêcher dans le Lac (Coûte 1 Appât)");
+    else if (target === 'fish') setInteractionHint("ESPACE pour pêcher dans l'Eau (Coûte 1 Appât)");
     else setInteractionHint(null);
   };
 
@@ -451,7 +528,7 @@ export default function Fishtopia({ onBack }) {
       if (stateRef.current.bait > 0) {
         fish();
       } else {
-        alert("Vous n'avez plus d'appât ! Rendez-vous au Kiosque des Questions.");
+        alert("Vous n'avez plus d'appât ! Rendez-vous devant l'entrée du Kiosque des Questions.");
       }
     }
   };
@@ -664,7 +741,7 @@ export default function Fishtopia({ onBack }) {
       </div>
       
       <div className="mt-4 text-center max-w-[800px] text-gray-600">
-        <p><strong>Objectif :</strong> Suivez les chemins terreux à travers l'herbe fleurie ! Avancez devant le <strong>Kiosque des Questions ❓</strong> pour répondre aux quiz, pêchez sur le ponton du lac et revendez vos poissons au Marché 🏪 ! *(Entrée dans la forêt strictement interdite)*</p>
+        <p><strong>Objectif :</strong> Placez-vous directement devant l'entrée du <strong>Kiosque des Questions ❓</strong> pour répondre aux quiz ! Pêchez sur le ponton et revendez vos poissons au Marché 🏪 ! *(Forêt strictement interdite)*</p>
       </div>
     </div>
   );
