@@ -9,24 +9,24 @@ const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
 
 // Tile types
-const GRASS = 0;
+const GRASS = 0; // Walkable Grass / Path
 const WATER = 1; // Impassable Lake
-const TREE = 2; // Impassable Woods
+const TREE = 2; // Impassable Woods (Off Limits!)
 const MARKET = 3; // Impassable Fish Market
-const TEMPLE = 4; // Impassable Temple Building & Wall Enclosure
+const TEMPLE = 4; // Impassable Question Sanctuary Temple
 const PIER = 5; // Walkable Fishing Pier
 
-// Exact collision map matching the visual painted artwork of the Temple compound and Woods
+// Simple collision map: Hamster can ONLY walk on Grass/Paths (0) and Pier (5)! Woods (2), Water (1), Temple (4), Market (3) are impassable.
 const map = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,2],
-  [2,4,4,4,4,4,4,4,2,2,0,1,1,1,1,1,1,1,0,2], // Rows 2-6: Entire Temple Building & Side Walls (Impassable 4)
-  [2,4,4,4,4,4,4,4,2,2,0,1,1,1,1,1,1,1,0,2],
-  [2,4,4,4,4,4,4,4,2,2,0,1,1,1,1,1,1,1,0,2],
-  [2,4,4,4,4,4,4,4,2,2,0,1,1,1,1,1,1,1,0,2],
-  [2,4,4,4,4,4,4,4,2,2,0,0,5,5,0,1,1,1,0,2],
-  [2,4,4,0,4,4,4,4,3,0,0,0,0,0,0,1,1,1,0,2], // Row 7: Outer Wall (Cols 1-2 & 4-7 = 4). Single Entrance Gate at Col 3 (0)
-  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,2], // Row 8: Open Pathway in front of Entrance Gate
+  [2,2,4,4,4,2,2,2,2,2,0,1,1,1,1,1,1,1,0,2], // Temple Building at cols 2-4, rows 2-3
+  [2,2,4,4,4,2,2,2,2,2,0,1,1,1,1,1,1,1,0,2],
+  [2,2,0,0,0,2,2,2,2,2,0,1,1,1,1,1,1,1,0,2], // Open Grass Path around Temple
+  [2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
+  [2,0,0,0,0,0,0,0,0,0,0,0,5,5,0,1,1,1,0,2],
+  [2,2,2,0,0,0,0,0,3,0,0,0,0,0,0,1,1,1,0,2], // Fish Market at col 8
+  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,2],
   [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,1,1,1,0,2],
   [2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
   [2,2,2,2,2,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
@@ -115,8 +115,8 @@ export default function Fishtopia({ onBack }) {
 
   // Hamster Player Entity (Size: 24)
   const playerRef = useRef({
-    x: 3.5 * TILE, // Spawn directly in front of Entrance Gate!
-    y: 8.5 * TILE,
+    x: 3.5 * TILE, // Spawn on grass path in front of Temple
+    y: 4.5 * TILE,
     vx: 0,
     vy: 0,
     speed: 3,
@@ -147,7 +147,7 @@ export default function Fishtopia({ onBack }) {
 
   useEffect(() => {
     playerRef.current.x = 3.5 * TILE;
-    playerRef.current.y = 8.5 * TILE;
+    playerRef.current.y = 4.5 * TILE;
 
     const handleKeyDown = (e) => {
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
@@ -221,7 +221,11 @@ export default function Fishtopia({ onBack }) {
     return map[row][col];
   };
 
-  // High precision 8-point collision check
+  // Hamster CAN ONLY walk on GRASS (0) or PIER (5). Everything else (Woods 2, Water 1, Temple 4, Market 3) is impassable!
+  const isWalkableTile = (tile) => {
+    return tile === GRASS || tile === PIER;
+  };
+
   const checkCollisionAt = (px, py, size) => {
     const colSize = size * 0.85; 
     const points = [
@@ -237,7 +241,7 @@ export default function Fishtopia({ onBack }) {
 
     for (let c of points) {
       const tile = getTile(c.x, c.y);
-      if (tile === TREE || tile === WATER || tile === MARKET || tile === TEMPLE) {
+      if (!isWalkableTile(tile)) {
         return true;
       }
     }
@@ -283,7 +287,7 @@ export default function Fishtopia({ onBack }) {
     p.vx = dx;
     p.vy = dy;
 
-    // Sub-step movement X (Zero clipping into woods or temple walls)
+    // Sub-step movement X (Hamster can only walk on grass and paths!)
     const stepsX = Math.ceil(Math.abs(dx));
     const stepDx = dx / Math.max(1, stepsX);
     for (let s = 0; s < stepsX; s++) {
@@ -294,7 +298,7 @@ export default function Fishtopia({ onBack }) {
       }
     }
 
-    // Sub-step movement Y (Zero clipping into woods or temple walls)
+    // Sub-step movement Y (Hamster can only walk on grass and paths!)
     const stepsY = Math.ceil(Math.abs(dy));
     const stepDy = dy / Math.max(1, stepsY);
     for (let s = 0; s < stepsY; s++) {
@@ -312,7 +316,7 @@ export default function Fishtopia({ onBack }) {
     else setInteractionHint(null);
   };
 
-  // --- DRAW FUNCTION (ZELDA THEME WITH WALLED COMPOUND & ENTRANCE GATE) ---
+  // --- DRAW FUNCTION (ZELDA THEME WITH CLEAN GRASS & PATHS) ---
   const draw = (ctx, time) => {
     const rLevel = stateRef.current.rodLevel;
     
@@ -329,25 +333,14 @@ export default function Fishtopia({ onBack }) {
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
-    // --- OVERLAY ZELDA GAME OBJECTS & ENTRANCE GATE PILLARS ---
+    // --- OVERLAY GAME OBJECTS (FISH MARKET STALL ICON) ---
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
         const tile = map[r][c];
         const x = c * TILE;
         const y = r * TILE;
 
-        if (r === 7 && c === 3) {
-          // Draw Entrance Gate Pillars over walkable Entrance Gate (row 7, col 3)
-          ctx.save();
-          const pulse = Math.sin(time / 200) * 0.3 + 0.7;
-          ctx.fillStyle = `rgba(56, 189, 248, ${pulse})`;
-          ctx.fillRect(x + 6, y + 10, TILE - 12, 10);
-
-          ctx.fillStyle = '#f59e0b';
-          ctx.fillRect(x, y, 6, TILE);
-          ctx.fillRect(x + TILE - 6, y, 6, TILE);
-          ctx.restore();
-        } else if (tile === MARKET) {
+        if (tile === MARKET) {
           // Merchant's Trading Post outside walls
           ctx.save();
           ctx.fillStyle = 'rgba(0,0,0,0.3)';
@@ -701,7 +694,7 @@ export default function Fishtopia({ onBack }) {
       </div>
       
       <div className="mt-4 text-center max-w-[800px] text-gray-600">
-        <p><strong>Objectif :</strong> Avancez jusqu'à la <strong>Porte d'Entrée (Rangée 7, Colonne 3)</strong> pour poser vos questions au grand <strong>Sanctuaire 🏛️</strong>. Répondez aux quiz pour gagner des appâts, pêchez au ponton et vendez vos poissons au Marché 🏪 !</p>
+        <p><strong>Objectif :</strong> Déplacez-vous librement sur l'herbe et les chemins ! Avancez devant le <strong>Sanctuaire 🏛️</strong> pour répondre aux quiz, pêchez au ponton et revendez vos poissons au Marché 🏪 !</p>
       </div>
     </div>
   );
