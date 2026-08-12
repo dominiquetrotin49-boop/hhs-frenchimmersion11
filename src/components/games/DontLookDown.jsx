@@ -5,16 +5,16 @@ import { UNIT_2_VOCAB } from '../../data/vocabulary';
 // --- GAME CONSTANTS ---
 const GRAVITY = 1500;
 const JUMP_FORCE = -750;
-const MOVE_SPEED = 200; // Slowed down
+const MOVE_SPEED = 200;
 const WIDTH = 800;
 const HEIGHT = 600;
 const TOTAL_HEIGHT = 6000;
 
 // Levels (Zones):
-// Z1: 6000 to 4500 (Rue de Paris)
-// Z2: 4500 to 3000 (Toits en zinc)
-// Z3: 3000 to 1500 (Tour Eiffel)
-// Z4: 1500 to 0 (Nuages)
+// Z1: 6000 to 4500 (Grand Prix Circuit / Asphalt & Checkered kerbs)
+// Z2: 4500 to 3000 (Neon Cyber Highway / Purple & Cyan rails)
+// Z3: 3000 to 1500 (Magma Mountain / Volcano & Gold speed rings)
+// Z4: 1500 to 0 (Rainbow Skyway / Cosmic Star Road)
 
 const GRAMMAR_QUESTIONS = [
   { q: "Je ___ (aller) au cinéma.", opts: ["vais", "vas", "va"], ans: 0 },
@@ -49,20 +49,16 @@ const QUESTIONS = [...GRAMMAR_QUESTIONS, ...VOCAB_QUESTIONS];
 
 const generatePlatforms = () => {
   const platforms = [];
-  // Sol (Ground)
   platforms.push({ id: 'ground', x: 0, y: TOTAL_HEIGHT, w: WIDTH, h: 40, type: 'castle' });
   
   const addCheckpoint = (level, yPos, isStart = false) => {
     if (!isStart) {
       platforms.push({ id: `chk_${level}_floor`, x: WIDTH/2 - 150, y: yPos, w: 300, h: 40, type: 'castle' });
     }
-    // Barrier spans entire width 150px above floor to block further progress
     platforms.push({ id: `chk_${level}_barrier`, x: 0, y: yPos - 150, w: WIDTH, h: 20, type: 'barrier', level: level });
-    // Sensor in the middle of the floor
     platforms.push({ id: `chk_${level}_sensor`, x: WIDTH/2 - 60, y: yPos - 80, w: 120, h: 80, type: 'sensor', level: level });
   };
 
-  // Level 0 Gate (Start of game)
   addCheckpoint(0, TOTAL_HEIGHT, true);
 
   let currentY = TOTAL_HEIGHT - 220;
@@ -101,23 +97,14 @@ const generatePlatforms = () => {
        break;
     }
 
-    // --- Staircase Path Generation (Matching user's zig-zag drawing) ---
-    const w = 130 + Math.random() * 20; // Slightly more uniform width
+    const w = 130 + Math.random() * 20;
+    const cycle = (currentY % 750) / 750;
+    let t = cycle * 2;
+    if (t > 1) t = 2 - t;
     
-    // Triangle wave with period 750px. 
-    // Checkpoints are every 1500px, so 1500 % 750 === 0.
-    // This perfectly synchronizes the staircase to hit the exact edge at every checkpoint!
-    const cycle = (currentY % 750) / 750; // 0.0 to 1.0
-    let t = cycle * 2; // 0.0 to 2.0
-    if (t > 1) t = 2 - t; // Triangle wave: 0.0 -> 1.0 -> 0.0
-    
-    // t=0 (at checkpoints) -> X=150 (Left edge)
-    // t=1 (halfway) -> X=650 (Right edge)
     let pathCenter = 150 + t * 500; 
-    
     let x = pathCenter - w/2; 
     
-    // Clamp to screen bounds just in case
     if (x < 10) x = 10;
     if (x + w > WIDTH - 10) x = WIDTH - w - 10;
     
@@ -134,7 +121,7 @@ const generatePlatforms = () => {
     }
     
     platforms.push({ id: `plat_${idCounter++}`, x, y: currentY, w, h: 30, type });
-    currentY -= (90 + Math.random() * 30); // Consistent gap around 90-120
+    currentY -= (90 + Math.random() * 30);
   }
   return platforms;
 };
@@ -142,8 +129,7 @@ const generatePlatforms = () => {
 export default function DontLookDown({ onBack }) {
   const canvasRef = useRef(null);
   
-  // Game State
-  const [activeModal, setActiveModal] = useState(null); // 'question', 'victory'
+  const [activeModal, setActiveModal] = useState(null);
   const [currentQ, setCurrentQ] = useState(null);
   const [qState, setQState] = useState(null);
   const [questionsToPass, setQuestionsToPass] = useState(0);
@@ -152,29 +138,12 @@ export default function DontLookDown({ onBack }) {
   const [currentInteraction, setCurrentInteraction] = useState(null);
   const [musicPlaying, setMusicPlaying] = useState(false);
   
-  // Refs for Game Engine
   const platformsRef = useRef(generatePlatforms());
   const gatesClearedRef = useRef({ 0: false, 1: false, 2: false, 3: false });
   const gameLoopRef = useRef(null);
   const keys = useRef({});
   const audioElRef = useRef(null);
   const unusedQuestionsRef = useRef([...Array(QUESTIONS.length).keys()]);
-  const texturesRef = useRef({});
-
-  useEffect(() => {
-    const loadTex = (name, url) => {
-      const img = new Image();
-      img.src = url;
-      texturesRef.current[name] = img;
-    };
-    loadTex('stone', '/assets/stone_texture_1785755214327.jpg');
-    loadTex('wood', '/assets/wood_texture_1785755241167.jpg');
-    loadTex('metal', '/assets/metal_texture_1785755250281.jpg');
-    loadTex('fabric', '/assets/fabric_texture_1785755259803.jpg');
-    loadTex('leather', '/assets/leather_texture_1785755269784.jpg');
-    loadTex('chalkboard', '/assets/chalkboard_texture_1785755279285.jpg');
-  }, []);
-
 
   const playerRef = useRef({
     x: WIDTH / 2,
@@ -188,15 +157,12 @@ export default function DontLookDown({ onBack }) {
   });
 
   const cameraRef = useRef({ y: TOTAL_HEIGHT - HEIGHT });
-
-  // Use refs to avoid stale state in closures
   const stateRef = useRef({ activeModal, currentInteraction });
 
   useEffect(() => {
     stateRef.current = { activeModal, currentInteraction };
   }, [activeModal, currentInteraction]);
 
-  // Init Engine
   useEffect(() => {
     const handleKeyDown = (e) => {
       const isModalActive = stateRef.current.activeModal;
@@ -207,11 +173,8 @@ export default function DontLookDown({ onBack }) {
       
       const key = e.key.toLowerCase();
       
-      // Jump Logic & Interaction
       if (!isModalActive && !keys.current[key]) {
         if (key === 'w' || key === 'z' || key === 'arrowup' || key === ' ') {
-          
-          // Check for Interaction first
           if (key === ' ' && stateRef.current.currentInteraction) {
             triggerGate(stateRef.current.currentInteraction.level);
             keys.current[key] = true;
@@ -241,7 +204,6 @@ export default function DontLookDown({ onBack }) {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
       cancelAnimationFrame(gameLoopRef.current);
-    // Removed obsolete audio cleanup
     };
   }, []);
 
@@ -267,14 +229,13 @@ export default function DontLookDown({ onBack }) {
     }
   };
 
-  // Physics Loop
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     let lastTime = performance.now();
 
     const loop = (time) => {
-      const dt = Math.min((time - lastTime) / 1000, 0.05); // cap dt
+      const dt = Math.min((time - lastTime) / 1000, 0.05);
       lastTime = time;
 
       update(dt);
@@ -288,60 +249,46 @@ export default function DontLookDown({ onBack }) {
 
   const triggerGate = (level) => {
     if (gatesClearedRef.current[level]) return;
-    
-    // Stop player
     playerRef.current.vx = 0;
     playerRef.current.vy = 0;
-    
-    setQuestionsToPass(5); // Now requires 5 questions
+    setQuestionsToPass(5);
     setCorrectAnswers(0);
     askQuestion();
   };
 
   const askQuestion = () => {
     if (unusedQuestionsRef.current.length === 0) {
-       // Reset if exhausted
-       unusedQuestionsRef.current = [...Array(QUESTIONS.length).keys()];
+      unusedQuestionsRef.current = [...Array(QUESTIONS.length).keys()];
     }
+    const idxInUnused = Math.floor(Math.random() * unusedQuestionsRef.current.length);
+    const qIndex = unusedQuestionsRef.current.splice(idxInUnused, 1)[0];
     
-    // Pick random unused index
-    const randIdx = Math.floor(Math.random() * unusedQuestionsRef.current.length);
-    const qIdx = unusedQuestionsRef.current[randIdx];
-    
-    // Remove it from unused
-    unusedQuestionsRef.current.splice(randIdx, 1);
-    
-    const q = QUESTIONS[qIdx];
-    setCurrentQ(q);
+    setCurrentQ(QUESTIONS[qIndex]);
     setQState(null);
     setActiveModal('question');
   };
 
-  const handleAnswer = (idx) => {
+  const handleAnswer = (ansIdx) => {
     if (qState !== null) return;
     
-    if (idx === currentQ.ans) {
+    if (ansIdx === currentQ.ans) {
       setQState('correct');
-      setCorrectAnswers(c => {
-        const newC = c + 1;
-        setTimeout(() => {
-          if (newC >= 5) { // 5 correct needed to pass gate
-            setActiveModal(null);
-            // Unlock all gates that match the active level interaction
-            if (stateRef.current.currentInteraction) {
-               gatesClearedRef.current[stateRef.current.currentInteraction.level] = true;
-            }
-          } else {
-            askQuestion(); // Next question
-          }
-        }, 1000);
-        return newC;
-      });
+      const newCorrect = correctAnswers + 1;
+      setCorrectAnswers(newCorrect);
+      
+      setTimeout(() => {
+        if (newCorrect >= 5) {
+          gatesClearedRef.current[currentInteraction.level] = true;
+          setActiveModal(null);
+        } else {
+          askQuestion();
+        }
+      }, 700);
     } else {
       setQState('wrong');
       setTimeout(() => {
         askQuestion();
-      }, 1500);
+      }, 1000);
     }
   };
 
@@ -349,8 +296,7 @@ export default function DontLookDown({ onBack }) {
     if (stateRef.current.activeModal) return;
 
     const p = playerRef.current;
-    
-    // Horizontal Movement
+
     if (keys.current['a'] || keys.current['q'] || keys.current['arrowleft']) {
       p.vx = -MOVE_SPEED;
       p.facingRight = false;
@@ -358,43 +304,25 @@ export default function DontLookDown({ onBack }) {
       p.vx = MOVE_SPEED;
       p.facingRight = true;
     } else {
-      // Friction
-      p.vx *= 0.8; 
-      if (Math.abs(p.vx) < 10) p.vx = 0;
+      p.vx = 0;
     }
 
-    // Gravity with Terminal Velocity to prevent tunneling through thin platforms
     p.vy += GRAVITY * dt;
-    if (p.vy > 550) p.vy = 550;
 
-    // Apply Physics & 4-way solid collision
-    p.isGrounded = false;
     let newX = p.x + p.vx * dt;
     let newY = p.y + p.vy * dt;
 
-    // Screen Wrap X
-    if (newX < -p.size) newX = WIDTH;
-    else if (newX > WIDTH) newX = -p.size;
+    if (newX < p.size/2) newX = p.size/2;
+    if (newX > WIDTH - p.size/2) newX = WIDTH - p.size/2;
 
-    // Floor fallback
-    if (newY > TOTAL_HEIGHT - p.size/2) {
-      newY = TOTAL_HEIGHT - p.size/2;
-      p.vy = 0;
-      p.isGrounded = true;
-      p.jumpsRemaining = 2;
-    }
-
+    p.isGrounded = false;
     let activeSensor = null;
 
-    // AABB 4-way resolution
     for (let plat of platformsRef.current) {
-      // Ignore cleared barriers
-      if (plat.type === 'barrier' && gatesClearedRef.current[plat.level]) continue;
-
-      const phx = p.size / 2;
-      const phy = p.size / 2;
-      const plhx = plat.w / 2;
-      const plhy = plat.h / 2;
+      const phx = p.size/2;
+      const phy = p.size/2;
+      const plhx = plat.w/2;
+      const plhy = plat.h/2;
 
       const pcx = newX;
       const pcy = newY;
@@ -408,8 +336,6 @@ export default function DontLookDown({ onBack }) {
       const intersectY = Math.abs(dy) - (phy + plhy);
 
       if (intersectX < 0 && intersectY < 0) {
-        
-        // Sensor overlapping
         if (plat.type === 'sensor') {
           if (!gatesClearedRef.current[plat.level]) {
              activeSensor = plat;
@@ -417,19 +343,16 @@ export default function DontLookDown({ onBack }) {
           continue;
         }
 
-        // Victory overlapping
         if (plat.type === 'victory') {
            if (!stateRef.current.activeModal) {
               setActiveModal('victory');
            }
         }
 
-        // Ignore cleared barriers
         if (plat.type === 'barrier' && gatesClearedRef.current[plat.level]) {
           continue;
         }
 
-        // Solid Resolution (Castle platforms and Active Barriers)
         if (intersectX > intersectY) {
           if (dx > 0) { newX -= intersectX; p.vx = 0; }
           else { newX += intersectX; p.vx = 0; }
@@ -445,7 +368,6 @@ export default function DontLookDown({ onBack }) {
       }
     }
 
-    // --- Fall-Catch Mechanism ---
     let catchY = TOTAL_HEIGHT;
     if (gatesClearedRef.current[3]) catchY = 1500;
     else if (gatesClearedRef.current[2]) catchY = 3000;
@@ -460,7 +382,6 @@ export default function DontLookDown({ onBack }) {
     p.x = newX;
     p.y = newY;
 
-    // Update hints for sensors
     if (activeSensor) {
       setInteractionHint("Appuyez sur ESPACE pour ouvrir la Porte !");
       setCurrentInteraction(activeSensor);
@@ -469,333 +390,305 @@ export default function DontLookDown({ onBack }) {
       setCurrentInteraction(null);
     }
 
-    // Camera Tracking (Smooth follow)
-    const camTarget = p.y - HEIGHT * 0.6; // Keep player in lower half
+    const camTarget = p.y - HEIGHT * 0.6;
     if (camTarget < cameraRef.current.y) {
-       // Scroll up immediately if player goes high
        cameraRef.current.y = camTarget;
     } else {
-       // Slowly pan down if player falls (so they can see where they fall)
        cameraRef.current.y += (camTarget - cameraRef.current.y) * 0.1;
     }
     
-    // Clamp Camera
     if (cameraRef.current.y > TOTAL_HEIGHT - HEIGHT) cameraRef.current.y = TOTAL_HEIGHT - HEIGHT;
     if (cameraRef.current.y < 0) cameraRef.current.y = 0;
   };
 
+  // --- DRAW FUNCTION (MARIO KART ARCADE STYLING) ---
   const draw = (ctx, time) => {
-    const getPattern = (ctx, name) => {
-      const img = texturesRef.current[name];
-      if (img && img.complete && img.naturalWidth > 0) {
-        if (!img.pattern) img.pattern = ctx.createPattern(img, 'repeat');
-        return img.pattern;
-      }
-      return null;
-    };
-    // Clear
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
     
     const camY = cameraRef.current.y;
-    // Global Shadow Setup
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-    ctx.shadowBlur = 12;
-    ctx.shadowOffsetY = 8;
+
+    // --- Dynamic Parallax Background Gradient per Zone ---
+    let bgGrad = ctx.createLinearGradient(0, 0, 0, HEIGHT);
+    if (camY > 4500) {
+      // Zone 1: Grand Prix Asphalt Night Stadium
+      bgGrad.addColorStop(0, '#0f172a');
+      bgGrad.addColorStop(0.6, '#1e1b4b');
+      bgGrad.addColorStop(1, '#311042');
+    } else if (camY > 3000) {
+      // Zone 2: Cyber Neon Highway
+      bgGrad.addColorStop(0, '#040d1a');
+      bgGrad.addColorStop(0.5, '#150630');
+      bgGrad.addColorStop(1, '#3b0764');
+    } else if (camY > 1500) {
+      // Zone 3: Magma Mountain Track
+      bgGrad.addColorStop(0, '#2d0606');
+      bgGrad.addColorStop(0.5, '#581c0c');
+      bgGrad.addColorStop(1, '#9a3412');
+    } else {
+      // Zone 4: Rainbow Cosmic Skyway
+      bgGrad.addColorStop(0, '#030712');
+      bgGrad.addColorStop(0.5, '#1e1b4b');
+      bgGrad.addColorStop(1, '#4c1d95');
+    }
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+    // Speed Lines / Stadium Lights Background Accent
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.lineWidth = 2;
+    for (let i = -100; i < WIDTH + 200; i += 80) {
+      ctx.beginPath();
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i - 40, HEIGHT);
+      ctx.stroke();
+    }
+    ctx.restore();
 
     ctx.save();
     ctx.translate(0, -cameraRef.current.y);
 
-    // Helper function for wood texture
-    const drawWood = (x, y, w, h, baseColor, darkColor) => {
-      ctx.fillStyle = baseColor;
-      ctx.fillRect(x, y, w, h);
-      ctx.strokeStyle = darkColor;
-      ctx.lineWidth = 1;
+    // --- Helper 3D Arcade Box Drawer ---
+    const drawArcade3DBlock = (x, y, w, h, topColor, sideColor, rimColor) => {
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+      ctx.shadowBlur = 8;
+      ctx.shadowOffsetY = 6;
+
+      ctx.fillStyle = sideColor;
       ctx.beginPath();
-      for(let i = 2; i < h; i += 4) {
-         ctx.moveTo(x, y + i);
-         ctx.lineTo(x + w, y + i + Math.sin(x*0.1)*2);
+      ctx.roundRect(x, y, w, h, 8);
+      ctx.fill();
+
+      ctx.shadowColor = 'transparent';
+      ctx.fillStyle = topColor;
+      ctx.beginPath();
+      ctx.roundRect(x + 2, y + 2, w - 4, h/2, [6, 6, 2, 2]);
+      ctx.fill();
+
+      if (rimColor) {
+        ctx.strokeStyle = rimColor;
+        ctx.lineWidth = 3;
+        ctx.strokeRect(x, y, w, h);
       }
-      ctx.stroke();
+      ctx.restore();
     };
 
+    // --- Helper Turbo Arrows Drawer (`>>>`) ---
+    const drawTurboArrows = (x, y, w, h, color = '#facc15') => {
+      ctx.save();
+      ctx.fillStyle = color;
+      const arrowCount = Math.max(1, Math.floor(w / 35));
+      const spacing = w / (arrowCount + 1);
+      const pulse = Math.sin(time / 150) * 3;
+      for (let i = 1; i <= arrowCount; i++) {
+        const ax = x + spacing * i;
+        const ay = y + h / 2;
+        ctx.beginPath();
+        ctx.moveTo(ax - 8, ay - 6 + pulse);
+        ctx.lineTo(ax + 2, ay + pulse);
+        ctx.lineTo(ax - 8, ay + 6 + pulse);
+        ctx.lineTo(ax - 3, ay + pulse);
+        ctx.fill();
+      }
+      ctx.restore();
+    };
+
+    // --- Helper Red & White Checkered Kerb Drawer ---
+    const drawCheckeredKerb = (x, y, w, h = 6) => {
+      ctx.save();
+      const squareW = 10;
+      let toggle = false;
+      for (let bx = x; bx < x + w; bx += squareW) {
+        ctx.fillStyle = toggle ? '#ef4444' : '#ffffff';
+        ctx.fillRect(bx, y, Math.min(squareW, x + w - bx), h);
+        toggle = !toggle;
+      }
+      ctx.restore();
+    };
+
+    // --- DRAW PLATFORMS ---
     for (let plat of platformsRef.current) {
-      if (plat.y + plat.h < cameraRef.current.y || plat.y > cameraRef.current.y + HEIGHT + 200) continue; // Culling
-      
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-      ctx.shadowBlur = 12;
-      ctx.shadowOffsetY = 8;
-      
+      if (plat.y + plat.h < cameraRef.current.y || plat.y > cameraRef.current.y + HEIGHT + 200) continue;
+
       if (plat.type === 'castle') {
-        // Skeuomorphic Castle Stones
-        ctx.fillStyle = getPattern(ctx, 'stone') || '#64748b';
-        ctx.fillRect(plat.x, plat.y, plat.w, plat.h);
-        
-        ctx.strokeStyle = '#334155';
-        ctx.lineWidth = 2;
-        
-        // Horizontal mortar line
-        ctx.beginPath();
-        ctx.moveTo(plat.x, plat.y + plat.h/2);
-        ctx.lineTo(plat.x + plat.w, plat.y + plat.h/2);
-        ctx.stroke();
-        
-        // Vertical mortar lines
-        for(let i=20; i<plat.w; i+=40) {
-          // Top row
-          ctx.beginPath();
-          ctx.moveTo(plat.x + i, plat.y);
-          ctx.lineTo(plat.x + i, plat.y + plat.h/2);
-          ctx.stroke();
-          // Bottom row (staggered)
-          if (plat.x + i + 20 < plat.x + plat.w) {
-            ctx.beginPath();
-            ctx.moveTo(plat.x + i + 20, plat.y + plat.h/2);
-            ctx.lineTo(plat.x + i + 20, plat.y + plat.h);
-            ctx.stroke();
-          }
-        }
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#334155', '#1e293b', '#64748b');
+        drawCheckeredKerb(plat.x, plat.y, plat.w, 5);
+        drawCheckeredKerb(plat.x, plat.y + plat.h - 5, plat.w, 5);
+        drawTurboArrows(plat.x, plat.y + 4, plat.w, plat.h - 8, '#facc15');
+
       } else if (plat.type === 'table') {
-        // Medieval Wooden Table
-        ctx.fillStyle = getPattern(ctx, 'wood') || '#78350f';
-        ctx.fillRect(plat.x, plat.y, plat.w, 12); // Tabletop
-        // Legs
-        ctx.fillRect(plat.x + 10, plat.y + 12, 10, plat.h - 12);
-        ctx.fillRect(plat.x + plat.w - 20, plat.y + 12, 10, plat.h - 12);
-        // Tablecloth
-        ctx.fillStyle = '#f8fafc';
-        ctx.fillRect(plat.x + 20, plat.y, plat.w - 40, 16);
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#f59e0b', '#b45309', '#fef08a');
+        ctx.save();
+        ctx.fillStyle = '#1e293b';
+        for (let bx = plat.x + 10; bx < plat.x + plat.w - 10; bx += 24) {
+          ctx.beginPath();
+          ctx.moveTo(bx, plat.y);
+          ctx.lineTo(bx + 8, plat.y);
+          ctx.lineTo(bx - 4, plat.y + plat.h);
+          ctx.lineTo(bx - 12, plat.y + plat.h);
+          ctx.fill();
+        }
+        ctx.restore();
+
       } else if (plat.type === 'banner') {
-        // Suspended Medieval Banner
-        ctx.strokeStyle = '#475569';
-        ctx.lineWidth = 4;
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#dc2626', '#991b1b', '#fca5a5');
+        ctx.save();
+        ctx.fillStyle = '#facc15';
         ctx.beginPath();
-        ctx.moveTo(plat.x, plat.y + 5);
-        ctx.lineTo(plat.x + plat.w, plat.y + 5); // Rope/Rod
-        ctx.stroke();
-        
-        ctx.fillStyle = '#b91c1c'; // Royal red
-        ctx.beginPath();
-        ctx.moveTo(plat.x + 10, plat.y + 5);
-        ctx.lineTo(plat.x + plat.w - 10, plat.y + 5);
-        ctx.lineTo(plat.x + plat.w - 10, plat.y + plat.h + 10);
-        ctx.lineTo(plat.x + plat.w/2, plat.y + plat.h - 5); // Cutout
-        ctx.lineTo(plat.x + 10, plat.y + plat.h + 10);
+        ctx.arc(plat.x + plat.w/2, plat.y + plat.h/2, 10, 0, Math.PI*2);
         ctx.fill();
-        // Golden Fleur-de-lis (simplified)
-        ctx.fillStyle = getPattern(ctx, 'wood') || '#fde047';
-        ctx.beginPath();
-        ctx.arc(plat.x + plat.w/2, plat.y + 20, 6, 0, Math.PI*2);
-        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('★', plat.x + plat.w/2, plat.y + plat.h/2 + 4);
+        ctx.restore();
+
       } else if (plat.type === 'platter') {
-        // Giant Silver Platter
-        ctx.fillStyle = '#94a3b8';
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#fbbf24', '#d97706', '#fef08a');
+        ctx.save();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.ellipse(plat.x + plat.w/2, plat.y + 15, plat.w/2, 15, 0, 0, Math.PI*2);
-        ctx.fill();
-        ctx.fillStyle = '#cbd5e1';
-        ctx.beginPath();
-        ctx.ellipse(plat.x + plat.w/2, plat.y + 12, plat.w/2 - 10, 10, 0, 0, Math.PI*2);
-        ctx.fill();
-        // A cheese wheel on it
-        ctx.fillStyle = '#fef08a';
-        ctx.beginPath();
-        ctx.arc(plat.x + plat.w/2 - 20, plat.y + 8, 12, 0, Math.PI*2);
-        ctx.fill();
+        ctx.arc(plat.x + plat.w/2, plat.y + plat.h/2, 8, 0, Math.PI*2);
+        ctx.stroke();
+        ctx.restore();
+
       } else if (plat.type === 'anvil') {
-        // Metallic Anvil
-        let grad = ctx.createLinearGradient(plat.x, plat.y, plat.x, plat.y + plat.h);
-        grad.addColorStop(0, '#94a3b8');
-        grad.addColorStop(0.5, '#475569');
-        grad.addColorStop(1, '#1e293b');
-        ctx.fillStyle = grad;
-        
-        ctx.fillRect(plat.x + 20, plat.y, plat.w - 40, 10); // Top
-        ctx.beginPath();
-        ctx.moveTo(plat.x + 30, plat.y + 10);
-        ctx.lineTo(plat.x + plat.w - 30, plat.y + 10);
-        ctx.lineTo(plat.x + plat.w - 10, plat.y + plat.h);
-        ctx.lineTo(plat.x + 10, plat.y + plat.h); // Base
-        ctx.fill();
-        // Horn
-        ctx.beginPath();
-        ctx.moveTo(plat.x + 20, plat.y);
-        ctx.lineTo(plat.x - 10, plat.y + 5);
-        ctx.lineTo(plat.x + 20, plat.y + 10);
-        ctx.fill();
-        
-        // Highlight
-        ctx.fillStyle = 'rgba(255,255,255,0.4)';
-        ctx.fillRect(plat.x + 20, plat.y, plat.w - 40, 2);
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#38bdf8', '#0284c7', '#bae6fd');
+        drawTurboArrows(plat.x, plat.y, plat.w, plat.h, '#ffffff');
+
       } else if (plat.type === 'towel') {
-        // Beach Towel
-        ctx.fillStyle = '#38bdf8'; // Blue
-        ctx.fillRect(plat.x, plat.y, plat.w, 10);
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = '#f8fafc'; // White stripes
-        for(let i=10; i<plat.w; i+=20) {
-          ctx.fillRect(plat.x + i, plat.y, 10, 10);
-        }
-        // Fringes
-        ctx.fillStyle = '#fef08a';
-        ctx.fillRect(plat.x - 5, plat.y, 5, 10);
-        ctx.fillRect(plat.x + plat.w, plat.y, 5, 10);
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#ec4899', '#be185d', '#fbcfe8');
+        ctx.save();
+        const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'];
+        const stripeW = plat.w / colors.length;
+        colors.forEach((c, idx) => {
+          ctx.fillStyle = c;
+          ctx.fillRect(plat.x + idx * stripeW, plat.y + 4, stripeW, plat.h - 8);
+        });
+        ctx.restore();
+
       } else if (plat.type === 'longchair') {
-        // Transat (Deckchair)
-        ctx.fillStyle = getPattern(ctx, 'wood') || '#b45309';
-        ctx.fillRect(plat.x, plat.y + 10, plat.w, 5); // base
-        ctx.beginPath();
-        ctx.moveTo(plat.x + 10, plat.y + 15);
-        ctx.lineTo(plat.x + 30, plat.y - 15); // backrest support
-        ctx.lineWidth = 4;
-        ctx.strokeStyle = '#b45309';
-        ctx.stroke();
-        // Fabric
-        ctx.fillStyle = '#ef4444'; // Red fabric
-        ctx.beginPath();
-        ctx.moveTo(plat.x + plat.w - 10, plat.y + 10);
-        ctx.lineTo(plat.x + 25, plat.y + 10);
-        ctx.lineTo(plat.x + 35, plat.y - 15);
-        ctx.fill();
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#ef4444', '#991b1b', '#ffffff');
+        drawCheckeredKerb(plat.x, plat.y, plat.w, 4);
+
       } else if (plat.type === 'umbrella') {
-        // Beach Umbrella
-        // Sand base
-        ctx.fillStyle = '#fef08a';
-        ctx.beginPath();
-        ctx.ellipse(plat.x + plat.w/2, plat.y + 10, plat.w/2, 10, 0, 0, Math.PI*2);
-        ctx.fill();
-        // Pole
-        ctx.fillStyle = '#d4d4d8';
-        ctx.fillRect(plat.x + plat.w/2 - 2, plat.y - 30, 4, 40);
-        // Canopy
-        ctx.fillStyle = '#22c55e'; // Green/white
-        ctx.beginPath();
-        ctx.arc(plat.x + plat.w/2, plat.y - 30, plat.w/2 + 10, Math.PI, 0);
-        ctx.fill();
-        ctx.fillStyle = '#f8fafc';
-        ctx.beginPath();
-        ctx.moveTo(plat.x + plat.w/2, plat.y - 30 - (plat.w/2 + 10));
-        ctx.lineTo(plat.x + plat.w/2 + 10, plat.y - 30);
-        ctx.lineTo(plat.x + plat.w/2 - 10, plat.y - 30);
-        ctx.fill();
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#10b981', '#047857', '#a7f3d0');
+        ctx.save();
+        ctx.fillStyle = '#ffffff';
+        for (let bx = plat.x + 15; bx < plat.x + plat.w - 10; bx += 25) {
+          ctx.beginPath();
+          ctx.arc(bx, plat.y + plat.h/2, 4, 0, Math.PI*2);
+          ctx.fill();
+        }
+        ctx.restore();
+
       } else if (plat.type === 'sandcastle') {
-        // Sandcastle
-        ctx.fillStyle = '#fef08a';
-        ctx.fillRect(plat.x, plat.y + 10, plat.w, 10); // Base
-        ctx.fillRect(plat.x + 10, plat.y - 10, 20, 20); // Left tower
-        ctx.fillRect(plat.x + plat.w - 30, plat.y - 10, 20, 20); // Right tower
-        ctx.fillRect(plat.x + 30, plat.y - 5, plat.w - 60, 15); // Middle
-        ctx.shadowBlur = 0;
-        // Crenellations
-        ctx.fillStyle = getPattern(ctx, 'wood') || '#fde047';
-        for(let i=10; i<plat.w-10; i+=15) {
-          ctx.fillRect(plat.x + i, plat.y - 15, 8, 10);
-        }
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#f59e0b', '#b45309', '#fef08a');
+        drawTurboArrows(plat.x, plat.y, plat.w, plat.h, '#ffffff');
+
       } else if (plat.type === 'desk') {
-        // Classroom Desk
-        drawWood(plat.x, plat.y, plat.w, 10, '#d97706', '#92400e'); // Wood top
-        
-        // Metal legs
-        let metalGrad = ctx.createLinearGradient(0, plat.x, 0, plat.x+20);
-        metalGrad.addColorStop(0, '#cbd5e1');
-        metalGrad.addColorStop(1, '#475569');
-        ctx.fillStyle = metalGrad;
-        ctx.fillRect(plat.x + 10, plat.y + 10, 8, 20);
-        ctx.fillRect(plat.x + plat.w - 18, plat.y + 10, 8, 20);
-        
-        // Notebook on top
-        ctx.shadowBlur = 4; // localized shadow for notebook
-        ctx.fillStyle = '#f8fafc';
-        ctx.fillRect(plat.x + plat.w/2 - 15, plat.y - 6, 30, 6);
-        ctx.shadowBlur = 12; // reset
-        ctx.fillStyle = '#ef4444'; // Red pen
-        ctx.fillRect(plat.x + plat.w/2 + 18, plat.y - 4, 10, 2);
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#8b5cf6', '#6d28d9', '#ddd6fe');
+        drawTurboArrows(plat.x, plat.y, plat.w, plat.h, '#facc15');
+
       } else if (plat.type === 'blackboard') {
-        // Blackboard
-        ctx.fillStyle = getPattern(ctx, 'chalkboard') || '#064e3b';
-        ctx.fillRect(plat.x, plat.y, plat.w, plat.h);
-        
-        ctx.shadowBlur = 0;
-        // Chalk dust texture
-        ctx.fillStyle = 'rgba(255,255,255,0.05)';
-        for(let i=0; i<100; i++) {
-           ctx.fillRect(plat.x + Math.random()*plat.w, plat.y + Math.random()*plat.h, 2, 2);
-        }
-        
-        // Wood frame
-        ctx.strokeStyle = '#78350f'; 
-        ctx.lineWidth = 6;
-        ctx.strokeRect(plat.x, plat.y, plat.w, plat.h);
-        
-        // Chalk scribbles
-        ctx.fillStyle = '#f8fafc';
-        ctx.font = '16px "Comic Sans MS", cursive, sans-serif';
-        ctx.fillText('A + B = C', plat.x + 20, plat.y + 22);
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#065f46', '#044e37', '#34d399');
+        ctx.save();
+        ctx.fillStyle = '#34d399';
+        ctx.font = 'bold 12px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('⚡ SPEED TURBO ⚡', plat.x + plat.w/2, plat.y + plat.h/2 + 4);
+        ctx.restore();
+
       } else if (plat.type === 'book') {
-        // Detailed Giant Book
-        ctx.fillStyle = getPattern(ctx, 'leather') || '#1e3a8a';
-        ctx.fillRect(plat.x, plat.y + 5, plat.w, 25);
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = '#fbbf24'; // Gold trim
-        ctx.fillRect(plat.x + 5, plat.y + 5, plat.w - 10, 2);
-        ctx.fillRect(plat.x + 5, plat.y + 28, plat.w - 10, 2);
-        
-        // Pages
-        ctx.fillStyle = '#f1f5f9';
-        ctx.fillRect(plat.x + 5, plat.y + 10, plat.w - 10, 15);
-        ctx.strokeStyle = '#cbd5e1';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        for(let i=12; i<25; i+=3) {
-           ctx.moveTo(plat.x + 5, plat.y + i);
-           ctx.lineTo(plat.x + plat.w - 5, plat.y + i);
-        }
-        ctx.stroke();
-        
-        // Spine
-        ctx.fillStyle = getPattern(ctx, 'metal') || '#172554';
-        ctx.fillRect(plat.x, plat.y + 5, 8, 25);
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#1e40af', '#1e3a8a', '#93c5fd');
+        drawTurboArrows(plat.x, plat.y, plat.w, plat.h, '#facc15');
+
       } else if (plat.type === 'ruler') {
-        // Wooden/Yellow Ruler
-        ctx.fillStyle = getPattern(ctx, 'wood') || '#fde047';
-        ctx.fillRect(plat.x, plat.y, plat.w, 15);
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = '#1e293b'; // Black ticks
-        for(let i=5; i<plat.w; i+=10) {
-           ctx.fillRect(plat.x + i, plat.y, 2, i%30 === 5 ? 10 : 5);
-        }
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#facc15', '#ca8a04', '#ffffff');
+        drawCheckeredKerb(plat.x, plat.y, plat.w, plat.h);
+
       } else if (plat.type === 'barrier') {
         if (!gatesClearedRef.current[plat.level]) {
-          // Draw magical barrier
-          ctx.fillStyle = `rgba(168, 85, 247, ${0.5 + Math.sin(time/200)*0.2})`;
+          ctx.save();
+          const pulse = Math.sin(time/120) * 0.2 + 0.7;
+          ctx.fillStyle = `rgba(236, 72, 153, ${pulse})`;
           ctx.fillRect(plat.x, plat.y, plat.w, plat.h);
-          ctx.shadowBlur = 0;
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-          for(let i=0; i<plat.w; i+=50) {
-             ctx.fillRect(plat.x + i + Math.sin(time/500)*10, plat.y, 4, plat.h);
+
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 3;
+          ctx.strokeRect(plat.x, plat.y, plat.w, plat.h);
+
+          ctx.strokeStyle = '#f472b6';
+          ctx.lineWidth = 2;
+          for (let bx = plat.x; bx < plat.x + plat.w; bx += 30) {
+            ctx.beginPath();
+            ctx.moveTo(bx, plat.y);
+            ctx.lineTo(bx + 15, plat.y + plat.h);
+            ctx.stroke();
           }
+          ctx.restore();
         }
       } else if (plat.type === 'sensor') {
         if (!gatesClearedRef.current[plat.level]) {
-          // Draw glowing question mark station
-          ctx.fillStyle = getPattern(ctx, 'wood') || '#fde047';
-          ctx.fillRect(plat.x, plat.y, plat.w, plat.h);
-          ctx.fillStyle = '#1e293b';
-          ctx.font = '30px Arial';
+          ctx.save();
+          const bounceY = Math.sin(time / 200) * 6;
+          const boxX = plat.x + plat.w/2 - 25;
+          const boxY = plat.y + plat.h/2 - 25 + bounceY;
+          const boxSize = 50;
+
+          ctx.shadowColor = '#facc15';
+          ctx.shadowBlur = 20;
+
+          ctx.fillStyle = '#d97706';
+          ctx.beginPath();
+          ctx.roundRect(boxX, boxY, boxSize, boxSize, 10);
+          ctx.fill();
+
+          ctx.shadowColor = 'transparent';
+          ctx.fillStyle = '#facc15';
+          ctx.beginPath();
+          ctx.roundRect(boxX + 3, boxY + 3, boxSize - 6, boxSize - 6, 8);
+          ctx.fill();
+
+          ctx.fillStyle = '#78350f';
+          const rivets = [
+            [boxX + 7, boxY + 7],
+            [boxX + boxSize - 7, boxY + 7],
+            [boxX + 7, boxY + boxSize - 7],
+            [boxX + boxSize - 7, boxY + boxSize - 7]
+          ];
+          rivets.forEach(([rx, ry]) => {
+            ctx.beginPath();
+            ctx.arc(rx, ry, 2.5, 0, Math.PI*2);
+            ctx.fill();
+          });
+
+          ctx.fillStyle = '#ffffff';
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+          ctx.shadowBlur = 4;
+          ctx.shadowOffsetY = 2;
+          ctx.font = 'bold 30px sans-serif';
           ctx.textAlign = 'center';
-          ctx.fillText('❓', plat.x + plat.w/2, plat.y + plat.h/2 + 10);
+          ctx.fillText('?', boxX + boxSize/2, boxY + boxSize/2 + 10);
+          ctx.restore();
         }
+
       } else if (plat.type === 'victory') {
-        ctx.fillStyle = getPattern(ctx, 'wood') || '#fde047';
-        ctx.fillRect(plat.x, plat.y, plat.w, plat.h);
-        ctx.fillStyle = '#1e293b';
-        ctx.font = '24px Arial';
+        drawArcade3DBlock(plat.x, plat.y, plat.w, plat.h, '#f59e0b', '#b45309', '#fef08a');
+        ctx.save();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 22px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('🏆 SOMMET 🏆', plat.x + plat.w/2, plat.y + 22);
+        ctx.shadowColor = '#facc15';
+        ctx.shadowBlur = 10;
+        ctx.fillText('🏆 GRAND PRIX SOMMET 🏆', plat.x + plat.w/2, plat.y + 26);
+        ctx.restore();
       }
     }
 
-    // --- Draw Skeuomorphic Hamster ---
+    // --- DRAW HAMSTER (KEEP EXACT SAME CHARACTER) ---
     const p = playerRef.current;
     const py = p.y;
     
@@ -806,11 +699,8 @@ export default function DontLookDown({ onBack }) {
     const scaleRatio = p.size / 24;
     ctx.scale(scaleRatio, scaleRatio);
 
-    // Disable global shadow for individual body parts to avoid messy overlap, 
-    // we'll draw one crisp shadow for the hamster.
     ctx.shadowColor = 'transparent';
 
-    // Hamster Drop Shadow (on the ground/platform)
     if (p.isGrounded) {
        ctx.fillStyle = 'rgba(0,0,0,0.3)';
        ctx.beginPath();
@@ -876,21 +766,23 @@ export default function DontLookDown({ onBack }) {
     ctx.stroke();
 
     ctx.restore();
-    ctx.restore(); // restore global context
+    ctx.restore();
   };
 
   return (
     <div className="flex flex-col items-center">
       <div className="flex justify-between w-full max-w-[800px] mb-4 items-center">
         <button className="back-btn m-0" onClick={onBack}>← Quitter</button>
-        <h2 className="text-accent m-0">Ne Regarde Pas En Bas (Unité 2)</h2>
+        <h2 className="text-accent m-0 font-extrabold tracking-wider text-2xl uppercase" style={{ color: '#facc15', textShadow: '0 2px 8px rgba(0,0,0,0.6)' }}>
+          🏁 Ne Regarde Pas En Bas (Unité 2)
+        </h2>
       </div>
 
       <div className="dld-container" style={{ '--cam-y': cameraRef.current ? cameraRef.current.y : 0 }}>
         
         <div className="dld-hud">
           <div className="hud-panel">
-            <span>🏰 Sommet : {Math.max(0, Math.floor((TOTAL_HEIGHT - HEIGHT - cameraRef.current.y)/10))}m</span>
+            <span>🏁 Altitude : {Math.max(0, Math.floor((TOTAL_HEIGHT - HEIGHT - cameraRef.current.y)/10))}m</span>
           </div>
           <button 
             onClick={toggleMusic}
@@ -917,10 +809,10 @@ export default function DontLookDown({ onBack }) {
         {/* MODALS */}
         {activeModal === 'question' && currentQ && (
           <div className="game-overlay">
-            <div className="modal-content">
-              <h2>Porte de Grammaire</h2>
-              <p className="text-sm text-gray-500 mb-2">Réponses correctes requises : {correctAnswers} / 5</p>
-              <p className="text-lg mb-4">{currentQ.q}</p>
+            <div className="modal-content arcade-modal">
+              <h2 className="text-amber-400">❓ Boîte Mystère Grammaire</h2>
+              <p className="text-sm text-gray-700 mb-2 font-bold">Réponses correctes requises : {correctAnswers} / 5</p>
+              <p className="text-lg mb-4 text-slate-900 font-extrabold">{currentQ.q}</p>
               
               <div className="q-options">
                 {currentQ.opts.map((opt, i) => {
@@ -942,9 +834,9 @@ export default function DontLookDown({ onBack }) {
 
         {activeModal === 'victory' && (
           <div className="game-overlay" onClick={onBack}>
-            <div className="modal-content">
-              <h2 className="text-amber-500 text-3xl">🎉 SOMMET ATTEINT ! 🎉</h2>
-              <p className="text-lg">Félicitations ! Vous avez grimpé tout en haut sans jamais regarder en bas (ou presque) !</p>
+            <div className="modal-content arcade-modal">
+              <h2 className="text-amber-400 text-3xl font-black">🏆 VICTOIRE DU GRAND PRIX ! 🏆</h2>
+              <p className="text-lg font-bold text-slate-800">Félicitations ! Vous avez atteint le sommet ultime du circuit sans jamais regarder en bas !</p>
               <p className="text-sm italic mt-4 opacity-75">(Cliquez pour quitter)</p>
             </div>
           </div>
@@ -952,7 +844,7 @@ export default function DontLookDown({ onBack }) {
       </div>
       
       <div className="mt-4 text-center max-w-[800px] text-gray-600">
-        <p><strong>Comment jouer :</strong> Utilisez A/D ou les Flèches Gauche/Droite pour vous déplacer. Espace ou W pour sauter ! Montez le plus haut possible. Aux portes magiques, répondez aux questions sur les verbes irréguliers pour passer ! Si vous tombez... eh bien, vous redescendez.</p>
+        <p><strong>Comment jouer :</strong> Utilisez A/D ou les Flèches Gauche/Droite pour vous déplacer. Espace ou W pour sauter ! Montez le plus haut possible sur le circuit. Aux Boîtes Mystères ❓, répondez aux questions de grammaire pour franchir les portes laser !</p>
       </div>
     </div>
   );
