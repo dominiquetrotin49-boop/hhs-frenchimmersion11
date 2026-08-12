@@ -160,7 +160,7 @@ export default function Fishtopia({ onBack }) {
   const [activeModal, setActiveModal] = useState(null);
   const [caughtFish, setCaughtFish] = useState(null);
   
-  const playerLevel = rodLevel; // Player level reflects current Fishing Rod unlocked
+  const playerLevel = rodLevel;
   
   const [currentQ, setCurrentQ] = useState(null);
   const [qState, setQState] = useState(null);
@@ -316,26 +316,19 @@ export default function Fishtopia({ onBack }) {
 
   const getInteractionTarget = () => {
     const p = playerRef.current;
-    const checkDist = TILE * 1.4;
     
-    // Check points around player (North, South, West, East, Center)
-    const pointsAround = [
-      getTile(p.x, p.y - checkDist), // North / facing building entrance
-      getTile(p.x, p.y - TILE * 0.5),
-      getTile(p.x, p.y + checkDist),
-      getTile(p.x - checkDist, p.y),
-      getTile(p.x + checkDist, p.y),
-      getTile(p.x, p.y),
-    ];
+    // Check tile directly ABOVE (North / facing building entrance) of the hamster
+    const tileInFront = getTile(p.x, p.y - TILE * 0.75);
     
-    // Facing Question Booth entrance
-    if (pointsAround.includes(TEMPLE)) return 'station';
+    // ONLY available when hamster is standing directly in front of the Question Booth entrance facing North!
+    if (tileInFront === TEMPLE) return 'station';
 
-    // Facing Market stall
-    if (pointsAround.includes(MARKET)) return 'market';
+    // ONLY available when hamster is standing directly in front of the Fish Market stall counter facing North!
+    if (tileInFront === MARKET) return 'market';
 
-    // Fishing Pier / Water
-    if (getTile(p.x, p.y) === PIER || pointsAround.includes(WATER)) return 'fish';
+    // Fishing Pier / Water interaction (standing on pier facing water or on pier tile)
+    const currentTile = getTile(p.x, p.y);
+    if (currentTile === PIER || tileInFront === WATER) return 'fish';
 
     return null;
   };
@@ -738,7 +731,7 @@ export default function Fishtopia({ onBack }) {
       </div>
       
       <div className="mt-4 text-center max-w-[800px] text-gray-600">
-        <p><strong>Objectif :</strong> Répondez aux questions devant le Kiosque ❓ pour obtenir des appâts. Pêchez et revendez vos poissons au Marché 🏪 pour acheter de nouvelles cannes et débloquer les niveaux 2, 3 et 4 jusqu'à capturer le poisson légendaire !</p>
+        <p><strong>Objectif :</strong> Placez-vous directement devant l'entrée du <strong>Kiosque ❓</strong> ou du <strong>Marché 🏪</strong> (face au bâtiment) pour interagir ! Pêchez et revendez vos poissons pour débloquer les 4 niveaux !</p>
       </div>
     </div>
   );
