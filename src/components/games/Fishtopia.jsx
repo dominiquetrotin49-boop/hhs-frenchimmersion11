@@ -9,30 +9,30 @@ const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
 
 // Tile types
-const GRASS = 0; // Walkable Grass / Path
+const GRASS = 0; // Walkable Grass / Dirt Path
 const WATER = 1; // Impassable Lake
-const TREE = 2; // Impassable Woods (Off Limits!)
-const MARKET = 3; // Impassable Fish Market
-const TEMPLE = 4; // Impassable Question Sanctuary Temple
+const TREE = 2; // Impassable Forest (STRICTLY OFF LIMITS!)
+const MARKET = 3; // Impassable Fish Market Stall
+const TEMPLE = 4; // Impassable Question Booth
 const PIER = 5; // Walkable Fishing Pier
 
-// Simple collision map: Hamster can ONLY walk on Grass/Paths (0) and Pier (5)! Woods (2), Water (1), Temple (4), Market (3) are impassable.
+// Precise collision map matching the new Level 1 Zelda artwork: Forest (2), Water (1), Question Booth (4), Market (3) are strictly impassable.
 const map = [
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-  [2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,2],
-  [2,2,4,4,4,2,2,2,2,2,0,1,1,1,1,1,1,1,0,2], // Temple Building at cols 2-4, rows 2-3
-  [2,2,4,4,4,2,2,2,2,2,0,1,1,1,1,1,1,1,0,2],
-  [2,2,0,0,0,2,2,2,2,2,0,1,1,1,1,1,1,1,0,2], // Open Grass Path around Temple
-  [2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
-  [2,0,0,0,0,0,0,0,0,0,0,0,5,5,0,1,1,1,0,2],
-  [2,2,2,0,0,0,0,0,3,0,0,0,0,0,0,1,1,1,0,2], // Fish Market at col 8
-  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,2],
-  [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,1,1,1,0,2],
-  [2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
-  [2,2,2,2,2,0,0,0,0,0,0,1,1,1,1,1,1,1,0,2],
-  [2,2,2,2,2,2,2,2,0,0,0,1,1,1,1,1,1,1,0,2],
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2], // Row 0: Solid Forest (Off Limits)
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2], // Row 1: Solid Forest (Off Limits)
+  [2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2], // Row 2: Forest with upper path at col 2-3
+  [2,2,0,0,2,2,2,2,2,4,4,2,2,2,2,1,1,1,1,2], // Row 3: Question Booth framing
+  [2,2,2,0,2,2,2,2,2,4,4,2,2,2,2,1,1,1,1,2], // Row 4: Question Booth (4) at col 9-10
+  [2,2,2,0,0,0,0,0,0,0,0,2,2,1,1,1,1,1,1,2], // Row 5: Open Dirt Path in front of Question Booth
+  [2,2,2,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,2], // Row 6: Open Flowery Path
+  [2,2,2,0,0,0,0,0,0,0,0,0,0,0,3,3,1,1,1,2], // Row 7: Fish Market Stall (3) at col 14-15
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Row 8: Open Path to Pier
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,2], // Row 9: Fishing Pier (5) at cols 15-18
+  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,2], // Row 10: Fishing Pier (5)
+  [2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,1,1,1,1,2], // Row 11: Forest Bottom-Left & Lake
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2], // Row 12: Solid Forest (Off Limits)
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2], // Row 13: Solid Forest (Off Limits)
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2], // Row 14: Solid Forest (Off Limits)
 ];
 
 const FISH_TYPES = [
@@ -115,8 +115,8 @@ export default function Fishtopia({ onBack }) {
 
   // Hamster Player Entity (Size: 24)
   const playerRef = useRef({
-    x: 3.5 * TILE, // Spawn on grass path in front of Temple
-    y: 4.5 * TILE,
+    x: 10.5 * TILE, // Spawn on dirt path right in front of Question Booth!
+    y: 5.5 * TILE,
     vx: 0,
     vy: 0,
     speed: 3,
@@ -146,8 +146,8 @@ export default function Fishtopia({ onBack }) {
   }, []);
 
   useEffect(() => {
-    playerRef.current.x = 3.5 * TILE;
-    playerRef.current.y = 4.5 * TILE;
+    playerRef.current.x = 10.5 * TILE;
+    playerRef.current.y = 5.5 * TILE;
 
     const handleKeyDown = (e) => {
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
@@ -217,11 +217,11 @@ export default function Fishtopia({ onBack }) {
   const getTile = (x, y) => {
     const col = Math.floor(x / TILE);
     const row = Math.floor(y / TILE);
-    if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return 2; // Out of bounds is solid woods!
+    if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return 2; // Forest out of bounds!
     return map[row][col];
   };
 
-  // Hamster CAN ONLY walk on GRASS (0) or PIER (5). Everything else (Woods 2, Water 1, Temple 4, Market 3) is impassable!
+  // Hamster CAN ONLY walk on GRASS (0) or PIER (5). Forest (2), Water (1), Question Booth (4), Market (3) are STRICTLY IMPASSABLE!
   const isWalkableTile = (tile) => {
     return tile === GRASS || tile === PIER;
   };
@@ -242,7 +242,7 @@ export default function Fishtopia({ onBack }) {
     for (let c of points) {
       const tile = getTile(c.x, c.y);
       if (!isWalkableTile(tile)) {
-        return true;
+        return true; // Forest, Water, Question Booth, and Market STRICTLY BLOCK HAMSTER!
       }
     }
     return false;
@@ -310,13 +310,13 @@ export default function Fishtopia({ onBack }) {
     }
 
     const target = getInteractionTarget();
-    if (target === 'station') setInteractionHint("ESPACE pour entrer dans le Sanctuaire des Questions !");
-    else if (target === 'market') setInteractionHint("ESPACE pour ouvrir le Marché d'Hyrule");
+    if (target === 'station') setInteractionHint("ESPACE pour poser une question au Kiosque !");
+    else if (target === 'market') setInteractionHint("ESPACE pour ouvrir le Marché de Poisson");
     else if (target === 'fish') setInteractionHint("ESPACE pour pêcher dans le Lac (Coûte 1 Appât)");
     else setInteractionHint(null);
   };
 
-  // --- DRAW FUNCTION (ZELDA THEME WITH CLEAN GRASS & PATHS) ---
+  // --- DRAW FUNCTION (CLEAN BG IMAGE & HAMSTER SPRITE) ---
   const draw = (ctx, time) => {
     const rLevel = stateRef.current.rodLevel;
     
@@ -331,36 +331,6 @@ export default function Fishtopia({ onBack }) {
     } else {
       ctx.fillStyle = '#15803d';
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
-    }
-
-    // --- OVERLAY GAME OBJECTS (FISH MARKET STALL ICON) ---
-    for (let r = 0; r < ROWS; r++) {
-      for (let c = 0; c < COLS; c++) {
-        const tile = map[r][c];
-        const x = c * TILE;
-        const y = r * TILE;
-
-        if (tile === MARKET) {
-          // Merchant's Trading Post outside walls
-          ctx.save();
-          ctx.fillStyle = 'rgba(0,0,0,0.3)';
-          ctx.fillRect(x, y + 10, TILE, TILE);
-          
-          ctx.fillStyle = '#b45309';
-          ctx.fillRect(x, y + 10, TILE, 20);
-          
-          ctx.fillStyle = '#ef4444';
-          ctx.fillRect(x - 5, y - 5, TILE/2 + 5, 20);
-          ctx.fillStyle = '#f8fafc';
-          ctx.fillRect(x + TILE/2, y - 5, TILE/2 + 5, 20);
-          
-          ctx.fillStyle = 'white';
-          ctx.font = '16px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText('🏪', x + TILE/2, y + 25);
-          ctx.restore();
-        }
-      }
     }
 
     // --- DRAW HAMSTER (KEEP EXACT SAME CHARACTER) ---
@@ -481,7 +451,7 @@ export default function Fishtopia({ onBack }) {
       if (stateRef.current.bait > 0) {
         fish();
       } else {
-        alert("Vous n'avez plus d'appât ! Rendez-vous au Sanctuaire des Questions.");
+        alert("Vous n'avez plus d'appât ! Rendez-vous au Kiosque des Questions.");
       }
     }
   };
@@ -604,7 +574,7 @@ export default function Fishtopia({ onBack }) {
         {activeModal === 'question' && currentQ && (
           <div className="game-overlay">
             <div className="modal-content">
-              <h2>🏛️ Sanctuaire des Questions</h2>
+              <h2>🏛️ Kiosque des Questions</h2>
               <p className="text-lg mb-4 font-bold">{currentQ.q}</p>
               
               <div className="q-options">
@@ -622,7 +592,7 @@ export default function Fishtopia({ onBack }) {
                 })}
               </div>
 
-              {qState === 'correct' && <p className="text-success font-bold mt-2">+3 Appâts de la Déesse !</p>}
+              {qState === 'correct' && <p className="text-success font-bold mt-2">+3 Appâts !</p>}
               {qState === 'wrong' && <p className="text-danger font-bold mt-2">Incorrect !</p>}
             </div>
           </div>
@@ -643,7 +613,7 @@ export default function Fishtopia({ onBack }) {
         {activeModal === 'shop' && (
           <div className="game-overlay">
             <div className="modal-content">
-              <h2>🏪 Le Marché d'Hyrule</h2>
+              <h2>🏪 Le Marché de Poisson</h2>
               
               <div className="shop-items">
                 <div className="shop-item bg-amber-50 border-amber-200">
@@ -682,7 +652,7 @@ export default function Fishtopia({ onBack }) {
           <div className="game-overlay" onClick={() => setActiveModal(null)}>
             <div className="modal-content fish-alert cursor-pointer" style={{ border: '4px solid #f59e0b', boxShadow: '0 0 50px #f59e0b' }}>
               <h2 className="text-amber-500 text-3xl font-black">🏆 VICTOIRE D'HYRULE ! 🏆</h2>
-              <p>Vous avez attrapé la créature légendaire d'Hyrule...</p>
+              <p>Vous avez attrapé la créature légendaire...</p>
               <div className="fish-icon" style={{ fontSize: '100px' }}>{caughtFish.icon}</div>
               <h3 className="text-4xl font-bold rarity-Legendary mb-4">{caughtFish.name}</h3>
               <p className="text-lg font-bold">Félicitations, vous êtes le Héros Légendaire de Francotopia !</p>
@@ -694,7 +664,7 @@ export default function Fishtopia({ onBack }) {
       </div>
       
       <div className="mt-4 text-center max-w-[800px] text-gray-600">
-        <p><strong>Objectif :</strong> Déplacez-vous librement sur l'herbe et les chemins ! Avancez devant le <strong>Sanctuaire 🏛️</strong> pour répondre aux quiz, pêchez au ponton et revendez vos poissons au Marché 🏪 !</p>
+        <p><strong>Objectif :</strong> Suivez les chemins terreux à travers l'herbe fleurie ! Avancez devant le <strong>Kiosque des Questions ❓</strong> pour répondre aux quiz, pêchez sur le ponton du lac et revendez vos poissons au Marché 🏪 ! *(Entrée dans la forêt strictement interdite)*</p>
       </div>
     </div>
   );
