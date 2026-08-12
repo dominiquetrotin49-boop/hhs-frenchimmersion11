@@ -10,11 +10,11 @@ const WIDTH = 800;
 const HEIGHT = 600;
 const TOTAL_HEIGHT = 6000;
 
-// Levels (Zones):
-// Z1: 6000 to 4500 -> Circuit de Paris (Eiffel Tower, Haussmann Roofs, Seine Bridge & Streetlamps)
-// Z2: 4500 to 3000 -> Grand Prix du Vieux-Québec (Château Frontenac, Stone Ramparts & Aurora Borealis)
-// Z3: 3000 to 1500 -> Circuit de Montréal (La Biosphère, Pont Jacques-Cartier & Neon Skyline)
-// Z4: 1500 to 0    -> Circuit Céleste de Genève & Côte d'Azur (Le Jet d'Eau, Alpine Peaks & Cosmic Rainbow Road)
+// Levels (Zones) with Hergé Tintin Ligne Claire City Backgrounds:
+// Z1: 6000 to 4500 -> Paris (Tour Eiffel, Seine, Toits Haussmanniens)
+// Z2: 4500 to 3000 -> Vieux-Québec (Château Frontenac, Remparts, Saint-Laurent)
+// Z3: 3000 to 1500 -> Montréal (La Biosphère, Pont Jacques-Cartier, Mont-Royal)
+// Z4: 1500 to 0    -> Genève (Le Jet d'Eau, Lac Léman, Alpes)
 
 const GRAMMAR_QUESTIONS = [
   { q: "Je ___ (aller) au cinéma.", opts: ["vais", "vas", "va"], ans: 0 },
@@ -144,6 +144,19 @@ export default function DontLookDown({ onBack }) {
   const keys = useRef({});
   const audioElRef = useRef(null);
   const unusedQuestionsRef = useRef([...Array(QUESTIONS.length).keys()]);
+  const texturesRef = useRef({});
+
+  useEffect(() => {
+    const loadTex = (name, url) => {
+      const img = new Image();
+      img.src = url;
+      texturesRef.current[name] = img;
+    };
+    loadTex('bg_paris', '/assets/dld_bg_paris.jpg');
+    loadTex('bg_quebec', '/assets/dld_bg_quebec.jpg');
+    loadTex('bg_montreal', '/assets/dld_bg_montreal.jpg');
+    loadTex('bg_geneva', '/assets/dld_bg_geneva.jpg');
+  }, []);
 
   const playerRef = useRef({
     x: WIDTH / 2,
@@ -401,341 +414,58 @@ export default function DontLookDown({ onBack }) {
     if (cameraRef.current.y < 0) cameraRef.current.y = 0;
   };
 
-  // --- DRAW FRANCOPHONE CITY BACKGROUND CIRCUITS ---
-  const drawCityBackground = (ctx, camY, time) => {
+  // --- DRAW HERGÉ TINTIN LIGNE CLAIRE CITY BACKGROUNDS ---
+  const drawCityBackground = (ctx, camY) => {
     ctx.save();
+    
+    let key = 'bg_paris';
+    let titleText = "🇫🇷 PARIS — Tintin Ligne Claire";
 
     if (camY > 4500) {
-      // --- LEVEL 1: PARIS GRAND PRIX CIRCUIT ---
-      let skyGrad = ctx.createLinearGradient(0, 0, 0, HEIGHT);
-      skyGrad.addColorStop(0, '#090d16');
-      skyGrad.addColorStop(0.5, '#1e1b4b');
-      skyGrad.addColorStop(1, '#311042');
-      ctx.fillStyle = skyGrad;
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-      // Rotating Eiffel Tower Yellow Beacon Searchlight Beam
-      const angle = (time / 1500) % (Math.PI * 2);
-      ctx.save();
-      ctx.fillStyle = 'rgba(254, 240, 138, 0.12)';
-      ctx.beginPath();
-      ctx.moveTo(680, 220);
-      ctx.lineTo(680 + Math.cos(angle) * 700 - 100, 220 + Math.sin(angle) * 400);
-      ctx.lineTo(680 + Math.cos(angle) * 700 + 100, 220 + Math.sin(angle) * 400);
-      ctx.fill();
-      ctx.restore();
-
-      // Eiffel Tower 3D Arcade Silhouette (Right side)
-      ctx.save();
-      ctx.fillStyle = '#1e1b4b';
-      ctx.strokeStyle = '#38bdf8';
-      ctx.lineWidth = 2;
-      // Spire & Top
-      ctx.beginPath();
-      ctx.moveTo(680, 200);
-      ctx.lineTo(670, 320);
-      ctx.lineTo(690, 320);
-      ctx.closePath();
-      ctx.fill();
-      // Middle Tier
-      ctx.fillRect(660, 320, 40, 60);
-      // Base Arch
-      ctx.beginPath();
-      ctx.moveTo(640, 520);
-      ctx.lineTo(660, 380);
-      ctx.lineTo(700, 380);
-      ctx.lineTo(720, 520);
-      ctx.lineTo(700, 520);
-      ctx.lineTo(680, 430);
-      ctx.lineTo(660, 520);
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-
-      // Haussmann Rooftops Silhouette
-      ctx.save();
-      ctx.fillStyle = '#0f172a';
-      for (let x = -20; x < WIDTH + 40; x += 110) {
-        ctx.fillRect(x, 440, 95, 160);
-        // Roof Mansard Top
-        ctx.beginPath();
-        ctx.moveTo(x - 5, 440);
-        ctx.lineTo(x + 20, 400);
-        ctx.lineTo(x + 75, 400);
-        ctx.lineTo(x + 100, 440);
-        ctx.fill();
-        // Lit Warm Yellow Windows
-        ctx.fillStyle = '#fef08a';
-        for (let wy = 455; wy < 560; wy += 35) {
-          for (let wx = x + 15; wx < x + 80; wx += 25) {
-            if ((wx + wy) % 3 !== 0) {
-              ctx.fillRect(wx, wy, 12, 18);
-            }
-          }
-        }
-        ctx.fillStyle = '#0f172a';
-      }
-      ctx.restore();
-
-      // Glowing Street Lamps on Seine Promenade
-      ctx.save();
-      for (let lx = 40; lx < WIDTH; lx += 180) {
-        ctx.fillStyle = '#facc15';
-        ctx.shadowColor = '#facc15';
-        ctx.shadowBlur = 12;
-        ctx.beginPath();
-        ctx.arc(lx, 510, 6, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#334155';
-        ctx.fillRect(lx - 2, 516, 4, 40);
-      }
-      ctx.restore();
-
-      // Paris Grand Prix Banner Text
-      ctx.save();
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '900 16px sans-serif';
-      ctx.textAlign = 'left';
-      ctx.shadowColor = '#38bdf8';
-      ctx.shadowBlur = 8;
-      ctx.fillText('🇫🇷 CIRCUIT DE PARIS', 20, 40);
-      ctx.restore();
-
+      key = 'bg_paris';
+      titleText = "🇫🇷 PARIS (Tour Eiffel & Bords de Seine)";
     } else if (camY > 3000) {
-      // --- LEVEL 2: GRAND PRIX DU VIEUX-QUÉBEC ---
-      let skyGrad = ctx.createLinearGradient(0, 0, 0, HEIGHT);
-      skyGrad.addColorStop(0, '#0284c7');
-      skyGrad.addColorStop(0.5, '#1e1b4b');
-      skyGrad.addColorStop(1, '#0f172a');
-      ctx.fillStyle = skyGrad;
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-      // Shimmering Green Aurora Borealis Waves
-      ctx.save();
-      const wave = Math.sin(time / 600) * 20;
-      ctx.fillStyle = 'rgba(52, 211, 153, 0.18)';
-      ctx.beginPath();
-      ctx.moveTo(0, 100 + wave);
-      ctx.bezierCurveTo(200, 40 + wave, 500, 160 - wave, WIDTH, 80 + wave);
-      ctx.lineTo(WIDTH, 260);
-      ctx.lineTo(0, 260);
-      ctx.fill();
-      ctx.restore();
-
-      // Château Frontenac Turrets & Roofline (Center-Left)
-      ctx.save();
-      ctx.fillStyle = '#1e1b4b';
-      // Main Central Castle Tower
-      ctx.fillRect(160, 240, 180, 260);
-      // Spire Copper Roofs
-      ctx.fillStyle = '#059669'; // Copper Green
-      ctx.beginPath();
-      ctx.moveTo(150, 240);
-      ctx.lineTo(250, 120); // Central Peak
-      ctx.lineTo(350, 240);
-      ctx.fill();
-
-      // Side Turrets
-      ctx.beginPath();
-      ctx.moveTo(110, 300); ctx.lineTo(140, 200); ctx.lineTo(170, 300); ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(330, 300); ctx.lineTo(360, 200); ctx.lineTo(390, 300); ctx.fill();
-
-      // Lit Arched Windows
-      ctx.fillStyle = '#fef08a';
-      for (let wy = 270; wy < 460; wy += 40) {
-        for (let wx = 180; wx < 320; wx += 35) {
-          ctx.fillRect(wx, wy, 14, 22);
-        }
-      }
-      ctx.restore();
-
-      // Québec Fortified Ramparts Wall
-      ctx.save();
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(0, 460, WIDTH, 140);
-      // Stone Battlement Crenellations
-      for (let bx = 0; bx < WIDTH; bx += 40) {
-        ctx.fillRect(bx, 440, 24, 20);
-      }
-      // Torchlights on Ramparts
-      ctx.fillStyle = '#f97316';
-      ctx.shadowColor = '#f97316';
-      ctx.shadowBlur = 15;
-      for (let tx = 20; tx < WIDTH; tx += 120) {
-        ctx.beginPath();
-        ctx.arc(tx, 450, 5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.restore();
-
-      // Québec Grand Prix Title Banner
-      ctx.save();
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '900 16px sans-serif';
-      ctx.textAlign = 'left';
-      ctx.shadowColor = '#34d399';
-      ctx.shadowBlur = 8;
-      ctx.fillText('⚜️ GRAND PRIX DU VIEUX-QUÉBEC', 20, 40);
-      ctx.restore();
-
+      key = 'bg_quebec';
+      titleText = "⚜️ VIEUX-QUÉBEC (Château Frontenac & Remparts)";
     } else if (camY > 1500) {
-      // --- LEVEL 3: CIRCUIT DE MONTRÉAL (NEON NIGHT) ---
-      let skyGrad = ctx.createLinearGradient(0, 0, 0, HEIGHT);
-      skyGrad.addColorStop(0, '#311042');
-      skyGrad.addColorStop(0.5, '#581c87');
-      skyGrad.addColorStop(1, '#020617');
-      ctx.fillStyle = skyGrad;
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-      // La Biosphère Geodesic Dome (Left Side)
-      ctx.save();
-      ctx.strokeStyle = '#38bdf8';
-      ctx.lineWidth = 2;
-      ctx.shadowColor = '#38bdf8';
-      ctx.shadowBlur = 12;
-      ctx.beginPath();
-      ctx.arc(160, 360, 110, Math.PI, 0); // Dome half arc
-      ctx.stroke();
-
-      // Dome Geodesic Grid Lines
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
-      for (let a = Math.PI; a <= Math.PI * 2; a += Math.PI / 8) {
-        ctx.beginPath();
-        ctx.moveTo(160, 360);
-        ctx.lineTo(160 + Math.cos(a) * 110, 360 + Math.sin(a) * 110);
-        ctx.stroke();
-      }
-      ctx.restore();
-
-      // Pont Jacques-Cartier Rainbow Suspension Bridge (Right side)
-      ctx.save();
-      const colors = ['#ef4444', '#f59e0b', '#10b981', '#38bdf8', '#a855f7'];
-      ctx.lineWidth = 4;
-      colors.forEach((c, i) => {
-        ctx.strokeStyle = c;
-        ctx.beginPath();
-        ctx.moveTo(350, 420 + i * 4);
-        ctx.bezierCurveTo(480, 260 + i * 4, 650, 260 + i * 4, WIDTH, 400 + i * 4);
-        ctx.stroke();
-      });
-      ctx.restore();
-
-      // Montréal Modern Skyline
-      ctx.save();
-      ctx.fillStyle = '#020617';
-      const towers = [
-        [380, 240, 70, 260],
-        [460, 180, 90, 320],
-        [560, 220, 80, 280],
-        [650, 160, 100, 340]
-      ];
-      towers.forEach(([tx, ty, tw, th]) => {
-        ctx.fillRect(tx, ty, tw, th);
-        // Windows Grid
-        ctx.fillStyle = '#e0e7ff';
-        for (let wy = ty + 15; wy < ty + th - 20; wy += 25) {
-          for (let wx = tx + 10; wx < tx + tw - 15; wx += 20) {
-            if ((wx * wy) % 5 !== 0) ctx.fillRect(wx, wy, 8, 12);
-          }
-        }
-        ctx.fillStyle = '#020617';
-      });
-      ctx.restore();
-
-      // Montréal Circuit Title Banner
-      ctx.save();
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '900 16px sans-serif';
-      ctx.textAlign = 'left';
-      ctx.shadowColor = '#c084fc';
-      ctx.shadowBlur = 8;
-      ctx.fillText('🇨🇦 CIRCUIT DE MONTRÉAL', 20, 40);
-      ctx.restore();
-
+      key = 'bg_montreal';
+      titleText = "🇨🇦 MONTRÉAL (La Biosphère & Pont Jacques-Cartier)";
     } else {
-      // --- LEVEL 4: CIRCUIT CÉLESTE DE GENÈVE & CÔTE D'AZUR ---
-      let skyGrad = ctx.createLinearGradient(0, 0, 0, HEIGHT);
-      skyGrad.addColorStop(0, '#030712');
-      skyGrad.addColorStop(0.5, '#1e1b4b');
-      skyGrad.addColorStop(1, '#4c1d95');
-      ctx.fillStyle = skyGrad;
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-      // Twinkling Star Clusters
-      ctx.save();
-      ctx.fillStyle = '#ffffff';
-      for (let i = 0; i < 45; i++) {
-        const sx = (i * 137) % WIDTH;
-        const sy = (i * 89) % (HEIGHT - 100);
-        const starPulse = Math.sin(time / 200 + i) * 0.4 + 0.6;
-        ctx.globalAlpha = starPulse;
-        ctx.fillRect(sx, sy, i % 3 === 0 ? 3 : 2, i % 3 === 0 ? 3 : 2);
-      }
-      ctx.restore();
-
-      // Le Jet d'Eau de Genève (Shooting Water Column & Turquoise Spray)
-      ctx.save();
-      ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
-      ctx.shadowColor = '#38bdf8';
-      ctx.shadowBlur = 25;
-      // Main Fountain Column
-      ctx.fillRect(200, 100, 16, 400);
-      // Spray Top Cloud
-      ctx.fillStyle = 'rgba(186, 230, 253, 0.6)';
-      ctx.beginPath();
-      ctx.arc(208, 90, 35, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      // Alpine Mountain Silhouettes (Mont Blanc)
-      ctx.save();
-      ctx.fillStyle = '#1e1b4b';
-      ctx.beginPath();
-      ctx.moveTo(0, 500);
-      ctx.lineTo(120, 320);
-      ctx.lineTo(240, 440);
-      ctx.lineTo(420, 280); // Peak
-      ctx.lineTo(580, 460);
-      ctx.lineTo(720, 350);
-      ctx.lineTo(WIDTH, 500);
-      ctx.lineTo(WIDTH, 600);
-      ctx.lineTo(0, 600);
-      ctx.closePath();
-      ctx.fill();
-
-      // Snow-capped Peaks
-      ctx.fillStyle = '#e0e7ff';
-      ctx.beginPath();
-      ctx.moveTo(420, 280);
-      ctx.lineTo(390, 330);
-      ctx.lineTo(450, 330);
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-
-      // Genève Skyway Title Banner
-      ctx.save();
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '900 16px sans-serif';
-      ctx.textAlign = 'left';
-      ctx.shadowColor = '#38bdf8';
-      ctx.shadowBlur = 8;
-      ctx.fillText('🇨🇭 CIRCUIT CÉLESTE DE GENÈVE', 20, 40);
-      ctx.restore();
+      key = 'bg_geneva';
+      titleText = "🇨🇭 GENÈVE (Le Jet d'Eau & Lac Léman)";
     }
+
+    const img = texturesRef.current[key];
+    if (img && img.complete && img.naturalWidth > 0) {
+      ctx.drawImage(img, 0, 0, WIDTH, HEIGHT);
+    } else {
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    }
+
+    // Title Badge (Herge Album Banner Style)
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+    ctx.fillRect(15, 15, 420, 36);
+    ctx.strokeStyle = '#facc15';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(15, 15, 420, 36);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 15px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(titleText, 28, 38);
 
     ctx.restore();
   };
 
-  // --- DRAW FUNCTION (MARIO KART ARCADE STYLING) ---
+  // --- DRAW FUNCTION ---
   const draw = (ctx, time) => {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
     
     const camY = cameraRef.current.y;
 
-    // --- Draw Francophone City Background Circuits ---
-    drawCityBackground(ctx, camY, time);
+    // --- Draw Hergé Tintin City Backgrounds ---
+    drawCityBackground(ctx, camY);
 
     ctx.save();
     ctx.translate(0, -cameraRef.current.y);
