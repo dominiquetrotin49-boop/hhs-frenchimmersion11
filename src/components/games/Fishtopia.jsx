@@ -16,7 +16,7 @@ const MARKET = 3; // Impassable Fish Market Stall (Right X: col 9-10, row 7-8)
 const TEMPLE = 4; // Impassable Question Booth (Left X: col 6-7, row 5-6)
 const PIER = 5; // Walkable Fishing Pier
 
-// Level 1 Map (Lake Grasslands) - Placed EXACTLY where the user drew the 2 Xs on the image!
+// Level 1 Map (Lake Grasslands)
 const MAP_LEVEL_1 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -26,9 +26,9 @@ const MAP_LEVEL_1 = [
   [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2], // Left X: Question Booth at col 6-7, row 5-6
   [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
   [2,2,0,0,0,0,0,0,0,3,3,0,0,0,0,0,1,1,1,2], // Right X: Fish Market at col 9-10, row 7-8
-  [2,2,0,0,0,0,0,0,0,3,3,0,0,0,5,5,5,5,5,2], // Front counter path at row 9, Pier at col 14-18, row 8-9
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,2],
-  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,3,3,0,0,5,5,5,5,5,5,2], // Path & Pier at col 13-18, row 8-10
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,2],
+  [2,2,2,2,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,2],
   [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -45,9 +45,9 @@ const MAP_LEVEL_2 = [
   [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
   [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
   [2,2,0,0,0,0,0,0,0,3,3,0,0,0,0,0,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,3,3,0,5,5,5,5,5,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,1,1,2],
-  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,3,3,0,5,5,5,5,5,5,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,2],
+  [2,2,2,2,0,0,0,0,0,0,0,0,5,5,5,5,5,5,2],
   [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -64,9 +64,9 @@ const MAP_LEVEL_3 = [
   [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
   [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
   [2,2,0,0,0,0,0,0,0,3,3,0,0,0,0,0,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,3,3,0,0,5,5,5,5,5,1,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,1,2],
-  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,3,3,0,0,5,5,5,5,5,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,2],
+  [2,2,2,2,0,0,0,0,0,0,0,0,0,5,5,5,5,5,2],
   [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -83,9 +83,9 @@ const MAP_LEVEL_4 = [
   [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
   [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
   [2,2,0,0,0,0,0,0,0,3,3,0,0,0,0,0,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,3,3,5,5,5,5,5,5,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,1,1,2],
-  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,3,3,5,5,5,5,5,5,5,2],
+  [2,2,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,2],
+  [2,2,2,2,0,0,0,0,0,0,0,5,5,5,5,5,5,5,2],
   [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -165,10 +165,10 @@ export default function Fishtopia({ onBack }) {
   const [currentQ, setCurrentQ] = useState(null);
   const [qState, setQState] = useState(null);
 
-  // Hamster Player Entity (Size: 24) - Spawns directly facing Question Booth entrance at col 6.5 row 7
+  // Hamster Player Entity (Size: 24) - Spawns SAFELY on path at col 7.5, row 7.5 (100% Walkable!)
   const playerRef = useRef({
-    x: 6.5 * TILE,
-    y: 7.0 * TILE,
+    x: 7.5 * TILE,
+    y: 7.5 * TILE,
     vx: 0,
     vy: 0,
     speed: 3,
@@ -198,9 +198,9 @@ export default function Fishtopia({ onBack }) {
   }, []);
 
   useEffect(() => {
-    // Spawn player in front of Question Booth entrance (col 6.5, row 7.0)
-    playerRef.current.x = 6.5 * TILE;
-    playerRef.current.y = 7.0 * TILE;
+    // Spawn player safely on path in front of Question Booth (col 7.5, row 7.5)
+    playerRef.current.x = 7.5 * TILE;
+    playerRef.current.y = 7.5 * TILE;
 
     const handleKeyDown = (e) => {
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
@@ -284,19 +284,8 @@ export default function Fishtopia({ onBack }) {
     return activeMap[row][col];
   };
 
-  // Hamster CAN ONLY walk on GRASS (0) or PIER (5). Forest (2), Water (1), Question Booth (4), Market (3) are STRICTLY IMPASSABLE!
-  const isWalkableTile = (tile) => {
-    return tile === GRASS || tile === PIER;
-  };
-
   const checkCollisionAt = (px, py, size) => {
-    // If center of player is on PIER (5), ALWAYS ALLOW smooth walking on the fishing dock!
-    const centerTile = getTile(px, py);
-    if (centerTile === PIER) {
-      return false;
-    }
-
-    const colSize = size * 0.75; 
+    const colSize = size * 0.6; // Forgiving 14px collision radius
     const points = [
       { x: px - colSize/2, y: py - colSize/2 },
       { x: px + colSize/2, y: py - colSize/2 },
@@ -310,11 +299,22 @@ export default function Fishtopia({ onBack }) {
 
     for (let c of points) {
       const tile = getTile(c.x, c.y);
-      if (!isWalkableTile(tile)) {
-        return true; // Forest, Water, Question Booth, and Market STRICTLY BLOCK HAMSTER!
-      }
+      
+      // Question Booth (4) & Market (3) are STRICTLY IMPASSABLE!
+      if (tile === TEMPLE || tile === MARKET) return true;
+      
+      // Forest (2) is STRICTLY IMPASSABLE!
+      if (tile === TREE) return true;
     }
-    return false;
+
+    // If player center or movement is on GRASS (0) or PIER (5), ALLOW MOVEMENT!
+    const centerTile = getTile(px, py);
+    if (centerTile === GRASS || centerTile === PIER) {
+      return false;
+    }
+
+    // Otherwise (WATER), block
+    return true;
   };
 
   const getInteractionTarget = () => {
@@ -327,7 +327,7 @@ export default function Fishtopia({ onBack }) {
     // Question Booth prompt is ONLY available when hamster is standing directly in front of the entrance facing North!
     if (tileInFront === TEMPLE) return 'station';
 
-    // Market interaction is ONLY available when hamster is standing directly in front of the fish market counter facing North!
+    // Market interaction is ONLY available when hamster is standing directly in front of the Fish Market stall counter facing North!
     if (tileInFront === MARKET) return 'market';
 
     // Fishing Pier / Water interaction (standing on pier or facing water)
@@ -844,7 +844,7 @@ export default function Fishtopia({ onBack }) {
       </div>
       
       <div className="mt-4 text-center max-w-[800px] text-gray-600">
-        <p><strong>Objectif :</strong> Marchez sur le chemin en terre 🚶 ! Placez-vous devant l'entrée du <strong>Kiosque ❓</strong> ou du <strong>Marché 🏪</strong> pour ouvrir les questions et revendre vos poissons !</p>
+        <p><strong>Objectif :</strong> Marchez sur le chemin en terre 🚶 ! Montez sur le ponton de pêche pour attraper des poissons 🎣 !</p>
       </div>
     </div>
   );
