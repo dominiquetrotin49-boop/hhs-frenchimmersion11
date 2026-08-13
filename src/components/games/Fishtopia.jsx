@@ -12,22 +12,22 @@ const HEIGHT = ROWS * TILE;
 const GRASS = 0; // Walkable Grass / Sand / Path
 const WATER = 1; // Impassable Water
 const TREE = 2; // Impassable Forest (STRICTLY OFF LIMITS!)
-const MARKET = 3; // Impassable Fish Market Stall (col 12-13, row 5-6)
-const TEMPLE = 4; // Impassable Question Booth (col 9-10, row 5-6)
+const MARKET = 3; // Impassable Fish Market Stall (Right X: col 9-10, row 7-8)
+const TEMPLE = 4; // Impassable Question Booth (Left X: col 6-7, row 5-6)
 const PIER = 5; // Walkable Fishing Pier
 
-// Level 1 Map (Lake Grasslands) - Booth & Market right next to dock path!
+// Level 1 Map (Lake Grasslands) - Placed EXACTLY where the user drew the 2 Xs on the image!
 const MAP_LEVEL_1 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2],
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,1,1,2],
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,1,1,2],
-  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2], // Question Booth at col 9-10 row 5, Market at col 12-13 row 5
-  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2], // Question Booth at col 9-10 row 6, Market at col 12-13 row 6
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Main entrance path in front at row 7!
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,2], // Walkable Pier at col 14-18 row 8
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,2], // Walkable Pier at col 14-18 row 9
+  [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2], // Left X: Question Booth at col 6-7, row 5-6
+  [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,3,3,0,0,0,0,0,1,1,1,2], // Right X: Fish Market at col 9-10, row 7-8
+  [2,2,0,0,0,0,0,0,0,3,3,0,0,0,5,5,5,5,5,2], // Front counter path at row 9, Pier at col 14-18, row 8-9
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,2],
   [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -42,11 +42,11 @@ const MAP_LEVEL_2 = [
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
-  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2], // Question Booth at col 9-10, Market at col 12-13
-  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Main entrance path in front at row 7!
-  [2,2,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,1,1,2], // Walkable Pier at col 12-16 row 8
-  [2,2,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,1,1,2], // Walkable Pier at col 12-16 row 9
+  [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,3,3,0,0,0,0,0,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,3,3,0,5,5,5,5,5,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,1,1,2],
   [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -61,11 +61,11 @@ const MAP_LEVEL_3 = [
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
-  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2], // Question Booth at col 9-10, Market at col 12-13
-  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Main entrance path in front at row 7!
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,1,2], // Walkable Pier at col 13-17 row 8
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,1,2], // Walkable Pier at col 13-17 row 9
+  [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,3,3,0,0,0,0,0,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,3,3,0,0,5,5,5,5,5,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,1,2],
   [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -80,11 +80,11 @@ const MAP_LEVEL_4 = [
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
-  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2], // Question Booth at col 9-10, Market at col 12-13
-  [2,2,0,0,0,0,0,0,4,4,0,3,3,0,0,0,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Main entrance path in front at row 7!
-  [2,2,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,1,1,2], // Walkable Pier at col 10-16 row 8
-  [2,2,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,1,1,2], // Walkable Pier at col 10-16 row 9
+  [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,3,3,0,0,0,0,0,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,3,3,5,5,5,5,5,5,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,1,1,2],
   [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -165,10 +165,10 @@ export default function Fishtopia({ onBack }) {
   const [currentQ, setCurrentQ] = useState(null);
   const [qState, setQState] = useState(null);
 
-  // Hamster Player Entity (Size: 24) - Spawns on path directly facing Question Booth & Dock Entrance!
+  // Hamster Player Entity (Size: 24) - Spawns directly facing Question Booth entrance at col 6.5 row 7
   const playerRef = useRef({
-    x: 9.5 * TILE,
-    y: 7.5 * TILE,
+    x: 6.5 * TILE,
+    y: 7.0 * TILE,
     vx: 0,
     vy: 0,
     speed: 3,
@@ -198,9 +198,9 @@ export default function Fishtopia({ onBack }) {
   }, []);
 
   useEffect(() => {
-    // Spawn player in front of Question Booth & dock path (col 9.5, row 7.5)
-    playerRef.current.x = 9.5 * TILE;
-    playerRef.current.y = 7.5 * TILE;
+    // Spawn player in front of Question Booth entrance (col 6.5, row 7.0)
+    playerRef.current.x = 6.5 * TILE;
+    playerRef.current.y = 7.0 * TILE;
 
     const handleKeyDown = (e) => {
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
@@ -403,8 +403,8 @@ export default function Fishtopia({ onBack }) {
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
-    // --- DRAW DYNAMIC QUESTION BOOTH BUILDING (TEMPLE = 4 at col 9-10, row 5-6) ---
-    const boothX = 9 * TILE;
+    // --- DRAW DYNAMIC QUESTION BOOTH BUILDING (TEMPLE = 4 at Left X: col 6-7, row 5-6) ---
+    const boothX = 6 * TILE;
     const boothY = 5 * TILE;
     const boothW = 2 * TILE;
     const boothH = 2 * TILE;
@@ -467,9 +467,9 @@ export default function Fishtopia({ onBack }) {
     ctx.fillText('QUESTIONS', boothX + boothW/2, boothY + 32);
 
 
-    // --- DRAW DYNAMIC FISH MARKET STALL (MARKET = 3 at col 12-13, row 5-6) ---
-    const marketX = 12 * TILE;
-    const marketY = 5 * TILE;
+    // --- DRAW DYNAMIC FISH MARKET STALL (MARKET = 3 at Right X: col 9-10, row 7-8) ---
+    const marketX = 9 * TILE;
+    const marketY = 7 * TILE;
     const marketW = 2 * TILE;
     const marketH = 2 * TILE;
 
@@ -844,7 +844,7 @@ export default function Fishtopia({ onBack }) {
       </div>
       
       <div className="mt-4 text-center max-w-[800px] text-gray-600">
-        <p><strong>Objectif :</strong> Marchez sur le chemin qui mène au ponton de pêche 🎣 ! Placez-vous devant le Kiosque ❓ ou le Marché 🏪 pour interagir !</p>
+        <p><strong>Objectif :</strong> Marchez sur le chemin en terre 🚶 ! Placez-vous devant l'entrée du <strong>Kiosque ❓</strong> ou du <strong>Marché 🏪</strong> pour ouvrir les questions et revendre vos poissons !</p>
       </div>
     </div>
   );
