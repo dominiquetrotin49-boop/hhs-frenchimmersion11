@@ -445,7 +445,7 @@ export default function Fishtopia({ onBack }) {
     else setInteractionHint(null);
   };
 
-  // --- DRAW FUNCTION (UPRIGHT BIPEDAL HAMSTER WITH VERTICAL STRAIGHT-UP FISHING POLE TO THE SIDE) ---
+  // --- DRAW FUNCTION (DISNEY-STYLE CUTE HAMSTER WITH BIG EXPRESSIVE EYES, RED SCARF, WHITE GLOVES, AND VERTICAL FISHING POLE) ---
   const draw = (ctx, time) => {
     const rLevel = stateRef.current.rodLevel;
     
@@ -462,21 +462,21 @@ export default function Fishtopia({ onBack }) {
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
-    // --- DRAW ANIMATED UPRIGHT HAMSTER CHARACTER ---
+    // --- DRAW ANIMATED DISNEY-STYLE HAMSTER CHARACTER ---
     const p = playerRef.current;
     const isMoving = p.vx !== 0 || p.vy !== 0;
 
-    // Upright walk parameters
-    const walkSpeed = 40;
+    // Disney Walk parameters
+    const walkSpeed = 38;
     const legStep = isMoving ? Math.sin(time / walkSpeed) * 5 : 0;
-    const legLift = isMoving ? Math.abs(Math.cos(time / walkSpeed)) * 3 : 0;
-    const bodyBob = isMoving ? Math.abs(Math.sin(time / 50)) * 3 : Math.sin(time / 200) * 0.8;
-    const bodyWaddle = isMoving ? Math.sin(time / 80) * 0.08 : 0;
+    const legLift = isMoving ? Math.abs(Math.cos(time / walkSpeed)) * 3.5 : 0;
+    const bodyBob = isMoving ? Math.abs(Math.sin(time / 45)) * 3.5 : Math.sin(time / 180) * 1.0;
+    const bodyWaddle = isMoving ? Math.sin(time / 70) * 0.10 : 0;
 
-    // Shadow below feet
-    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    // Soft drop shadow below feet
+    ctx.fillStyle = 'rgba(0,0,0,0.22)';
     ctx.beginPath();
-    ctx.ellipse(p.x, p.y + p.size/2 + 2, p.size/2, p.size/5, 0, 0, Math.PI*2);
+    ctx.ellipse(p.x, p.y + p.size/2 + 3, p.size/2 + 1, p.size/5, 0, 0, Math.PI*2);
     ctx.fill();
 
     ctx.save();
@@ -488,96 +488,149 @@ export default function Fishtopia({ onBack }) {
     const dirScaleX = p.facing === 'left' ? -baseScale : baseScale;
     ctx.scale(dirScaleX, baseScale);
 
-    // 🐾 1. BACK FEET (Standing Upright on 2 Feet)
+    // 🐾 1. DISNEY BACK FEET / SHOES (Soft rounded Disney feet with yellow soles)
     ctx.fillStyle = '#b45309';
     // Left Foot
     ctx.beginPath();
-    ctx.ellipse(-5 - legStep * 0.5, 14 - (legStep > 0 ? legLift : 0), 3.5, 2.5, 0, 0, Math.PI * 2);
+    ctx.ellipse(-5.5 - legStep * 0.5, 14.5 - (legStep > 0 ? legLift : 0), 4, 3, 0, 0, Math.PI * 2);
     ctx.fill();
-    // Right Foot
+    ctx.fillStyle = '#fef08a';
     ctx.beginPath();
-    ctx.ellipse(5 + legStep * 0.5, 14 - (legStep < 0 ? legLift : 0), 3.5, 2.5, 0, 0, Math.PI * 2);
+    ctx.ellipse(-5.5 - legStep * 0.5, 15.5 - (legStep > 0 ? legLift : 0), 2.5, 1.5, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // 🐹 2. UPRIGHT BODY (Chubby Hamster Torso)
-    const bodyGrad = ctx.createRadialGradient(-2, -2, 2, 0, 2, 13);
-    bodyGrad.addColorStop(0, '#fde047');
-    bodyGrad.addColorStop(0.7, '#d97706');
+    ctx.fillStyle = '#b45309';
+    // Right Foot
+    ctx.beginPath();
+    ctx.ellipse(5.5 + legStep * 0.5, 14.5 - (legStep < 0 ? legLift : 0), 4, 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fef08a';
+    ctx.beginPath();
+    ctx.ellipse(5.5 + legStep * 0.5, 15.5 - (legStep < 0 ? legLift : 0), 2.5, 1.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 🐹 2. DISNEY CHUBBY TORSO & SCARF
+    const bodyGrad = ctx.createRadialGradient(-3, -3, 2, 0, 2, 14);
+    bodyGrad.addColorStop(0, '#fef08a');
+    bodyGrad.addColorStop(0.5, '#f59e0b');
     bodyGrad.addColorStop(1, '#92400e');
     ctx.fillStyle = bodyGrad;
     ctx.beginPath();
-    ctx.ellipse(0, 2, 11, 13, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 2, 12, 13.5, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // White Fluffy Belly Patch
-    const bellyGrad = ctx.createRadialGradient(0, 4, 1, 0, 5, 8);
+    // White Fluffy Disney Tummy
+    const bellyGrad = ctx.createRadialGradient(0, 5, 1, 0, 6, 8);
     bellyGrad.addColorStop(0, '#ffffff');
-    bellyGrad.addColorStop(1, '#e2e8f0');
+    bellyGrad.addColorStop(1, '#f1f5f9');
     ctx.fillStyle = bellyGrad;
     ctx.beginPath();
-    ctx.ellipse(0, 4, 7, 9, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 4.5, 7.5, 9, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Cute Fluffy Tail (Back)
-    ctx.fillStyle = '#fef08a';
+    // Disney Red Adventurer Scarf around neck
+    ctx.fillStyle = '#ef4444';
     ctx.beginPath();
-    ctx.arc(-11, 8, 3.5, 0, Math.PI * 2);
+    ctx.ellipse(0, -5, 8, 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Scarf Knot Tails
+    ctx.beginPath();
+    ctx.moveTo(-2, -4);
+    ctx.lineTo(-7, 2);
+    ctx.lineTo(-3, 3);
+    ctx.closePath();
     ctx.fill();
 
-    // 👂 3. EARS
-    const earBounce = isMoving ? Math.sin(time / 45) * 1.5 : 0;
+    // Fluffy Puffy Tail (Back)
+    ctx.fillStyle = '#fffbeb';
+    ctx.beginPath();
+    ctx.arc(-11.5, 7.5, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 👂 3. DISNEY BIG ROUND EARS
+    const earBounce = isMoving ? Math.sin(time / 40) * 1.8 : 0;
     ctx.fillStyle = '#b45309';
     ctx.beginPath();
-    ctx.arc(-8, -14 + earBounce, 5.5, 0, Math.PI * 2);
-    ctx.arc(8, -14 - earBounce, 5.5, 0, Math.PI * 2);
+    ctx.arc(-8.5, -14.5 + earBounce, 6, 0, Math.PI * 2);
+    ctx.arc(8.5, -14.5 - earBounce, 6, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#fbcfe8';
     ctx.beginPath();
-    ctx.arc(-8, -14 + earBounce, 2.8, 0, Math.PI * 2);
-    ctx.arc(8, -14 - earBounce, 2.8, 0, Math.PI * 2);
+    ctx.arc(-8.5, -14.5 + earBounce, 3.2, 0, Math.PI * 2);
+    ctx.arc(8.5, -14.5 - earBounce, 3.2, 0, Math.PI * 2);
     ctx.fill();
 
-    // 👁️ 4. HEAD / FACE
+    // 👁️ 4. BIG DISNEY EXPRESSIVE EYES, EYEBROWS & SMILE
     const eyeOffsetX = 2;
 
-    // Pink Cute Cheeks
-    ctx.fillStyle = 'rgba(244, 114, 182, 0.65)';
+    // Chubby Disney Cheek Puffs
+    ctx.fillStyle = 'rgba(251, 146, 60, 0.45)';
     ctx.beginPath();
-    ctx.arc(-6 + eyeOffsetX, -3, 2.5, 0, Math.PI * 2);
-    ctx.arc(4 + eyeOffsetX, -3, 2.5, 0, Math.PI * 2);
+    ctx.arc(-6.5 + eyeOffsetX, -2.5, 3.5, 0, Math.PI * 2);
+    ctx.arc(4.5 + eyeOffsetX, -2.5, 3.5, 0, Math.PI * 2);
     ctx.fill();
 
-    // Shiny Black Eyes
-    ctx.fillStyle = 'black';
+    // Large Round Disney Eyes
+    ctx.fillStyle = '#1e1b4b';
     ctx.beginPath();
-    ctx.arc(-4 + eyeOffsetX, -6, 2.5, 0, Math.PI * 2);
-    ctx.arc(4 + eyeOffsetX, -6, 2.5, 0, Math.PI * 2);
-    ctx.fill();
-    // White Eye Sparkles
-    ctx.fillStyle = 'white';
-    ctx.beginPath();
-    ctx.arc(-4.5 + eyeOffsetX, -7, 1, 0, Math.PI * 2);
-    ctx.arc(3.5 + eyeOffsetX, -7, 1, 0, Math.PI * 2);
+    ctx.ellipse(-4 + eyeOffsetX, -6.5, 3, 4, 0, 0, Math.PI * 2);
+    ctx.ellipse(4 + eyeOffsetX, -6.5, 3, 4, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Pink Snout / Nose
-    ctx.fillStyle = '#f472b6';
+    // Big White Disney Catchlight Highlights (Top Left)
+    ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.arc(eyeOffsetX, -2, 2, 0, Math.PI * 2);
+    ctx.arc(-5 + eyeOffsetX, -8, 1.4, 0, Math.PI * 2);
+    ctx.arc(3 + eyeOffsetX, -8, 1.4, 0, Math.PI * 2);
+    ctx.fill();
+    // Little Second Sparkle (Bottom Right)
+    ctx.beginPath();
+    ctx.arc(-3 + eyeOffsetX, -5.2, 0.7, 0, Math.PI * 2);
+    ctx.arc(5 + eyeOffsetX, -5.2, 0.7, 0, Math.PI * 2);
     ctx.fill();
 
-    // 🐾 5. LEFT ARM (Free arm resting / swinging naturally)
-    const armSwing = isMoving ? Math.sin(time / walkSpeed) * 3 : 0;
+    // Cute Disney Eyebrows
+    const browBounce = isMoving ? Math.sin(time / 50) * 1 : 0;
+    ctx.strokeStyle = '#78350f';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(-4 + eyeOffsetX, -12 + browBounce, 2.5, Math.PI + 0.3, Math.PI*2 - 0.3);
+    ctx.arc(4 + eyeOffsetX, -12 - browBounce, 2.5, Math.PI + 0.3, Math.PI*2 - 0.3);
+    ctx.stroke();
+
+    // Button Nose
+    ctx.fillStyle = '#f43f5e';
+    ctx.beginPath();
+    ctx.arc(eyeOffsetX, -2, 2.2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Cheerful Disney Smile
+    ctx.strokeStyle = '#78350f';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(eyeOffsetX, -1, 2.5, 0.2, Math.PI - 0.2);
+    ctx.stroke();
+
+    // 🐾 5. LEFT ARM (Disney White Glove Paw swinging)
+    const armSwing = isMoving ? Math.sin(time / walkSpeed) * 4 : 0;
     ctx.fillStyle = '#d97706';
     ctx.beginPath();
-    ctx.ellipse(-9, 2 + armSwing, 3.5, 2.5, Math.PI / 4, 0, Math.PI * 2);
+    ctx.ellipse(-9.5, 2 + armSwing, 3.5, 2.5, Math.PI / 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff'; // White Disney Paw Glove
+    ctx.beginPath();
+    ctx.arc(-11, 4 + armSwing, 2.2, 0, Math.PI * 2);
     ctx.fill();
 
     // 🎣 6. RIGHT ARM & VERTICAL FISHING POLE (Held straight up to the side, NOT across face!)
-    // Right Paw / Arm holding the pole at right side
+    // Right Paw / White Disney Glove holding pole at right side
     ctx.fillStyle = '#d97706';
     ctx.beginPath();
-    ctx.ellipse(8, 2, 3.5, 2.8, 0, 0, Math.PI * 2);
+    ctx.ellipse(8.5, 2, 3.5, 2.8, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff'; // White Glove
+    ctx.beginPath();
+    ctx.arc(9.5, 2, 2.2, 0, Math.PI * 2);
     ctx.fill();
 
     // Fishing Pole (Held straight vertical pointing up into the air!)
@@ -588,12 +641,20 @@ export default function Fishtopia({ onBack }) {
     else if (rLevel === 4) poleColor = '#38bdf8';
 
     const rodSway = isMoving ? Math.sin(time / 50) * 0.05 : 0;
-    ctx.translate(8, 2);
+    ctx.translate(9, 2);
     ctx.rotate(rodSway);
 
     // Pole Shaft pointing STRAIGHT UP (Clears face completely)
     ctx.fillStyle = poleColor;
-    ctx.fillRect(-1.5, -42, 3.5, 46);
+    ctx.fillRect(-1.5, -44, 3.5, 48);
+
+    // Shiny Disney Golden Reel
+    ctx.fillStyle = '#facc15';
+    ctx.beginPath();
+    ctx.arc(3, -2, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#78350f';
+    ctx.fillRect(3, -1, 3, 1);
 
     // Pole Grip Handle
     ctx.fillStyle = '#451a03';
@@ -601,27 +662,27 @@ export default function Fishtopia({ onBack }) {
 
     // DANGLING FISHING LINE & SWAYING HOOK / BOBBER
     const lineTipX = 0;
-    const lineTipY = -42;
-    const lineSway = isMoving ? Math.sin(time / 40) * 5 : Math.sin(time / 100) * 1.5;
+    const lineTipY = -44;
+    const lineSway = isMoving ? Math.sin(time / 38) * 5.5 : Math.sin(time / 100) * 1.5;
     const hookX = lineTipX + lineSway;
-    const hookY = lineTipY + 30;
+    const hookY = lineTipY + 32;
 
     // Line String
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
     ctx.lineWidth = 0.8;
     ctx.beginPath();
     ctx.moveTo(lineTipX, lineTipY);
     ctx.lineTo(hookX, hookY);
     ctx.stroke();
 
-    // Dangling Red & White Fishing Bobber / Hook
-    ctx.fillStyle = '#ef4444'; // Red top
+    // Dangling Red & White Disney Bobber
+    ctx.fillStyle = '#ef4444'; // Glossy Red top
     ctx.beginPath();
-    ctx.arc(hookX, hookY, 2.5, 0, Math.PI * 2);
+    ctx.arc(hookX, hookY, 2.8, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = '#ffffff'; // White bottom
+    ctx.fillStyle = '#ffffff'; // Glossy White bottom
     ctx.beginPath();
-    ctx.arc(hookX, hookY + 1.5, 1.8, 0, Math.PI * 2);
+    ctx.arc(hookX, hookY + 1.6, 2.0, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore(); // Restore pole transform
