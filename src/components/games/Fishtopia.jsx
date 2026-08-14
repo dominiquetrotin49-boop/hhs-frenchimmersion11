@@ -113,6 +113,7 @@ const RODS = [
   { id: 4, name: "Canne en Diamant", cost: 500, rates: [0.0, 0.10, 0.50, 0.40] }
 ];
 
+// EXPANDED QUESTION BANK (80 Total Questions - 20 Per Level!)
 const QUESTIONS = {
   "1": [
     { "q": "Comment dit-on 'journalist' ?", "opts": ["le journal", "le journaliste", "le média"], "ans": 1 },
@@ -124,28 +125,83 @@ const QUESTIONS = {
     { "q": "Un journaliste qui travaille à son compte est un ___.", "opts": ["rédacteur", "pigiste", "éditeur"], "ans": 1 },
     { "q": "Une fausse information est souvent appelée une ___.", "opts": ["fake news (infox)", "dépêche", "chronique"], "ans": 0 },
     { "q": "L'abonnement à un journal permet de le ___.", "opts": ["recevoir", "vendre", "supprimer"], "ans": 0 },
-    { "q": "Un bref résumé de l'actualité à la radio est un ___.", "opts": ["flash info", "roman", "poème"], "ans": 0 }
+    { "q": "Un bref résumé de l'actualité à la radio est un ___.", "opts": ["flash info", "roman", "poème"], "ans": 0 },
+    { "q": "Un dessin humoristique dans un journal est un ___.", "opts": ["dessin de presse", "tableau", "portrait"], "ans": 0 },
+    { "q": "Le responsable de la rédaction est le rédacteur en ___.", "opts": ["chef", "premier", "maître"], "ans": 0 },
+    { "q": "Vérifier les faits avant de publier s'appelle le ___.", "opts": ["fact-checking", "changement", "tirage"], "ans": 0 },
+    { "q": "Un commentaire d'opinion écrit par le directeur est un ___.", "opts": ["éditorial", "roman", "poème"], "ans": 0 },
+    { "q": "Un grand reportage d'investigation est une ___.", "opts": ["enquête", "pub", "annonce"], "ans": 0 },
+    { "q": "La censure empêche la libre ___ des idées.", "opts": ["circulation", "fermeture", "perte"], "ans": 0 },
+    { "q": "Les réseaux sociaux propagent vite les ___.", "opts": ["rumeurs", "statues", "vérités"], "ans": 0 },
+    { "q": "Un journal publié chaque jour est un ___.", "opts": ["quotidien", "mensuel", "annuel"], "ans": 0 },
+    { "q": "Un journal publié chaque semaine est un ___.", "opts": ["hebdomadaire", "quotidien", "mensuel"], "ans": 0 },
+    { "q": "Un droit fondamental du citoyen est la liberté d'___.", "opts": ["expression", "achat", "sommeil"], "ans": 0 }
   ],
   "2": [
     { "q": "Elle ___ (aller) au lycée tous les jours.", "opts": ["vas", "va", "vont"], "ans": 1 },
     { "q": "Nous ___ (avoir) un cours de français.", "opts": ["avons", "avez", "ont"], "ans": 0 },
     { "q": "Ils ___ (être) très motivés.", "opts": ["sont", "sommes", "êtes"], "ans": 0 },
     { "q": "Je ___ (faire) mes devoirs à la bibliothèque.", "opts": ["fais", "fait", "faisons"], "ans": 0 },
-    { "q": "Vous ___ (pouvoir) m'expliquer cette leçon ?", "opts": ["pouvez", "pouvons", "peuvent"], "ans": 0 }
+    { "q": "Vous ___ (pouvoir) m'expliquer cette leçon ?", "opts": ["pouvez", "pouvons", "peuvent"], "ans": 0 },
+    { "q": "Tu ___ (finir) tes exercices avant midi.", "opts": ["finis", "finit", "finissons"], "ans": 0 },
+    { "q": "Nous ___ (choisir) une bonne stratégie.", "opts": ["choisissons", "choisissez", "choisissent"], "ans": 0 },
+    { "q": "Elles ___ (parler) couramment français.", "opts": ["parlent", "parles", "parlez"], "ans": 0 },
+    { "q": "Je ___ (manger) une pomme à la récréation.", "opts": ["mange", "manges", "mangeons"], "ans": 0 },
+    { "q": "Vous ___ (écrire) un bel article de journal.", "opts": ["écrivez", "écrivons", "écrivent"], "ans": 0 },
+    { "q": "Il ___ (lire) un roman passionnant.", "opts": ["lit", "lis", "lisez"], "ans": 0 },
+    { "q": "Nous ___ (partir) en voyage demain.", "opts": ["partons", "partez", "partent"], "ans": 0 },
+    { "q": "Elles ___ (vendre) des poissons au marché.", "opts": ["vendent", "vends", "vendez"], "ans": 0 },
+    { "q": "Tu ___ (comprendre) cette règle de grammaire ?", "opts": ["comprends", "comprend", "comprenons"], "ans": 0 },
+    { "q": "Vous ___ (attendre) le bus scolaire.", "opts": ["attendez", "attendons", "attendent"], "ans": 0 },
+    { "q": "Je ___ (mettre) mes affaires dans mon sac.", "opts": ["mets", "met", "mettons"], "ans": 0 },
+    { "q": "Ils ___ (dormir) huit heures par nuit.", "opts": ["dorment", "dort", "dormons"], "ans": 0 },
+    { "q": "Nous ___ (apprendre) le vocabulaire de l'unité.", "opts": ["apprenons", "apprenez", "apprennent"], "ans": 0 },
+    { "q": "Elle ___ (répondre) aux questions du kiosque.", "opts": ["répond", "réponds", "répondent"], "ans": 0 },
+    { "q": "Tu ___ (voir) ce magnifique paysage ?", "opts": ["vois", "voit", "voyons"], "ans": 0 }
   ],
   "3": [
     { "q": "Tu ___ (devoir) réviser les verbes.", "opts": ["dois", "doit", "devons"], "ans": 0 },
     { "q": "Elles ___ (prendre) le bus de huit heures.", "opts": ["prennent", "prends", "prenez"], "ans": 0 },
     { "q": "Nous ___ (vouloir) réussir notre projet.", "opts": ["voulons", "voulez", "veulent"], "ans": 0 },
     { "q": "Je ___ (savoir) la réponse à la question.", "opts": ["sais", "sait", "savent"], "ans": 0 },
-    { "q": "Vous ___ (venir) à la réunion du club ?", "opts": ["venez", "venons", "viennent"], "ans": 0 }
+    { "q": "Vous ___ (venir) à la réunion du club ?", "opts": ["venez", "venons", "viennent"], "ans": 0 },
+    { "q": "Il faut que tu ___ (faire) attention.", "opts": ["fasses", "fais", "faites"], "ans": 0 },
+    { "q": "Je souhaiterais qu'elle ___ (être) présente.", "opts": ["soit", "est", "sera"], "ans": 0 },
+    { "q": "Si j'avais le temps, je ___ (partir) en vacances.", "opts": ["partirais", "partir", "partirai"], "ans": 0 },
+    { "q": "Il faut que nous ___ (avoir) nos billets.", "opts": ["ayons", "avons", "aurez"], "ans": 0 },
+    { "q": "Si vous étudiiez, vous ___ (réussir) l'examen.", "opts": ["réussiriez", "réussissez", "réussir"], "ans": 0 },
+    { "q": "Il est important qu'ils ___ (comprendre) la leçon.", "opts": ["comprennent", "comprennent pas", "comprendra"], "ans": 0 },
+    { "q": "Tu ___ (pouvoir) m'aider si tu voulais.", "opts": ["pourrais", "peux", "pouvez"], "ans": 0 },
+    { "q": "Bien qu'il ___ (faire) froid, nous sortons.", "opts": ["fasse", "fait", "fera"], "ans": 0 },
+    { "q": "Nous ___ (aimer) visiter la Bretagne cet été.", "opts": ["aimerions", "aimons", "aimerez"], "ans": 0 },
+    { "q": "Il faut que vous ___ (savoir) la vérité.", "opts": ["sachiez", "savez", "saurez"], "ans": 0 },
+    { "q": "Si elle travaillait, elle ___ (avoir) de meilleures notes.", "opts": ["aurait", "a", "aura"], "ans": 0 },
+    { "q": "Avant que tu ne ___ (partir), écoute-moi.", "opts": ["partes", "pars", "partira"], "ans": 0 },
+    { "q": "Je préférerais que nous ___ (choisir) ensemble.", "opts": ["choisissions", "choisissons", "choisirez"], "ans": 0 },
+    { "q": "Tu ___ (devoir) m'avertir plus tôt.", "opts": ["devrais", "dois", "devras"], "ans": 0 },
+    { "q": "Il faut qu'ils ___ (aller) au laboratoire.", "opts": ["aillent", "vont", "iront"], "ans": 0 }
   ],
   "4": [
     { "q": "J'ai vu cette vidéo, je l'ai ___ aimée.", "opts": ["beaucoup", "très", "trop"], "ans": 0 },
     { "q": "Combien de livres as-tu ? J'___ ai trois.", "opts": ["y", "les", "en"], "ans": 2 },
     { "q": "Je te conseille ___ lire cet article.", "opts": ["à", "de", "pour"], "ans": 1 },
     { "q": "Il ___ offre des fleurs. (à sa mère)", "opts": ["l'", "la", "lui"], "ans": 2 },
-    { "q": "Vous ___ avez parlé hier. (à vos amis)", "opts": ["les", "leur", "y"], "ans": 1 }
+    { "q": "Vous ___ avez parlé hier. (à vos amis)", "opts": ["les", "leur", "y"], "ans": 1 },
+    { "q": "Le livre ___ je te parle est passionnant.", "opts": ["dont", "que", "qui"], "ans": 0 },
+    { "q": "La ville ___ j'habite est magnifique.", "opts": ["où", "que", "dont"], "ans": 0 },
+    { "q": "Ce film est fantastique, je ___ recommande.", "opts": ["le", "lui", "en"], "ans": 0 },
+    { "q": "As-tu répondu à la lettre ? Oui, j'___ ai répondu.", "opts": ["y", "en", "la"], "ans": 0 },
+    { "q": "Les conseils ___ le professeur m'a donnés sont utiles.", "opts": ["que", "qui", "dont"], "ans": 0 },
+    { "q": "Elle se souvient ___ son premier voyage en France.", "opts": ["de", "à", "en"], "ans": 0 },
+    { "q": "Il s'intéresse beaucoup ___ arts et à la culture.", "opts": ["aux", "des", "les"], "ans": 0 },
+    { "q": "C'est l'étudiant ___ a gagné le concours.", "opts": ["qui", "que", "dont"], "ans": 0 },
+    { "q": "Avez-vous besoin de ce dictionnaire ? Oui, j'___ ai besoin.", "opts": ["en", "y", "le"], "ans": 0 },
+    { "q": "Ma sœur ___ a envoyé une belle carte postale. (à nous)", "opts": ["nous", "leur", "les"], "ans": 0 },
+    { "q": "Ce sont les affaires ___ j'ai achetées au marché.", "opts": ["que", "qui", "dont"], "ans": 0 },
+    { "q": "Penses-tu à tes examens ? Oui, j'___ pense souvent.", "opts": ["y", "en", "les"], "ans": 0 },
+    { "q": "Il m'a demandé ___ je voulais venir avec lui.", "opts": ["si", "que", "dont"], "ans": 0 },
+    { "q": "C'est la raison pour ___ il est en retard.", "opts": ["laquelle", "quel", "qui"], "ans": 0 },
+    { "q": "Elle ___ a dit la vérité sans hésiter. (à moi)", "opts": ["m'", "moi", "me les"], "ans": 0 }
   ]
 };
 
@@ -288,7 +344,7 @@ export default function Fishtopia({ onBack }) {
 
   // --- HARD RULES FOR MOVEMENT / WALKABILITY ---
   // Hamster CAN ONLY walk on Sand/Dirt Path/Grass (GRASS=0) or Wooden Pier Dock (PIER=5).
-  // Water (1), Forest/Cliffs/Granite Rocks/Palm Trees (2), Fish Market structure (3), Question Booth structure (4) are 100% IMPASSABLE!
+  // Water (1), Forest/Cliffs/Granite Rocks/Jungle (2), Fish Market structure (3), Question Booth structure (4) are 100% IMPASSABLE!
   const checkCollisionAt = (px, py, size) => {
     const colSize = 16; // 16px collision box around hamster center
     const points = [
