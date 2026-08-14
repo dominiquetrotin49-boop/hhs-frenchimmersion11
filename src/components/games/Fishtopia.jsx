@@ -9,37 +9,32 @@ const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
 
 // Tile types
-const GRASS = 0; // Walkable Grass / Sand / Path
-const WATER = 1; // Impassable Water
-const TREE = 2; // Impassable Forest (STRICTLY OFF LIMITS!)
-const MARKET = 3; // Impassable Fish Market Stall (col 10-11, row 4-5)
-const TEMPLE = 4; // Impassable Question Booth (col 6-7, row 5-6)
-const PIER = 5; // Walkable Fishing Pier
+const GRASS = 0; // Walkable Sand / Dirt Path / Grass
+const WATER = 1; // IMPASSABLE Water (Strict Hard Rule: CANNOT walk on water!)
+const TREE = 2; // IMPASSABLE Forest / Cliffs (Strict Hard Rule: CANNOT walk through trees/rocks!)
+const MARKET = 3; // IMPASSABLE Fish Market Stall structure
+const TEMPLE = 4; // IMPASSABLE Question Booth Cabin structure
+const PIER = 5; // Walkable Wooden Fishing Dock ("Penton")
 
-// Standard Map Grid for all 4 Levels
-// Question Booth at col 6-7, row 5-6 | Fish Market at col 10-11, row 4-5 | Pier at col 11-18, row 8-10
+// Standard Map Grid for all 4 Levels (matching the image layout)
+// Question Booth at col 2-4, row 4-6 | Fish Market at col 12-14, row 1-3 | Pier at col 10-17, row 9-12
 const MAP_GRID = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,3,3,0,0,0,2,1,1,1,2], // Fish Market Stall at col 10-11, row 4
-  [2,2,0,0,0,0,4,4,0,0,3,3,0,0,0,1,1,1,1,2], // Question Booth at col 6-7 row 5-6 | Fish Market at col 10-11 row 5
-  [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2], // Front Entrance Path for Question Booth (row 7) & Fish Market (row 6)
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Open Main Path
-  [2,2,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,5,2], // Wooden Fishing Dock Pier at col 11-18, row 8-10
-  [2,2,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,5,2],
-  [2,2,2,2,0,0,0,0,0,0,0,5,5,5,5,5,5,5,5,2],
-  [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,2,2,1,1,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,2,2,1,1,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,2,2,1,1,2],
+  [2,2,4,4,4,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2], // Fish Market front entrance path at col 12-14, row 4
+  [2,2,4,4,4,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,4,4,4,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2], // Question Booth front entrance path at col 2-4, row 7
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,5,1,2], // Wooden Fishing Dock Pier at col 10-17, row 9-12
+  [2,2,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,5,1,2],
+  [2,2,2,2,0,0,0,0,0,0,5,5,5,5,5,5,5,5,1,2],
+  [2,2,2,2,2,2,0,0,0,0,5,5,5,5,5,5,5,5,1,2],
+  [2,2,2,2,2,2,2,2,0,0,1,1,1,1,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
-
-const MAP_LEVEL_1 = MAP_GRID;
-const MAP_LEVEL_2 = MAP_GRID;
-const MAP_LEVEL_3 = MAP_GRID;
-const MAP_LEVEL_4 = MAP_GRID;
 
 // ADJUSTED ECONOMY: Reduced fish sales values (~3x lower) so students must answer more questions!
 const FISH_TYPES = [
@@ -114,9 +109,9 @@ export default function Fishtopia({ onBack }) {
   const [currentQ, setCurrentQ] = useState(null);
   const [qState, setQState] = useState(null);
 
-  // Hamster Player Entity (Size: 24) - Spawns SAFELY on main path at col 7.5, row 7.5 (100% Walkable!)
+  // Hamster Player Entity (Size: 24) - Spawns SAFELY on path at col 6, row 7.5
   const playerRef = useRef({
-    x: 7.5 * TILE,
+    x: 6.0 * TILE,
     y: 7.5 * TILE,
     vx: 0,
     vy: 0,
@@ -147,8 +142,8 @@ export default function Fishtopia({ onBack }) {
   }, []);
 
   useEffect(() => {
-    // Spawn player safely on main dirt path (col 7.5, row 7.5)
-    playerRef.current.x = 7.5 * TILE;
+    // Spawn player safely on dirt path (col 6, row 7.5)
+    playerRef.current.x = 6.0 * TILE;
     playerRef.current.y = 7.5 * TILE;
 
     const handleKeyDown = (e) => {
@@ -217,20 +212,18 @@ export default function Fishtopia({ onBack }) {
     return () => cancelAnimationFrame(gameLoopRef.current);
   }, []);
 
-  const getMapForLevel = () => {
-    return MAP_GRID;
-  };
-
   const getTile = (x, y) => {
     const col = Math.floor(x / TILE);
     const row = Math.floor(y / TILE);
-    if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return 2; // Forest out of bounds!
-    const activeMap = getMapForLevel();
-    return activeMap[row][col];
+    if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return 2; // Off-screen forest boundary
+    return MAP_GRID[row][col];
   };
 
+  // --- HARD RULE 1: WALKABILITY CONSTRAINTS ---
+  // Hamster CAN ONLY walk on Sand/Dirt Path/Grass (GRASS=0) or Wooden Pier Dock (PIER=5).
+  // Water (1), Forest/Cliffs (2), Fish Market structure (3), Question Booth structure (4) are 100% IMPASSABLE!
   const checkCollisionAt = (px, py, size) => {
-    const colSize = size * 0.6; // Forgiving 14px collision radius
+    const colSize = 16; // 16px collision box around hamster center
     const points = [
       { x: px - colSize/2, y: py - colSize/2 },
       { x: px + colSize/2, y: py - colSize/2 },
@@ -244,39 +237,31 @@ export default function Fishtopia({ onBack }) {
 
     for (let c of points) {
       const tile = getTile(c.x, c.y);
-      
-      // Question Booth (4) & Market (3) are STRICTLY IMPASSABLE!
-      if (tile === TEMPLE || tile === MARKET) return true;
-      
-      // Forest (2) is STRICTLY IMPASSABLE!
-      if (tile === TREE) return true;
+      // Hard Rule: If tile is NOT walkable Grass/Path (0) or Pier Dock (5), BLOCK MOVEMENT!
+      if (tile !== GRASS && tile !== PIER) {
+        return true; // BLOCKED! Cannot walk on water, trees, or building structures!
+      }
     }
 
-    // If player center or movement is on GRASS (0) or PIER (5), ALLOW MOVEMENT!
-    const centerTile = getTile(px, py);
-    if (centerTile === GRASS || centerTile === PIER) {
-      return false;
-    }
-
-    // Otherwise (WATER), block
-    return true;
+    return false; // Walkable!
   };
 
+  // --- HARD RULES 2 & 3: STRICT INTERACTION TRIGGERS ---
   const getInteractionTarget = () => {
     const p = playerRef.current;
     
-    // Check tile directly ABOVE (North / facing building entrance) of the hamster
+    // Check tile directly in front (North / facing building entrance) of the hamster
     const tileInFront = getTile(p.x, p.y - TILE * 0.75);
     const currentTile = getTile(p.x, p.y);
 
-    // Question Booth prompt is ONLY available when hamster is standing directly in front of the entrance facing North!
+    // Rule 2: Question Booth tab ONLY when standing directly in front facing North
     if (tileInFront === TEMPLE) return 'station';
 
-    // Market interaction is ONLY available when hamster is standing directly in front of the Fish Market stall counter facing North!
+    // Rule 2: Fish Market / Trading tab ONLY when standing directly in front facing North
     if (tileInFront === MARKET) return 'market';
 
-    // Fishing Pier / Water interaction (standing on pier or facing water)
-    if (currentTile === PIER || tileInFront === WATER) return 'fish';
+    // Rule 3: Fishing tab ONLY when standing on the wooden fishing dock ("penton")
+    if (currentTile === PIER) return 'fish';
 
     return null;
   };
@@ -302,7 +287,7 @@ export default function Fishtopia({ onBack }) {
     p.vx = dx;
     p.vy = dy;
 
-    // Sub-step movement X (Hamster can walk on grass, sand, paths, and pier!)
+    // Sub-step movement X (Hamster can ONLY walk on sand/dirt path, grass, or pier!)
     const stepsX = Math.ceil(Math.abs(dx));
     const stepDx = dx / Math.max(1, stepsX);
     for (let s = 0; s < stepsX; s++) {
@@ -313,7 +298,7 @@ export default function Fishtopia({ onBack }) {
       }
     }
 
-    // Sub-step movement Y (Hamster can walk on grass, sand, paths, and pier!)
+    // Sub-step movement Y (Hamster can ONLY walk on sand/dirt path, grass, or pier!)
     const stepsY = Math.ceil(Math.abs(dy));
     const stepDy = dy / Math.max(1, stepsY);
     for (let s = 0; s < stepsY; s++) {
@@ -331,7 +316,7 @@ export default function Fishtopia({ onBack }) {
     else setInteractionHint(null);
   };
 
-  // --- DRAW FUNCTION (HIGH DEFINITION ARTWORK & HAMSTER SPRITE) ---
+  // --- DRAW FUNCTION (BACKGROUND ARTWORK & HAMSTER SPRITE) ---
   const draw = (ctx, time) => {
     const rLevel = stateRef.current.rodLevel;
     
@@ -347,7 +332,6 @@ export default function Fishtopia({ onBack }) {
       ctx.fillStyle = '#15803d';
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
     }
-
 
     // --- DRAW HAMSTER SPRITE ---
     const p = playerRef.current;
@@ -680,7 +664,7 @@ export default function Fishtopia({ onBack }) {
       </div>
       
       <div className="mt-4 text-center max-w-[800px] text-gray-600">
-        <p><strong>Objectif :</strong> Marchez sur le chemin en terre 🚶 ! Montez sur le ponton de pêche pour attraper des poissons 🎣 ! Placez-vous devant l'entrée du Marché ou du Kiosque pour interagir !</p>
+        <p><strong>Règles :</strong> Marchez sur le chemin 🚶 ! Montez sur le ponton pour pêcher 🎣 ! Placez-vous devant l'entrée du Kiosque ou du Marché pour interagir !</p>
       </div>
     </div>
   );
