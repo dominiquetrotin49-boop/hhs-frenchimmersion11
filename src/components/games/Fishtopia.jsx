@@ -11,13 +11,12 @@ const HEIGHT = ROWS * TILE;
 // Tile types
 const GRASS = 0; // Walkable Sand / Dirt Path / Grass
 const WATER = 1; // IMPASSABLE Water (Strict Hard Rule: CANNOT walk on water!)
-const TREE = 2; // IMPASSABLE Forest / Cliffs (Strict Hard Rule: CANNOT walk through trees/rocks!)
+const TREE = 2; // IMPASSABLE Forest / Rocks / Cliff face (Strict Hard Rule: CANNOT walk through trees/rocks/cliffs!)
 const MARKET = 3; // IMPASSABLE Fish Market Stall structure
 const TEMPLE = 4; // IMPASSABLE Question Booth Cabin structure
 const PIER = 5; // Walkable Wooden Fishing Dock ("Penton")
 
-// Standard Map Grid for all 4 Levels (matching the image layout)
-// Question Booth at col 2-4, row 4-6 | Fish Market at col 12-14, row 1-3 | Pier at col 10-17, row 9-12
+// Base Map Grid (Level 1, 3, 4)
 const MAP_GRID = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,2,2,1,1,2],
@@ -35,6 +34,29 @@ const MAP_GRID = [
   [2,2,2,2,2,2,2,2,0,0,1,1,1,1,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
+
+// Level 2 Map (Brittany Coastal Cliffs): STRICT hard rules for cliffs, granite rocks, and ocean water!
+const MAP_LEVEL_2 = [
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,2,2,2,2,2], // Granite Rocks & Cliff Boundary at top right
+  [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,2,2,2,2,2],
+  [2,2,4,4,4,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2], // Cliff Face & Rocks on right (col 15-19)
+  [2,2,4,4,4,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2],
+  [2,2,4,4,4,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2], // Path
+  [2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,2,1,1,1,2], // Granite Rocks at left (col 0-7) & ocean right (col 16-18)
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,1,1,1,2], // Wooden Dock at col 10-15, row 9-12 | Cliff edge & ocean at right
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,1,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,1,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,1,1,1,2],
+  [2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,2], // Cliff base & ocean water (Strictly Impassable!)
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+];
+
+const MAP_LEVEL_1 = MAP_GRID;
+const MAP_LEVEL_3 = MAP_GRID;
+const MAP_LEVEL_4 = MAP_GRID;
 
 // ADJUSTED ECONOMY: Reduced fish sales values (~3x lower) so students must answer more questions!
 const FISH_TYPES = [
@@ -212,16 +234,25 @@ export default function Fishtopia({ onBack }) {
     return () => cancelAnimationFrame(gameLoopRef.current);
   }, []);
 
+  const getMapForLevel = () => {
+    const lvl = stateRef.current?.rodLevel || 1;
+    if (lvl === 2) return MAP_LEVEL_2;
+    if (lvl === 3) return MAP_LEVEL_3;
+    if (lvl === 4) return MAP_LEVEL_4;
+    return MAP_LEVEL_1;
+  };
+
   const getTile = (x, y) => {
     const col = Math.floor(x / TILE);
     const row = Math.floor(y / TILE);
-    if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return 2; // Off-screen forest boundary
-    return MAP_GRID[row][col];
+    if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return 2; // Off-screen boundary is strictly IMPASSABLE!
+    const activeMap = getMapForLevel();
+    return activeMap[row][col];
   };
 
-  // --- HARD RULE 1: WALKABILITY CONSTRAINTS ---
+  // --- HARD RULES FOR MOVEMENT / WALKABILITY ---
   // Hamster CAN ONLY walk on Sand/Dirt Path/Grass (GRASS=0) or Wooden Pier Dock (PIER=5).
-  // Water (1), Forest/Cliffs (2), Fish Market structure (3), Question Booth structure (4) are 100% IMPASSABLE!
+  // Water (1), Forest/Cliffs/Granite Rocks (2), Fish Market structure (3), Question Booth structure (4) are 100% IMPASSABLE!
   const checkCollisionAt = (px, py, size) => {
     const colSize = 16; // 16px collision box around hamster center
     const points = [
@@ -239,14 +270,14 @@ export default function Fishtopia({ onBack }) {
       const tile = getTile(c.x, c.y);
       // Hard Rule: If tile is NOT walkable Grass/Path (0) or Pier Dock (5), BLOCK MOVEMENT!
       if (tile !== GRASS && tile !== PIER) {
-        return true; // BLOCKED! Cannot walk on water, trees, or building structures!
+        return true; // BLOCKED! Cannot walk on water, rocks, cliffs, trees, or building structures!
       }
     }
 
     return false; // Walkable!
   };
 
-  // --- HARD RULES 2 & 3: STRICT INTERACTION TRIGGERS ---
+  // --- HARD RULES FOR INTERACTION TRIGGERS ---
   const getInteractionTarget = () => {
     const p = playerRef.current;
     
@@ -254,13 +285,13 @@ export default function Fishtopia({ onBack }) {
     const tileInFront = getTile(p.x, p.y - TILE * 0.75);
     const currentTile = getTile(p.x, p.y);
 
-    // Rule 2: Question Booth tab ONLY when standing directly in front facing North
+    // Rule: Question Booth tab ONLY when standing directly in front facing North
     if (tileInFront === TEMPLE) return 'station';
 
-    // Rule 2: Fish Market / Trading tab ONLY when standing directly in front facing North
+    // Rule: Fish Market / Trading tab ONLY when standing directly in front facing North
     if (tileInFront === MARKET) return 'market';
 
-    // Rule 3: Fishing tab ONLY when standing on the wooden fishing dock ("penton")
+    // Rule: Fishing tab ONLY when standing on the wooden fishing dock ("penton")
     if (currentTile === PIER) return 'fish';
 
     return null;
@@ -287,7 +318,7 @@ export default function Fishtopia({ onBack }) {
     p.vx = dx;
     p.vy = dy;
 
-    // Sub-step movement X (Hamster can ONLY walk on sand/dirt path, grass, or pier!)
+    // Sub-step movement X (Hamster CANNOT walk on water, rocks, or cliffs!)
     const stepsX = Math.ceil(Math.abs(dx));
     const stepDx = dx / Math.max(1, stepsX);
     for (let s = 0; s < stepsX; s++) {
@@ -298,7 +329,7 @@ export default function Fishtopia({ onBack }) {
       }
     }
 
-    // Sub-step movement Y (Hamster can ONLY walk on sand/dirt path, grass, or pier!)
+    // Sub-step movement Y (Hamster CANNOT walk on water, rocks, or cliffs!)
     const stepsY = Math.ceil(Math.abs(dy));
     const stepDy = dy / Math.max(1, stepsY);
     for (let s = 0; s < stepsY; s++) {
