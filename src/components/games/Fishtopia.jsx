@@ -343,11 +343,11 @@ export default function Fishtopia({ onBack }) {
     return activeMap[row][col];
   };
 
-  // --- HARD RULES FOR MOVEMENT / WALKABILITY ---
-  // Hamster CAN ONLY walk on Sand/Dirt Path/Grass (GRASS=0) or Wooden Pier Dock (PIER=5).
-  // Water (1), Forest/Cliffs/Granite Rocks/Jungle (2), Fish Market structure (3), Question Booth structure (4) are 100% IMPASSABLE!
+  // --- HARD RULES FOR MOVEMENT / WALKABILITY (STRICT 12-POINT COLLISION SAMPLING) ---
+  // Hard Rule: Hamster CAN ONLY walk on Sand/Dirt Path (GRASS=0) or Wooden Pier Dock (PIER=5).
+  // Water (1), Forest/Trees/Bushes/Rocks/Long Grass/Cliffs (2), Fish Market structure (3), Question Booth structure (4) are 100% STRICTLY IMPASSABLE in ALL levels!
   const checkCollisionAt = (px, py, size) => {
-    const colSize = 16; // 16px collision box around hamster center
+    const colSize = 18; // Strict 18px bounding box around hamster center
     const points = [
       { x: px - colSize/2, y: py - colSize/2 },
       { x: px + colSize/2, y: py - colSize/2 },
@@ -357,13 +357,17 @@ export default function Fishtopia({ onBack }) {
       { x: px, y: py + colSize/2 },
       { x: px - colSize/2, y: py },
       { x: px + colSize/2, y: py },
+      { x: px - colSize/4, y: py - colSize/2 },
+      { x: px + colSize/4, y: py - colSize/2 },
+      { x: px - colSize/4, y: py + colSize/2 },
+      { x: px + colSize/4, y: py + colSize/2 }
     ];
 
     for (let c of points) {
       const tile = getTile(c.x, c.y);
-      // Hard Rule: If tile is NOT walkable Grass/Path (0) or Pier Dock (5), BLOCK MOVEMENT!
+      // Hard Rule: If tile is NOT walkable Dirt/Sand Path (0) or Pier Dock (5), BLOCK MOVEMENT IMMEDIATELY!
       if (tile !== GRASS && tile !== PIER) {
-        return true; // BLOCKED! Cannot walk on water, trees, cliffs, booth, or market structure!
+        return true; // BLOCKED! Strictly cannot walk on water, bushes, rocks, forest, long grass, or buildings!
       }
     }
 
