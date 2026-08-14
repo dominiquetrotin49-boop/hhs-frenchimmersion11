@@ -9,43 +9,44 @@ const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
 
 // Tile types
-const GRASS = 0; // Walkable Sand / Sand Path / Grass
+const GRASS = 0; // Walkable Sand / Dirt Path ONLY
 const WATER = 1; // IMPASSABLE Water (Strict Hard Rule: CANNOT walk on water!)
-const TREE = 2; // IMPASSABLE Forest / Rocks / Cliff face / Jungle (Strict Hard Rule: CANNOT walk through obstacles!)
+const TREE = 2; // IMPASSABLE Forest / Bushes / Rocks / Long Grass / Cliff / Jungle
 const MARKET = 3; // IMPASSABLE Fish Market Stall structure
 const TEMPLE = 4; // IMPASSABLE Question Booth Cabin structure
 const PIER = 5; // Walkable Wooden Fishing Dock ("Penton")
 
-// Base Map Grid (Level 1 & Standard)
+// Base Map Grid (Level 1): ONLY the narrow dirt path (0) and wooden penton (5) are walkable.
+// All surrounding grass, bushes, long grass, rocks, trees, and water are STRICTLY IMPASSABLE (1 & 2)!
 const MAP_GRID = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,1,1,2],
   [2,2,4,4,4,4,2,2,2,2,2,2,3,3,3,3,2,1,1,2],
-  [2,2,4,4,4,4,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2], // Fish Market front entrance path at col 12-15, row 4
-  [2,2,4,4,4,4,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,2,4,4,4,4,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2], // Question Booth front entrance path at col 2-5, row 7
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,5,1,2], // Wooden Fishing Dock Pier at col 10-17, row 9-12
-  [2,2,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,5,1,2],
-  [2,2,2,2,0,0,0,0,0,0,5,5,5,5,5,5,5,5,1,2],
-  [2,2,2,2,2,2,0,0,0,0,5,5,5,5,5,5,5,5,1,2],
-  [2,2,2,2,2,2,2,2,0,0,1,1,1,1,1,1,1,1,1,2],
+  [2,2,4,4,4,4,2,2,2,2,2,2,0,0,0,0,2,1,1,1,2], // Front entrance path for Fish Market
+  [2,2,4,4,4,4,2,2,0,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,4,4,4,4,2,2,0,0,0,0,2,2,2,2,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,2,2,2,2,1,1,1,1,2], // Front entrance path for Question Booth
+  [2,2,2,2,0,0,0,0,0,0,2,2,2,2,2,2,1,1,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,5,5,1,2], // Wooden Fishing Dock ("Penton")
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,5,5,1,2],
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,5,5,1,2],
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,5,5,1,2],
+  [2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
-// Level 2 Map (Brittany Coastal Cliffs): STRICT hard rules for cliffs, granite rocks, and ocean water!
+// Level 2 Map (Brittany Coastal Cliffs): Rocks, cliffs, bushes, long grass, and water are strictly IMPASSABLE!
 const MAP_LEVEL_2 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,2,2,2],
   [2,2,4,4,4,4,2,2,2,2,2,2,3,3,3,3,2,2,2,2],
-  [2,2,4,4,4,4,0,0,0,0,0,0,0,0,0,0,2,2,2,2],
-  [2,2,4,4,4,4,0,0,0,0,0,0,0,0,0,0,2,2,2,2],
-  [2,2,4,4,4,4,0,0,0,0,0,0,0,0,0,0,2,2,2,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2],
-  [2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,2],
+  [2,2,4,4,4,4,2,2,2,2,2,2,0,0,0,0,2,2,2,2],
+  [2,2,4,4,4,4,2,2,0,0,0,0,0,0,0,0,2,2,2,2],
+  [2,2,4,4,4,4,2,2,0,0,0,0,2,2,2,2,2,2,2,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2],
+  [2,2,2,2,2,2,2,2,0,0,0,0,2,2,2,2,1,1,1,2],
   [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,1,1,1,2],
   [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,1,1,1,2],
   [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,1,1,1,2],
@@ -54,41 +55,42 @@ const MAP_LEVEL_2 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
-// Level 3 Map (Cape Cod Dunes): STRICT hard rules for ocean water & sand dunes!
+// Level 3 Map (Cape Cod Dunes): Sand dunes, bushes, long grass, and water are strictly IMPASSABLE!
 const MAP_LEVEL_3 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,1,1,1,2],
   [2,2,4,4,4,4,2,2,2,2,2,2,3,3,3,3,1,1,1,2],
-  [2,2,4,4,4,4,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,2,4,4,4,4,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,2,4,4,4,4,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,1,1,2],
-  [2,2,2,2,0,0,0,0,0,0,5,5,5,5,5,5,5,1,1,2],
-  [2,2,2,2,2,2,0,0,0,0,5,5,5,5,5,5,5,1,1,2],
-  [2,2,2,2,2,2,2,2,0,0,1,1,1,1,1,1,1,1,1,2],
+  [2,2,4,4,4,4,2,2,2,2,2,2,0,0,0,0,1,1,1,1,2],
+  [2,2,4,4,4,4,2,2,0,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,4,4,4,4,2,2,0,0,0,0,2,2,2,2,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,2,2,2,2,1,1,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,0,0,2,2,2,2,1,1,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,5,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,5,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,5,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,5,1,1,2],
+  [2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
-// Level 4 Map (Tahiti Lagoon): STRICT hard rules for sand/sand path & wooden penton walkability!
+// Level 4 Map (Tahiti Lagoon): ONLY the sand path (0) and wooden penton (5) are walkable.
+// All lagoon water, bushes, palms, long grass, and buildings are strictly IMPASSABLE!
 const MAP_LEVEL_4 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-  [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,1,1,2], // Fish Market Stall structure (IMPASSABLE)
   [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,1,1,2],
-  [2,1,4,4,4,4,2,2,2,2,2,2,3,3,3,3,2,1,1,2], // Question Booth Cabin structure (IMPASSABLE)
-  [2,1,4,4,4,4,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2], // Front Entrance path for Fish Market at col 12-15, row 4
-  [2,1,4,4,4,4,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,1,4,4,4,4,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2], // Front Entrance path for Question Booth at col 2-5, row 7
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,2,2,2,0,0,0,0,0,0,5,5,5,5,5,5,5,5,1,2], // Wooden Dock Pier ("Penton") at col 10-17, row 9-12
-  [2,2,2,2,0,0,0,0,0,0,5,5,5,5,5,5,5,5,1,2],
-  [2,2,2,2,0,0,0,0,0,0,5,5,5,5,5,5,5,5,1,2],
-  [2,2,2,2,2,2,0,0,0,0,5,5,5,5,5,5,5,5,1,2],
-  [2,2,2,2,2,2,2,2,0,0,1,1,1,1,1,1,1,1,1,2], // Shallow Ocean Water (STRICTLY IMPASSABLE!)
+  [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,1,1,2],
+  [2,1,4,4,4,4,2,2,2,2,2,2,3,3,3,3,2,1,1,2],
+  [2,1,4,4,4,4,2,2,2,2,2,2,0,0,0,0,2,1,1,1,2],
+  [2,1,4,4,4,4,2,2,0,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,1,4,4,4,4,2,2,0,0,0,0,2,2,2,2,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,2,2,2,2,1,1,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,0,0,2,2,2,2,1,1,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,5,5,1,2],
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,5,5,1,2],
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,5,5,1,2],
+  [2,2,2,2,2,2,2,2,0,0,5,5,5,5,5,5,5,5,1,2],
+  [2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
@@ -223,10 +225,10 @@ export default function Fishtopia({ onBack }) {
   const [currentQ, setCurrentQ] = useState(null);
   const [qState, setQState] = useState(null);
 
-  // Hamster Player Entity (Size: 24) - Spawns SAFELY on path at col 6, row 7.5
+  // Hamster Player Entity (Size: 24) - Spawns SAFELY on path at col 4, row 7
   const playerRef = useRef({
-    x: 6.0 * TILE,
-    y: 7.5 * TILE,
+    x: 4.0 * TILE,
+    y: 7.0 * TILE,
     vx: 0,
     vy: 0,
     speed: 3,
@@ -257,9 +259,9 @@ export default function Fishtopia({ onBack }) {
   }, []);
 
   useEffect(() => {
-    // Spawn player safely on dirt/sand path (col 6, row 7.5)
-    playerRef.current.x = 6.0 * TILE;
-    playerRef.current.y = 7.5 * TILE;
+    // Spawn player safely on dirt path (col 4, row 7)
+    playerRef.current.x = 4.0 * TILE;
+    playerRef.current.y = 7.0 * TILE;
 
     const handleKeyDown = (e) => {
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
@@ -420,7 +422,7 @@ export default function Fishtopia({ onBack }) {
     if (dx < 0) p.facing = 'left';
     else if (dx > 0) p.facing = 'right';
 
-    // Sub-step movement X (Hamster CANNOT walk through Question Booth cabin, Market, Trees, or Water!)
+    // Sub-step movement X (Hamster CANNOT walk through Question Booth cabin, Market, Bushes, Rocks, Forest, Long Grass, or Water!)
     const stepsX = Math.ceil(Math.abs(dx));
     const stepDx = dx / Math.max(1, stepsX);
     for (let s = 0; s < stepsX; s++) {
@@ -431,7 +433,7 @@ export default function Fishtopia({ onBack }) {
       }
     }
 
-    // Sub-step movement Y (Hamster CANNOT walk through Question Booth cabin, Market, Trees, or Water!)
+    // Sub-step movement Y (Hamster CANNOT walk through Question Booth cabin, Market, Bushes, Rocks, Forest, Long Grass, or Water!)
     const stepsY = Math.ceil(Math.abs(dy));
     const stepDy = dy / Math.max(1, stepsY);
     for (let s = 0; s < stepsY; s++) {
@@ -921,7 +923,7 @@ export default function Fishtopia({ onBack }) {
               <p className="font-bold text-lg text-emerald-700 mt-2">Quête d'Hyrule Accomplie !</p>
               <div className="fish-icon" style={{ fontSize: '90px', margin: '10px 0' }}>{caughtFish.icon}</div>
               <h3 className="text-3xl font-bold rarity-Legendary mb-2">{caughtFish.name}</h3>
-              <p className="text-base text-gray-700">Félicitations ! Vous avez capturé le poisson légendaire suprême du Niveau 4. Vous avez répondu aux questions avec succès et êtes proclamé le <strong>Grand Maître Pêcheur de Francotopia</strong> !</p>
+              <p className="text-base text-gray-700">Félicitations ! Vous avez capturé le poisson légendaire suprême du Niveau 4. Vous avez répondu aux questions avec succès et êtes proclamé le <strong>Grand Maître PÊCHEUR de Francotopia</strong> !</p>
               <p className="text-xs italic mt-4 opacity-75">(Cliquez pour continuer)</p>
             </div>
           </div>
