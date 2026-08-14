@@ -445,7 +445,7 @@ export default function Fishtopia({ onBack }) {
     else setInteractionHint(null);
   };
 
-  // --- DRAW FUNCTION (HIGH-QUALITY PROCEDURAL HAMSTER WALK ANIMATION) ---
+  // --- DRAW FUNCTION (UPRIGHT BIPEDAL HAMSTER CHARACTER WITH ROD HELD ON SHOULDER & SWAYING LINE) ---
   const draw = (ctx, time) => {
     const rLevel = stateRef.current.rodLevel;
     
@@ -462,151 +462,170 @@ export default function Fishtopia({ onBack }) {
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
-    // --- DRAW ANIMATED HAMSTER SPRITE ---
+    // --- DRAW ANIMATED UPRIGHT HAMSTER CHARACTER ---
     const p = playerRef.current;
     const isMoving = p.vx !== 0 || p.vy !== 0;
 
-    // Walk cycle timing (energetic 4-paw hamster scurry)
-    const walkSpeed = 35; // Speed of leg oscillation
-    const walkCycle = isMoving ? Math.sin(time / walkSpeed) : 0;
-    const walkCycleCos = isMoving ? Math.cos(time / walkSpeed) : 0;
-    const bob = isMoving ? Math.abs(Math.sin(time / 45)) * 4 : Math.sin(time / 200) * 0.8;
-    const waddle = isMoving ? Math.sin(time / 70) * 0.12 : 0; // Dynamic body waddle rotation
+    // Upright walk parameters
+    const walkSpeed = 40;
+    const legStep = isMoving ? Math.sin(time / walkSpeed) * 5 : 0;
+    const legLift = isMoving ? Math.abs(Math.cos(time / walkSpeed)) * 3 : 0;
+    const bodyBob = isMoving ? Math.abs(Math.sin(time / 50)) * 3 : Math.sin(time / 200) * 0.8;
+    const bodyWaddle = isMoving ? Math.sin(time / 80) * 0.08 : 0;
 
-    // Shadow squishes & stretches with walk bob
+    // Shadow below feet
     ctx.fillStyle = 'rgba(0,0,0,0.25)';
     ctx.beginPath();
-    const shadowStretch = isMoving ? 1 + Math.sin(time / 45) * 0.15 : 1;
-    ctx.ellipse(p.x, p.y + p.size/2 - 2, (p.size/2 + 2) * shadowStretch, p.size/4, 0, 0, Math.PI*2);
+    ctx.ellipse(p.x, p.y + p.size/2 + 2, p.size/2, p.size/5, 0, 0, Math.PI*2);
     ctx.fill();
 
     ctx.save();
-    ctx.translate(p.x, p.y - bob);
-    ctx.rotate(waddle);
+    ctx.translate(p.x, p.y - bodyBob);
+    ctx.rotate(bodyWaddle);
 
-    // Flip sprite horizontally if facing left
+    // Directional Flip
     const baseScale = p.size / 24;
     const dirScaleX = p.facing === 'left' ? -baseScale : baseScale;
     ctx.scale(dirScaleX, baseScale);
 
-    // Fishing Rod (mounted on back)
+    // 🐾 1. BACK FEET (Standing Upright on 2 Feet)
+    ctx.fillStyle = '#b45309';
+    // Left Foot
+    ctx.beginPath();
+    ctx.ellipse(-5 - legStep * 0.5, 14 - (legStep > 0 ? legLift : 0), 3.5, 2.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Right Foot
+    ctx.beginPath();
+    ctx.ellipse(5 + legStep * 0.5, 14 - (legStep < 0 ? legLift : 0), 3.5, 2.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 🐹 2. UPRIGHT BODY (Chubby Hamster Torso)
+    const bodyGrad = ctx.createRadialGradient(-2, -2, 2, 0, 2, 13);
+    bodyGrad.addColorStop(0, '#fde047');
+    bodyGrad.addColorStop(0.7, '#d97706');
+    bodyGrad.addColorStop(1, '#92400e');
+    ctx.fillStyle = bodyGrad;
+    ctx.beginPath();
+    ctx.ellipse(0, 2, 11, 13, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // White Fluffy Belly Patch
+    const bellyGrad = ctx.createRadialGradient(0, 4, 1, 0, 5, 8);
+    bellyGrad.addColorStop(0, '#ffffff');
+    bellyGrad.addColorStop(1, '#e2e8f0');
+    ctx.fillStyle = bellyGrad;
+    ctx.beginPath();
+    ctx.ellipse(0, 4, 7, 9, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Cute Fluffy Tail (Back)
+    ctx.fillStyle = '#fef08a';
+    ctx.beginPath();
+    ctx.arc(-11, 8, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 👂 3. EARS
+    const earBounce = isMoving ? Math.sin(time / 45) * 1.5 : 0;
+    ctx.fillStyle = '#b45309';
+    ctx.beginPath();
+    ctx.arc(-8, -14 + earBounce, 5.5, 0, Math.PI * 2);
+    ctx.arc(8, -14 - earBounce, 5.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fbcfe8';
+    ctx.beginPath();
+    ctx.arc(-8, -14 + earBounce, 2.8, 0, Math.PI * 2);
+    ctx.arc(8, -14 - earBounce, 2.8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 👁️ 4. HEAD / FACE
+    const eyeOffsetX = 2;
+
+    // Pink Cute Cheeks
+    ctx.fillStyle = 'rgba(244, 114, 182, 0.65)';
+    ctx.beginPath();
+    ctx.arc(-6 + eyeOffsetX, -3, 2.5, 0, Math.PI * 2);
+    ctx.arc(4 + eyeOffsetX, -3, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Shiny Black Eyes
+    ctx.fillStyle = 'black';
+    ctx.beginPath();
+    ctx.arc(-4 + eyeOffsetX, -6, 2.5, 0, Math.PI * 2);
+    ctx.arc(4 + eyeOffsetX, -6, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+    // White Eye Sparkles
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(-4.5 + eyeOffsetX, -7, 1, 0, Math.PI * 2);
+    ctx.arc(3.5 + eyeOffsetX, -7, 1, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Pink Snout / Nose
+    ctx.fillStyle = '#f472b6';
+    ctx.beginPath();
+    ctx.arc(eyeOffsetX, -2, 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 🐾 5. LEFT ARM (Free arm resting / swinging naturally)
+    const armSwing = isMoving ? Math.sin(time / walkSpeed) * 3 : 0;
+    ctx.fillStyle = '#d97706';
+    ctx.beginPath();
+    ctx.ellipse(-9, 2 + armSwing, 3.5, 2.5, Math.PI / 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 🎣 6. RIGHT ARM & FISHING POLE HELD ON SHOULDER / CHEST WITH DANGLING LINE
+    // Right Paw / Arm holding the pole
+    ctx.fillStyle = '#d97706';
+    ctx.beginPath();
+    ctx.ellipse(6, 1, 4, 3, -Math.PI / 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Fishing Pole (Rests across chest / right shoulder, angled up & back!)
     ctx.save();
     let poleColor = '#78350f';
     if (rLevel === 2) poleColor = '#cbd5e1';
     else if (rLevel === 3) poleColor = '#fbbf24';
     else if (rLevel === 4) poleColor = '#38bdf8';
-    
-    const rodSway = isMoving ? Math.sin(time / 60) * 0.18 : 0;
-    ctx.rotate(Math.PI / 4 + rodSway);
+
+    const rodAngle = -Math.PI / 6 + (isMoving ? Math.sin(time / 50) * 0.08 : 0);
+    ctx.translate(6, 1);
+    ctx.rotate(rodAngle);
+
+    // Pole Shaft
     ctx.fillStyle = poleColor;
-    ctx.fillRect(-2, -35, 4, 50);
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = 0.6;
+    ctx.fillRect(-2, -35, 4, 45);
+
+    // Pole Grip Handle
+    ctx.fillStyle = '#451a03';
+    ctx.fillRect(-3, 0, 6, 10);
+
+    // DANGLING FISHING LINE & SWAYING HOOK / BOBBER
+    const lineTipX = 0;
+    const lineTipY = -35;
+    const lineSway = isMoving ? Math.sin(time / 40) * 6 : Math.sin(time / 100) * 2;
+    const hookX = lineTipX + lineSway;
+    const hookY = lineTipY + 28;
+
+    // Line String
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.lineWidth = 0.8;
     ctx.beginPath();
-    ctx.moveTo(0, -35);
-    ctx.lineTo(0, 15);
+    ctx.moveTo(lineTipX, lineTipY);
+    ctx.lineTo(hookX, hookY);
     ctx.stroke();
-    ctx.restore();
 
-    // Fluffy Hamster Tail (Back)
-    ctx.fillStyle = '#fef08a';
+    // Dangling Red & White Fishing Bobber / Hook
+    ctx.fillStyle = '#ef4444'; // Red top
     ctx.beginPath();
-    const tailWasp = isMoving ? Math.sin(time / 40) * 2 : 0;
-    ctx.arc(-11 + tailWasp, 2, 4, 0, Math.PI * 2);
+    ctx.arc(hookX, hookY, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff'; // White bottom
+    ctx.beginPath();
+    ctx.arc(hookX, hookY + 1.5, 1.8, 0, Math.PI * 2);
     ctx.fill();
 
-    // 🐾 BACK FEET (Animated 2-leg walking cycle)
-    ctx.fillStyle = '#b45309';
-    // Back Left Foot
-    ctx.beginPath();
-    ctx.arc(-6 + walkCycle * 4, 10 - walkCycle * 2, 3.5, 0, Math.PI * 2);
-    ctx.fill();
-    // Back Right Foot
-    ctx.beginPath();
-    ctx.arc(6 - walkCycle * 4, 10 + walkCycle * 2, 3.5, 0, Math.PI * 2);
-    ctx.fill();
-
-    // EARS (Bounce dynamically when walking!)
-    const earBounceLeft = isMoving ? Math.sin(time / 40) * 2 : 0;
-    const earBounceRight = isMoving ? Math.sin(time / 40 + Math.PI/2) * 2 : 0;
-
-    ctx.fillStyle = '#b45309'; 
-    ctx.beginPath();
-    ctx.arc(-8, -10 + earBounceLeft, 6, 0, Math.PI * 2);
-    ctx.arc(8, -10 + earBounceRight, 6, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#fbcfe8'; 
-    ctx.beginPath();
-    ctx.arc(-8, -10 + earBounceLeft, 3, 0, Math.PI * 2);
-    ctx.arc(8, -10 + earBounceRight, 3, 0, Math.PI * 2);
-    ctx.fill();
-
-    // HAMSTER BODY (Squish & Stretch on movement)
-    ctx.save();
-    const bodyStretchY = isMoving ? 1 + Math.abs(Math.sin(time / 45)) * 0.08 : 1 + Math.sin(time / 200) * 0.03;
-    const bodyStretchX = 1 / bodyStretchY;
-    ctx.scale(bodyStretchX, bodyStretchY);
-
-    const bodyGrad = ctx.createRadialGradient(-3, -3, 2, 0, 0, 12);
-    bodyGrad.addColorStop(0, '#fbbf24');
-    bodyGrad.addColorStop(0.8, '#d97706');
-    bodyGrad.addColorStop(1, '#92400e');
-    ctx.fillStyle = bodyGrad;
-    ctx.beginPath();
-    ctx.arc(0, 0, 12, 0, Math.PI * 2);
-    ctx.fill();
-
-    // White Fluffy Belly
-    const bellyGrad = ctx.createRadialGradient(0, 2, 1, 0, 4, 8);
-    bellyGrad.addColorStop(0, '#ffffff');
-    bellyGrad.addColorStop(1, '#cbd5e1');
-    ctx.fillStyle = bellyGrad;
-    ctx.beginPath();
-    ctx.arc(0, 4, 8, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    // 🐾 FRONT PAWS / HANDS (Animated 2-paw walking swing)
-    ctx.fillStyle = '#d97706';
-    // Front Left Paw
-    ctx.beginPath();
-    ctx.arc(-7 + walkCycleCos * 3, 3 + walkCycle * 2, 3, 0, Math.PI * 2);
-    ctx.fill();
-    // Front Right Paw
-    ctx.beginPath();
-    ctx.arc(7 - walkCycleCos * 3, 3 - walkCycle * 2, 3, 0, Math.PI * 2);
-    ctx.fill();
-
-    // EYES & CHEEKS (Directional offset)
-    const eyeOffsetX = 2; // Default facing right, flipped via scale(-1, 1) when facing left
-
-    // Cute Pink Cheeks
-    ctx.fillStyle = 'rgba(244, 114, 182, 0.6)';
-    ctx.beginPath();
-    ctx.arc(-6 + eyeOffsetX, 2, 2.5, 0, Math.PI * 2);
-    ctx.arc(4 + eyeOffsetX, 2, 2.5, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Big Shiny Eyes
-    ctx.fillStyle = 'black';
-    ctx.beginPath();
-    ctx.arc(-4 + eyeOffsetX, -2, 2.5, 0, Math.PI * 2);
-    ctx.arc(4 + eyeOffsetX, -2, 2.5, 0, Math.PI * 2);
-    ctx.fill();
-    // Eye Sparkle
-    ctx.fillStyle = 'white';
-    ctx.beginPath();
-    ctx.arc(-4.5 + eyeOffsetX, -3, 1, 0, Math.PI * 2);
-    ctx.arc(3.5 + eyeOffsetX, -3, 1, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Pink Snout / Nose
-    ctx.fillStyle = '#f472b6'; 
-    ctx.beginPath();
-    ctx.arc(eyeOffsetX, 2, 2, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.restore();
+    ctx.restore(); // Restore pole transform
+    ctx.restore(); // Restore hamster transform
   };
 
   const handleInteract = () => {
