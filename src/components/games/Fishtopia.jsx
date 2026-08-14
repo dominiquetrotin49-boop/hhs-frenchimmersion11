@@ -466,17 +466,25 @@ export default function Fishtopia({ onBack }) {
     const p = playerRef.current;
     const isMoving = p.vx !== 0 || p.vy !== 0;
 
-    // Disney Walk parameters
-    const walkSpeed = 38;
-    const legStep = isMoving ? Math.sin(time / walkSpeed) * 5 : 0;
-    const legLift = isMoving ? Math.abs(Math.cos(time / walkSpeed)) * 3.5 : 0;
-    const bodyBob = isMoving ? Math.abs(Math.sin(time / 45)) * 3.5 : Math.sin(time / 180) * 1.0;
-    const bodyWaddle = isMoving ? Math.sin(time / 70) * 0.10 : 0;
+    // Disney Walk & Idle Animation Parameters
+    const walkSpeed = 30; // Smooth energetic stepping frequency
+    const legStep = isMoving ? Math.sin(time / walkSpeed) * 6 : 0;
+    const legLift = isMoving ? Math.abs(Math.cos(time / walkSpeed)) * 4 : 0;
+    
+    // Idle Breathing & Movement Bobbing
+    const idleBreathing = !isMoving ? Math.sin(time / 250) * 1.2 : 0;
+    const bodyBob = isMoving ? Math.abs(Math.sin(time / 35)) * 4 : idleBreathing;
+    const bodyWaddle = isMoving ? Math.sin(time / 60) * 0.12 : 0;
 
-    // Soft drop shadow below feet
+    // Disney Eye Blinking Logic (Quick blink every ~3.5 seconds)
+    const blinkCycle = (time % 3500);
+    const isBlinking = blinkCycle > 3350;
+    const eyeHeightScale = isBlinking ? 0.2 : 1.0;
+
+    // Soft drop shadow below feet (expands slightly when stepping)
     ctx.fillStyle = 'rgba(0,0,0,0.22)';
     ctx.beginPath();
-    ctx.ellipse(p.x, p.y + p.size/2 + 3, p.size/2 + 1, p.size/5, 0, 0, Math.PI*2);
+    ctx.ellipse(p.x, p.y + p.size/2 + 3, p.size/2 + (isMoving ? 1.5 : 0), p.size/5, 0, 0, Math.PI*2);
     ctx.fill();
 
     ctx.save();
@@ -516,7 +524,7 @@ export default function Fishtopia({ onBack }) {
     bodyGrad.addColorStop(1, '#92400e');
     ctx.fillStyle = bodyGrad;
     ctx.beginPath();
-    ctx.ellipse(0, 2, 12, 13.5, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 2, 12, 13.5 + idleBreathing * 0.5, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // White Fluffy Disney Tummy
@@ -533,11 +541,13 @@ export default function Fishtopia({ onBack }) {
     ctx.beginPath();
     ctx.ellipse(0, -5, 8, 3, 0, 0, Math.PI * 2);
     ctx.fill();
-    // Scarf Knot Tails
+    
+    // Scarf Knot Tails Fluttering in the Wind
+    const scarfFlutter = isMoving ? Math.sin(time / 30) * 3 : Math.sin(time / 150) * 1;
     ctx.beginPath();
     ctx.moveTo(-2, -4);
-    ctx.lineTo(-7, 2);
-    ctx.lineTo(-3, 3);
+    ctx.lineTo(-7 - scarfFlutter, 2 + scarfFlutter * 0.5);
+    ctx.lineTo(-3, 4);
     ctx.closePath();
     ctx.fill();
 
@@ -547,8 +557,8 @@ export default function Fishtopia({ onBack }) {
     ctx.arc(-11.5, 7.5, 4, 0, Math.PI * 2);
     ctx.fill();
 
-    // 👂 3. DISNEY BIG ROUND EARS
-    const earBounce = isMoving ? Math.sin(time / 40) * 1.8 : 0;
+    // 👂 3. DISNEY BIG ROUND EARS (Bouncing when walking, twitching when idle)
+    const earBounce = isMoving ? Math.sin(time / 30) * 2.5 : Math.sin(time / 300) * 0.8;
     ctx.fillStyle = '#b45309';
     ctx.beginPath();
     ctx.arc(-8.5, -14.5 + earBounce, 6, 0, Math.PI * 2);
@@ -570,27 +580,29 @@ export default function Fishtopia({ onBack }) {
     ctx.arc(4.5 + eyeOffsetX, -2.5, 3.5, 0, Math.PI * 2);
     ctx.fill();
 
-    // Large Round Disney Eyes
+    // Large Round Disney Eyes (with Natural Blinking!)
     ctx.fillStyle = '#1e1b4b';
     ctx.beginPath();
-    ctx.ellipse(-4 + eyeOffsetX, -6.5, 3, 4, 0, 0, Math.PI * 2);
-    ctx.ellipse(4 + eyeOffsetX, -6.5, 3, 4, 0, 0, Math.PI * 2);
+    ctx.ellipse(-4 + eyeOffsetX, -6.5, 3, Math.max(0.5, 4 * eyeHeightScale), 0, 0, Math.PI * 2);
+    ctx.ellipse(4 + eyeOffsetX, -6.5, 3, Math.max(0.5, 4 * eyeHeightScale), 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Big White Disney Catchlight Highlights (Top Left)
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(-5 + eyeOffsetX, -8, 1.4, 0, Math.PI * 2);
-    ctx.arc(3 + eyeOffsetX, -8, 1.4, 0, Math.PI * 2);
-    ctx.fill();
-    // Little Second Sparkle (Bottom Right)
-    ctx.beginPath();
-    ctx.arc(-3 + eyeOffsetX, -5.2, 0.7, 0, Math.PI * 2);
-    ctx.arc(5 + eyeOffsetX, -5.2, 0.7, 0, Math.PI * 2);
-    ctx.fill();
+    // Big White Disney Catchlight Highlights (Hidden during blink)
+    if (!isBlinking) {
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(-5 + eyeOffsetX, -8, 1.4, 0, Math.PI * 2);
+      ctx.arc(3 + eyeOffsetX, -8, 1.4, 0, Math.PI * 2);
+      ctx.fill();
+      // Little Second Sparkle (Bottom Right)
+      ctx.beginPath();
+      ctx.arc(-3 + eyeOffsetX, -5.2, 0.7, 0, Math.PI * 2);
+      ctx.arc(5 + eyeOffsetX, -5.2, 0.7, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
     // Cute Disney Eyebrows
-    const browBounce = isMoving ? Math.sin(time / 50) * 1 : 0;
+    const browBounce = isMoving ? Math.sin(time / 40) * 1.2 : 0;
     ctx.strokeStyle = '#78350f';
     ctx.lineWidth = 1.2;
     ctx.beginPath();
@@ -611,8 +623,8 @@ export default function Fishtopia({ onBack }) {
     ctx.arc(eyeOffsetX, -1, 2.5, 0.2, Math.PI - 0.2);
     ctx.stroke();
 
-    // 🐾 5. LEFT ARM (Disney White Glove Paw swinging)
-    const armSwing = isMoving ? Math.sin(time / walkSpeed) * 4 : 0;
+    // 🐾 5. LEFT ARM (Disney White Glove Paw swinging energetically when walking)
+    const armSwing = isMoving ? Math.sin(time / walkSpeed) * 5 : Math.sin(time / 200) * 1;
     ctx.fillStyle = '#d97706';
     ctx.beginPath();
     ctx.ellipse(-9.5, 2 + armSwing, 3.5, 2.5, Math.PI / 4, 0, Math.PI * 2);
@@ -640,7 +652,7 @@ export default function Fishtopia({ onBack }) {
     else if (rLevel === 3) poleColor = '#fbbf24';
     else if (rLevel === 4) poleColor = '#38bdf8';
 
-    const rodSway = isMoving ? Math.sin(time / 50) * 0.05 : 0;
+    const rodSway = isMoving ? Math.sin(time / 40) * 0.08 : Math.sin(time / 150) * 0.02;
     ctx.translate(9, 2);
     ctx.rotate(rodSway);
 
@@ -663,7 +675,7 @@ export default function Fishtopia({ onBack }) {
     // DANGLING FISHING LINE & SWAYING HOOK / BOBBER
     const lineTipX = 0;
     const lineTipY = -44;
-    const lineSway = isMoving ? Math.sin(time / 38) * 5.5 : Math.sin(time / 100) * 1.5;
+    const lineSway = isMoving ? Math.sin(time / 30) * 6.5 : Math.sin(time / 90) * 2.0;
     const hookX = lineTipX + lineSway;
     const hookY = lineTipY + 32;
 
