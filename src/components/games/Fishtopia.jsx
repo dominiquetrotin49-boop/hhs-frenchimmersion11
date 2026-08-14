@@ -231,7 +231,8 @@ export default function Fishtopia({ onBack }) {
     vy: 0,
     speed: 3,
     size: 24,
-    color: '#f59e0b'
+    color: '#f59e0b',
+    facing: 'right'
   });
 
   const keys = useRef({});
@@ -412,6 +413,9 @@ export default function Fishtopia({ onBack }) {
     p.vx = dx;
     p.vy = dy;
 
+    if (dx < 0) p.facing = 'left';
+    else if (dx > 0) p.facing = 'right';
+
     // Sub-step movement X (Hamster CANNOT walk through Question Booth cabin, Market, Trees, or Water!)
     const stepsX = Math.ceil(Math.abs(dx));
     const stepDx = dx / Math.max(1, stepsX);
@@ -441,7 +445,7 @@ export default function Fishtopia({ onBack }) {
     else setInteractionHint(null);
   };
 
-  // --- DRAW FUNCTION (BACKGROUND ARTWORK & HAMSTER SPRITE) ---
+  // --- DRAW FUNCTION (HIGH-QUALITY PROCEDURAL HAMSTER WALK ANIMATION) ---
   const draw = (ctx, time) => {
     const rLevel = stateRef.current.rodLevel;
     
@@ -458,68 +462,91 @@ export default function Fishtopia({ onBack }) {
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
-    // --- DRAW HAMSTER SPRITE ---
+    // --- DRAW ANIMATED HAMSTER SPRITE ---
     const p = playerRef.current;
-    
-    // Player Shadow
+    const isMoving = p.vx !== 0 || p.vy !== 0;
+
+    // Walk cycle timing (energetic 4-paw hamster scurry)
+    const walkSpeed = 35; // Speed of leg oscillation
+    const walkCycle = isMoving ? Math.sin(time / walkSpeed) : 0;
+    const walkCycleCos = isMoving ? Math.cos(time / walkSpeed) : 0;
+    const bob = isMoving ? Math.abs(Math.sin(time / 45)) * 4 : Math.sin(time / 200) * 0.8;
+    const waddle = isMoving ? Math.sin(time / 70) * 0.12 : 0; // Dynamic body waddle rotation
+
+    // Shadow squishes & stretches with walk bob
     ctx.fillStyle = 'rgba(0,0,0,0.25)';
     ctx.beginPath();
-    ctx.ellipse(p.x, p.y + p.size/2 - 2, p.size/2 + 2, p.size/4, 0, 0, Math.PI*2);
+    const shadowStretch = isMoving ? 1 + Math.sin(time / 45) * 0.15 : 1;
+    ctx.ellipse(p.x, p.y + p.size/2 - 2, (p.size/2 + 2) * shadowStretch, p.size/4, 0, 0, Math.PI*2);
     ctx.fill();
 
-    const isMoving = p.vx !== 0 || p.vy !== 0;
-    const bob = isMoving ? Math.sin(time / 60) * (p.size/12) : 0;
-    
     ctx.save();
-    ctx.translate(p.x, p.y + bob);
-    const scale = p.size / 24;
-    ctx.scale(scale, scale);
+    ctx.translate(p.x, p.y - bob);
+    ctx.rotate(waddle);
 
-    // Fishing Rod (on back)
+    // Flip sprite horizontally if facing left
+    const baseScale = p.size / 24;
+    const dirScaleX = p.facing === 'left' ? -baseScale : baseScale;
+    ctx.scale(dirScaleX, baseScale);
+
+    // Fishing Rod (mounted on back)
     ctx.save();
     let poleColor = '#78350f';
     if (rLevel === 2) poleColor = '#cbd5e1';
     else if (rLevel === 3) poleColor = '#fbbf24';
     else if (rLevel === 4) poleColor = '#38bdf8';
     
-    const angle = p.vx !== 0 ? Math.PI/4 + Math.sin(time/100)*0.1 : Math.PI/4;
-    ctx.rotate(angle);
+    const rodSway = isMoving ? Math.sin(time / 60) * 0.18 : 0;
+    ctx.rotate(Math.PI / 4 + rodSway);
     ctx.fillStyle = poleColor;
     ctx.fillRect(-2, -35, 4, 50);
     ctx.strokeStyle = 'white';
-    ctx.lineWidth = 0.5;
+    ctx.lineWidth = 0.6;
     ctx.beginPath();
     ctx.moveTo(0, -35);
     ctx.lineTo(0, 15);
     ctx.stroke();
     ctx.restore();
 
-    // Feet
-    const swing = isMoving ? Math.sin(time / 50) * 4 : 0;
-    const breath = !isMoving ? Math.sin(time / 200) * 0.05 : 0;
-    
-    ctx.fillStyle = '#b45309';
+    // Fluffy Hamster Tail (Back)
+    ctx.fillStyle = '#fef08a';
     ctx.beginPath();
-    ctx.arc(-5, 10 + swing, 3.5, 0, Math.PI*2);
-    ctx.arc(5, 10 - swing, 3.5, 0, Math.PI*2);
+    const tailWasp = isMoving ? Math.sin(time / 40) * 2 : 0;
+    ctx.arc(-11 + tailWasp, 2, 4, 0, Math.PI * 2);
     ctx.fill();
 
-    // Ears
+    // 🐾 BACK FEET (Animated 2-leg walking cycle)
+    ctx.fillStyle = '#b45309';
+    // Back Left Foot
+    ctx.beginPath();
+    ctx.arc(-6 + walkCycle * 4, 10 - walkCycle * 2, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+    // Back Right Foot
+    ctx.beginPath();
+    ctx.arc(6 - walkCycle * 4, 10 + walkCycle * 2, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // EARS (Bounce dynamically when walking!)
+    const earBounceLeft = isMoving ? Math.sin(time / 40) * 2 : 0;
+    const earBounceRight = isMoving ? Math.sin(time / 40 + Math.PI/2) * 2 : 0;
+
     ctx.fillStyle = '#b45309'; 
     ctx.beginPath();
-    ctx.arc(-8, -10, 6, 0, Math.PI * 2);
-    ctx.arc(8, -10, 6, 0, Math.PI * 2);
+    ctx.arc(-8, -10 + earBounceLeft, 6, 0, Math.PI * 2);
+    ctx.arc(8, -10 + earBounceRight, 6, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#fbcfe8'; 
     ctx.beginPath();
-    ctx.arc(-8, -10, 3, 0, Math.PI * 2);
-    ctx.arc(8, -10, 3, 0, Math.PI * 2);
+    ctx.arc(-8, -10 + earBounceLeft, 3, 0, Math.PI * 2);
+    ctx.arc(8, -10 + earBounceRight, 3, 0, Math.PI * 2);
     ctx.fill();
-    
-    // Body
+
+    // HAMSTER BODY (Squish & Stretch on movement)
     ctx.save();
-    ctx.scale(1, 1 + breath);
-    
+    const bodyStretchY = isMoving ? 1 + Math.abs(Math.sin(time / 45)) * 0.08 : 1 + Math.sin(time / 200) * 0.03;
+    const bodyStretchX = 1 / bodyStretchY;
+    ctx.scale(bodyStretchX, bodyStretchY);
+
     const bodyGrad = ctx.createRadialGradient(-3, -3, 2, 0, 0, 12);
     bodyGrad.addColorStop(0, '#fbbf24');
     bodyGrad.addColorStop(0.8, '#d97706');
@@ -528,8 +555,8 @@ export default function Fishtopia({ onBack }) {
     ctx.beginPath();
     ctx.arc(0, 0, 12, 0, Math.PI * 2);
     ctx.fill();
-    
-    // Belly
+
+    // White Fluffy Belly
     const bellyGrad = ctx.createRadialGradient(0, 2, 1, 0, 4, 8);
     bellyGrad.addColorStop(0, '#ffffff');
     bellyGrad.addColorStop(1, '#cbd5e1');
@@ -538,27 +565,45 @@ export default function Fishtopia({ onBack }) {
     ctx.arc(0, 4, 8, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
-    
-    let eyeOffsetX = 0;
-    if (p.vx > 0) eyeOffsetX = 2;
-    if (p.vx < 0) eyeOffsetX = -2;
 
-    // Eyes
+    // 🐾 FRONT PAWS / HANDS (Animated 2-paw walking swing)
+    ctx.fillStyle = '#d97706';
+    // Front Left Paw
+    ctx.beginPath();
+    ctx.arc(-7 + walkCycleCos * 3, 3 + walkCycle * 2, 3, 0, Math.PI * 2);
+    ctx.fill();
+    // Front Right Paw
+    ctx.beginPath();
+    ctx.arc(7 - walkCycleCos * 3, 3 - walkCycle * 2, 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // EYES & CHEEKS (Directional offset)
+    const eyeOffsetX = 2; // Default facing right, flipped via scale(-1, 1) when facing left
+
+    // Cute Pink Cheeks
+    ctx.fillStyle = 'rgba(244, 114, 182, 0.6)';
+    ctx.beginPath();
+    ctx.arc(-6 + eyeOffsetX, 2, 2.5, 0, Math.PI * 2);
+    ctx.arc(4 + eyeOffsetX, 2, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Big Shiny Eyes
     ctx.fillStyle = 'black';
     ctx.beginPath();
-    ctx.arc(-4 + eyeOffsetX, -2, 2.5, 0, Math.PI*2);
-    ctx.arc(4 + eyeOffsetX, -2, 2.5, 0, Math.PI*2);
+    ctx.arc(-4 + eyeOffsetX, -2, 2.5, 0, Math.PI * 2);
+    ctx.arc(4 + eyeOffsetX, -2, 2.5, 0, Math.PI * 2);
     ctx.fill();
+    // Eye Sparkle
     ctx.fillStyle = 'white';
     ctx.beginPath();
-    ctx.arc(-4.5 + eyeOffsetX, -3, 1, 0, Math.PI*2);
-    ctx.arc(3.5 + eyeOffsetX, -3, 1, 0, Math.PI*2);
+    ctx.arc(-4.5 + eyeOffsetX, -3, 1, 0, Math.PI * 2);
+    ctx.arc(3.5 + eyeOffsetX, -3, 1, 0, Math.PI * 2);
     ctx.fill();
 
-    // Nose
+    // Pink Snout / Nose
     ctx.fillStyle = '#f472b6'; 
     ctx.beginPath();
-    ctx.arc(eyeOffsetX, 2, 2, 0, Math.PI*2);
+    ctx.arc(eyeOffsetX, 2, 2, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
