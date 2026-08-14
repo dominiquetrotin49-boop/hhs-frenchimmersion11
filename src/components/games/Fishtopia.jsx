@@ -11,12 +11,12 @@ const HEIGHT = ROWS * TILE;
 // Tile types
 const GRASS = 0; // Walkable Sand / Dirt Path / Grass
 const WATER = 1; // IMPASSABLE Water (Strict Hard Rule: CANNOT walk on water!)
-const TREE = 2; // IMPASSABLE Forest / Rocks / Cliff face (Strict Hard Rule: CANNOT walk through trees/rocks/cliffs!)
+const TREE = 2; // IMPASSABLE Forest / Rocks / Cliff face / Dunes (Strict Hard Rule: CANNOT walk through obstacles!)
 const MARKET = 3; // IMPASSABLE Fish Market Stall structure
 const TEMPLE = 4; // IMPASSABLE Question Booth Cabin structure
 const PIER = 5; // Walkable Wooden Fishing Dock ("Penton")
 
-// Base Map Grid (Level 1, 3, 4)
+// Base Map Grid (Level 1, 4)
 const MAP_GRID = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,2,2,1,1,2],
@@ -54,8 +54,26 @@ const MAP_LEVEL_2 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
+// Level 3 Map (Cape Cod Dunes): STRICT hard rules for ocean water & sand dunes!
+const MAP_LEVEL_3 = [
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,2,1,1,1,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,2,1,1,1,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,2,1,1,1,2],
+  [2,2,4,4,4,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2], // Ocean water right at col 15-18 (Strictly Impassable!)
+  [2,2,4,4,4,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,4,4,4,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,1,1,2], // Wooden Dock Pier at col 10-16, row 9-12 | Ocean water at col 17-18
+  [2,2,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,1,1,2],
+  [2,2,2,2,0,0,0,0,0,0,5,5,5,5,5,5,5,1,1,2],
+  [2,2,2,2,2,2,0,0,0,0,5,5,5,5,5,5,5,1,1,2],
+  [2,2,2,2,2,2,2,2,0,0,1,1,1,1,1,1,1,1,1,2], // Ocean shoreline water (Strictly Impassable!)
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+];
+
 const MAP_LEVEL_1 = MAP_GRID;
-const MAP_LEVEL_3 = MAP_GRID;
 const MAP_LEVEL_4 = MAP_GRID;
 
 // ADJUSTED ECONOMY: Reduced fish sales values (~3x lower) so students must answer more questions!
@@ -252,7 +270,7 @@ export default function Fishtopia({ onBack }) {
 
   // --- HARD RULES FOR MOVEMENT / WALKABILITY ---
   // Hamster CAN ONLY walk on Sand/Dirt Path/Grass (GRASS=0) or Wooden Pier Dock (PIER=5).
-  // Water (1), Forest/Cliffs/Granite Rocks (2), Fish Market structure (3), Question Booth structure (4) are 100% IMPASSABLE!
+  // Water (1), Forest/Cliffs/Granite Rocks/Dunes (2), Fish Market structure (3), Question Booth structure (4) are 100% IMPASSABLE!
   const checkCollisionAt = (px, py, size) => {
     const colSize = 16; // 16px collision box around hamster center
     const points = [
