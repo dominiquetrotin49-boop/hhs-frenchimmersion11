@@ -445,7 +445,7 @@ export default function Fishtopia({ onBack }) {
     else setInteractionHint(null);
   };
 
-  // --- DRAW FUNCTION (UPRIGHT BIPEDAL HAMSTER CHARACTER WITH ROD HELD ON SHOULDER & SWAYING LINE) ---
+  // --- DRAW FUNCTION (UPRIGHT BIPEDAL HAMSTER WITH VERTICAL STRAIGHT-UP FISHING POLE TO THE SIDE) ---
   const draw = (ctx, time) => {
     const rLevel = stateRef.current.rodLevel;
     
@@ -573,38 +573,38 @@ export default function Fishtopia({ onBack }) {
     ctx.ellipse(-9, 2 + armSwing, 3.5, 2.5, Math.PI / 4, 0, Math.PI * 2);
     ctx.fill();
 
-    // 🎣 6. RIGHT ARM & FISHING POLE HELD ON SHOULDER / CHEST WITH DANGLING LINE
-    // Right Paw / Arm holding the pole
+    // 🎣 6. RIGHT ARM & VERTICAL FISHING POLE (Held straight up to the side, NOT across face!)
+    // Right Paw / Arm holding the pole at right side
     ctx.fillStyle = '#d97706';
     ctx.beginPath();
-    ctx.ellipse(6, 1, 4, 3, -Math.PI / 6, 0, Math.PI * 2);
+    ctx.ellipse(8, 2, 3.5, 2.8, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Fishing Pole (Rests across chest / right shoulder, angled up & back!)
+    // Fishing Pole (Held straight vertical pointing up into the air!)
     ctx.save();
     let poleColor = '#78350f';
     if (rLevel === 2) poleColor = '#cbd5e1';
     else if (rLevel === 3) poleColor = '#fbbf24';
     else if (rLevel === 4) poleColor = '#38bdf8';
 
-    const rodAngle = -Math.PI / 6 + (isMoving ? Math.sin(time / 50) * 0.08 : 0);
-    ctx.translate(6, 1);
-    ctx.rotate(rodAngle);
+    const rodSway = isMoving ? Math.sin(time / 50) * 0.05 : 0;
+    ctx.translate(8, 2);
+    ctx.rotate(rodSway);
 
-    // Pole Shaft
+    // Pole Shaft pointing STRAIGHT UP (Clears face completely)
     ctx.fillStyle = poleColor;
-    ctx.fillRect(-2, -35, 4, 45);
+    ctx.fillRect(-1.5, -42, 3.5, 46);
 
     // Pole Grip Handle
     ctx.fillStyle = '#451a03';
-    ctx.fillRect(-3, 0, 6, 10);
+    ctx.fillRect(-2.5, -2, 5.5, 10);
 
     // DANGLING FISHING LINE & SWAYING HOOK / BOBBER
     const lineTipX = 0;
-    const lineTipY = -35;
-    const lineSway = isMoving ? Math.sin(time / 40) * 6 : Math.sin(time / 100) * 2;
+    const lineTipY = -42;
+    const lineSway = isMoving ? Math.sin(time / 40) * 5 : Math.sin(time / 100) * 1.5;
     const hookX = lineTipX + lineSway;
-    const hookY = lineTipY + 28;
+    const hookY = lineTipY + 30;
 
     // Line String
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
