@@ -12,7 +12,7 @@ const HEIGHT = ROWS * TILE;
 const GRASS = 0; // Walkable Grass / Sand / Path
 const WATER = 1; // Impassable Water
 const TREE = 2; // Impassable Forest (STRICTLY OFF LIMITS!)
-const MARKET = 3; // Impassable Fish Market Stall (Right X: col 9-10, row 7-8)
+const MARKET = 3; // Impassable Fish Market Stall
 const TEMPLE = 4; // Impassable Question Booth (Left X: col 6-7, row 5-6)
 const PIER = 5; // Walkable Fishing Pier
 
@@ -73,19 +73,19 @@ const MAP_LEVEL_3 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
-// Level 4 Map (Tahiti Lagoon)
+// Level 4 Map (Tahiti Lagoon) - Fish Market re-positioned at RED X: col 10-11, row 4-5!
 const MAP_LEVEL_4 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
   [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2],
+  [2,2,0,0,0,0,0,0,0,0,3,3,0,0,0,2,1,1,1,2], // RED X: Fish Market at col 10-11, row 4-5
+  [2,2,0,0,0,0,4,4,0,0,3,3,0,0,0,1,1,1,1,2], // Question Booth at col 6-7, row 5-6
   [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,2,0,0,0,0,4,4,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,3,3,0,0,0,0,0,1,1,1,2],
-  [2,2,0,0,0,0,0,0,0,3,3,5,5,5,5,5,5,5,2],
-  [2,2,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,2],
-  [2,2,2,2,0,0,0,0,0,0,0,5,5,5,5,5,5,5,2],
+  [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2], // Open entrance path in front at row 6!
+  [2,2,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,5,2], // Clear Pier entrance at col 11-18, row 8-10!
+  [2,2,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,5,2],
+  [2,2,2,2,0,0,0,0,0,0,0,5,5,5,5,5,5,5,5,2],
   [2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -467,9 +467,10 @@ export default function Fishtopia({ onBack }) {
     ctx.fillText('QUESTIONS', boothX + boothW/2, boothY + 32);
 
 
-    // --- DRAW DYNAMIC FISH MARKET STALL (MARKET = 3 at Right X: col 9-10, row 7-8) ---
-    const marketX = 9 * TILE;
-    const marketY = 7 * TILE;
+    // --- DRAW DYNAMIC FISH MARKET STALL (MARKET = 3) ---
+    // On Level 4, Fish Market is positioned at RED X (col 10-11, row 4-5). On Levels 1-3, col 9-10, row 7-8.
+    const marketX = (rLevel === 4) ? 10 * TILE : 9 * TILE;
+    const marketY = (rLevel === 4) ? 4 * TILE : 7 * TILE;
     const marketW = 2 * TILE;
     const marketH = 2 * TILE;
 
@@ -844,7 +845,7 @@ export default function Fishtopia({ onBack }) {
       </div>
       
       <div className="mt-4 text-center max-w-[800px] text-gray-600">
-        <p><strong>Objectif :</strong> Marchez sur le chemin en terre 🚶 ! Montez sur le ponton de pêche pour attraper des poissons 🎣 !</p>
+        <p><strong>Objectif :</strong> Marchez sur le chemin en terre 🚶 ! Montez sur le ponton de pêche pour attraper des poissons 🎣 ! Placez-vous devant le Marché ou le Kiosque pour interagir !</p>
       </div>
     </div>
   );
