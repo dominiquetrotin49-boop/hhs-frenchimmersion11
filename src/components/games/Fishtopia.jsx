@@ -331,26 +331,26 @@ export default function Fishtopia({ onBack }) {
 
   const maskCanvasRef = useRef(null);
   const maskCtxRef = useRef(null);
-  const maskDataRef = useRef(null);
+  const maskDataRef = useRef({});
 
   useEffect(() => {
-    // Load offscreen canvas mask for Level 1 directly from user's black-painted image!
-    const maskImg = new Image();
-    maskImg.src = '/assets/level1_mask.jpg';
-    maskImg.onload = () => {
-      const offCanvas = document.createElement('canvas');
-      offCanvas.width = WIDTH;
-      offCanvas.height = HEIGHT;
-      const offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
-      offCtx.drawImage(maskImg, 0, 0, WIDTH, HEIGHT);
-      maskCanvasRef.current = offCanvas;
-      maskCtxRef.current = offCtx;
-      try {
-        maskDataRef.current = offCtx.getImageData(0, 0, WIDTH, HEIGHT);
-      } catch (e) {
-        console.error("Mask getImageData failed:", e);
-      }
-    };
+    // Load offscreen canvas masks for ALL 4 levels from pixel mask images!
+    [1, 2, 3, 4].forEach(lvl => {
+      const maskImg = new Image();
+      maskImg.src = `/assets/level${lvl}_mask.jpg`;
+      maskImg.onload = () => {
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = WIDTH;
+        offCanvas.height = HEIGHT;
+        const offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
+        offCtx.drawImage(maskImg, 0, 0, WIDTH, HEIGHT);
+        try {
+          maskDataRef.current[lvl] = offCtx.getImageData(0, 0, WIDTH, HEIGHT);
+        } catch (e) {
+          console.error(`Mask level ${lvl} getImageData failed:`, e);
+        }
+      };
+    });
   }, []);
 
   const getMapForLevel = () => {
@@ -369,14 +369,15 @@ export default function Fishtopia({ onBack }) {
     return activeMap[row][col];
   };
 
-  // --- HARD RULES FOR MOVEMENT / WALKABILITY (DIRECT PIXEL-COLOR MASKING FROM USER'S BLACK PATH IMAGE) ---
-  // Hard Rule: Hamster CAN ONLY walk on pixels painted BLACK (R<70, G<70, B<70) in the user's annotated image!
-  // Water, grass, rocks, forest, long grass, cliffs, and buildings are 100% STRICTLY IMPASSABLE!
+  // --- HARD RULES FOR MOVEMENT / WALKABILITY (DIRECT PIXEL-COLOR MASKING ACROSS ALL 4 LEVELS) ---
+  // Hard Rule: Hamster CAN ONLY walk on pixels painted BLACK (R<70, G<70, B<70) in the level's annotated mask image!
+  // Water, grass, rocks, forest, long grass, cliffs, and buildings are 100% STRICTLY IMPASSABLE across ALL 4 LEVELS!
   const checkCollisionAt = (px, py, size) => {
     const rLevel = stateRef.current?.rodLevel || 1;
+    const activeMaskData = maskDataRef.current[rLevel];
 
-    // For Level 1: Direct Pixel-Color Sampling from user's black path image!
-    if (rLevel === 1 && maskDataRef.current) {
+    // For ALL Levels: Direct Pixel-Color Sampling from the black path mask image!
+    if (activeMaskData) {
       const colSize = 8; // Nimble 8px collision box for smooth turning along black path
       const points = [
         { x: px - colSize/2, y: py - colSize/2 },
@@ -386,7 +387,7 @@ export default function Fishtopia({ onBack }) {
         { x: px, y: py }
       ];
 
-      const imgData = maskDataRef.current.data;
+      const imgData = activeMaskData.data;
       for (let c of points) {
         const cx = Math.floor(c.x);
         const cy = Math.floor(c.y);
@@ -402,13 +403,13 @@ export default function Fishtopia({ onBack }) {
         const isBlack = (r < 70 && g < 70 && b < 70);
 
         if (!isBlack) {
-          return true; // BLOCKED! Only pixels painted black by the user are walkable!
+          return true; // BLOCKED! Only pixels painted black are walkable!
         }
       }
       return false; // Walkable!
     }
 
-    // Grid fallback for other levels:
+    // Grid fallback for other levels if mask is loading:
     const colSize = 10;
     const points = [
       { x: px - colSize/2, y: py - colSize/2 },
