@@ -710,82 +710,220 @@ export default function DontLookDown({ onBack }) {
       }
     }
 
-    // --- DRAW HAMSTER (KEEP EXACT SAME CHARACTER) ---
+    // --- DRAW DISNEY-STYLE HAMSTER CHARACTER WITH ARMS IN THE AIR WHEN JUMPING ---
     const p = playerRef.current;
     const py = p.y;
-    
-    ctx.save();
-    ctx.translate(p.x, py);
-    if (!p.facingRight) ctx.scale(-1, 1);
-    
-    const scaleRatio = p.size / 24;
-    ctx.scale(scaleRatio, scaleRatio);
+    const isMoving = p.vx !== 0;
+    const isJumping = !p.isGrounded;
 
-    ctx.shadowColor = 'transparent';
+    // Disney Walk & Animation Parameters
+    const walkSpeed = 30;
+    const legStep = (isMoving && p.isGrounded) ? Math.sin(time / walkSpeed) * 6 : 0;
+    const legLift = (isMoving && p.isGrounded) ? Math.abs(Math.cos(time / walkSpeed)) * 4 : 0;
+    
+    // Jump Tuck or Idle Breathing
+    const jumpLegTuck = isJumping ? 4 : 0;
+    const idleBreathing = (p.isGrounded && !isMoving) ? Math.sin(time / 250) * 1.2 : 0;
+    const bodyBob = (isMoving && p.isGrounded) ? Math.abs(Math.sin(time / 35)) * 4 : (isJumping ? -3 : idleBreathing);
+    const bodyWaddle = (isMoving && p.isGrounded) ? Math.sin(time / 60) * 0.12 : (isJumping ? Math.sin(time / 40) * 0.15 : 0);
 
+    // Disney Eye Blinking Logic
+    const blinkCycle = (time % 3500);
+    const isBlinking = blinkCycle > 3350;
+    const eyeHeightScale = isBlinking ? 0.2 : 1.0;
+
+    // Shadow below feet when grounded
     if (p.isGrounded) {
-       ctx.fillStyle = 'rgba(0,0,0,0.3)';
+       ctx.fillStyle = 'rgba(0,0,0,0.25)';
        ctx.beginPath();
-       ctx.ellipse(0, p.size/2 + 2, p.size/1.5, 4, 0, 0, Math.PI*2);
+       ctx.ellipse(p.x, py + p.size/2 + 1, p.size/1.6, 4, 0, 0, Math.PI*2);
        ctx.fill();
     }
 
-    // Ears
-    ctx.fillStyle = '#d97706'; 
-    ctx.beginPath();
-    ctx.arc(-8, -10, 7, 0, Math.PI * 2);
-    ctx.arc(8, -10, 7, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#fbcfe8'; // Inner ear
-    ctx.beginPath();
-    ctx.arc(-8, -10, 4, 0, Math.PI * 2);
-    ctx.arc(8, -10, 4, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.save();
+    ctx.translate(p.x, py - bodyBob);
+    ctx.rotate(bodyWaddle);
     
-    // Body (Radial gradient for 3D fur effect)
-    let furGrad = ctx.createRadialGradient(-3, -3, 2, 0, 0, p.size/1.5);
-    furGrad.addColorStop(0, '#fbbf24'); // Highlight
-    furGrad.addColorStop(0.7, '#f59e0b'); // Base orange
-    furGrad.addColorStop(1, '#b45309'); // Shadow edge
-    
-    ctx.fillStyle = furGrad;
+    // Directional Flip
+    const baseScale = p.size / 24;
+    const dirScaleX = p.facingRight ? baseScale : -baseScale;
+    ctx.scale(dirScaleX, baseScale);
+
+    ctx.shadowColor = 'transparent';
+
+    // 🐾 1. DISNEY FEET / SHOES
+    ctx.fillStyle = '#b45309';
+    // Left Foot
     ctx.beginPath();
-    ctx.arc(0, 0, p.size/2, 0, Math.PI * 2);
+    ctx.ellipse(-5.5 - legStep * 0.5, 14.5 - (legStep > 0 ? legLift : 0) - jumpLegTuck, 4, 3, 0, 0, Math.PI * 2);
     ctx.fill();
-    
-    // Belly
-    let bellyGrad = ctx.createRadialGradient(0, 4, 1, 0, 4, p.size/2.5);
-    bellyGrad.addColorStop(0, '#ffffff');
-    bellyGrad.addColorStop(1, '#e2e8f0');
-    ctx.fillStyle = bellyGrad;
+    ctx.fillStyle = '#fef08a';
     ctx.beginPath();
-    ctx.arc(0, 4, p.size/2.5, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Eyes
-    ctx.fillStyle = '#0f172a';
-    ctx.beginPath();
-    ctx.arc(4, -4, 3, 0, Math.PI*2); // Big eye
-    ctx.fill();
-    ctx.fillStyle = 'white';
-    ctx.beginPath();
-    ctx.arc(5, -5, 1.2, 0, Math.PI*2); // Catchlight
+    ctx.ellipse(-5.5 - legStep * 0.5, 15.5 - (legStep > 0 ? legLift : 0) - jumpLegTuck, 2.5, 1.5, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Nose & Whiskers
-    ctx.fillStyle = '#f472b6'; 
+    ctx.fillStyle = '#b45309';
+    // Right Foot
     ctx.beginPath();
-    ctx.arc(10, 1, 2.5, 0, Math.PI*2);
+    ctx.ellipse(5.5 + legStep * 0.5, 14.5 - (legStep < 0 ? legLift : 0) - jumpLegTuck, 4, 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fef08a';
+    ctx.beginPath();
+    ctx.ellipse(5.5 + legStep * 0.5, 15.5 - (legStep < 0 ? legLift : 0) - jumpLegTuck, 2.5, 1.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 🐹 2. DISNEY CHUBBY TORSO
+    const bodyGrad = ctx.createRadialGradient(-3, -3, 2, 0, 2, 14);
+    bodyGrad.addColorStop(0, '#fef08a');
+    bodyGrad.addColorStop(0.5, '#f59e0b');
+    bodyGrad.addColorStop(1, '#92400e');
+    ctx.fillStyle = bodyGrad;
+    ctx.beginPath();
+    ctx.ellipse(0, 2, 12, 13.5 + idleBreathing * 0.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // White Fluffy Tummy
+    const bellyGrad = ctx.createRadialGradient(0, 5, 1, 0, 6, 8);
+    bellyGrad.addColorStop(0, '#ffffff');
+    bellyGrad.addColorStop(1, '#f1f5f9');
+    ctx.fillStyle = bellyGrad;
+    ctx.beginPath();
+    ctx.ellipse(0, 4.5, 7.5, 9, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Disney Red Adventurer Scarf
+    ctx.fillStyle = '#ef4444';
+    ctx.beginPath();
+    ctx.ellipse(0, -5, 8, 3, 0, 0, Math.PI * 2);
     ctx.fill();
     
-    // Whiskers
-    ctx.strokeStyle = '#475569';
+    // Scarf Knot Tails Fluttering in Wind
+    const scarfFlutter = isJumping ? Math.sin(time / 20) * 5 + 4 : (isMoving ? Math.sin(time / 30) * 3 : Math.sin(time / 150) * 1);
+    ctx.beginPath();
+    ctx.moveTo(-2, -4);
+    ctx.lineTo(-7 - scarfFlutter, 2 + scarfFlutter * 0.5);
+    ctx.lineTo(-3, 4);
+    ctx.closePath();
+    ctx.fill();
+
+    // Fluffy Puffy Tail (Back)
+    ctx.fillStyle = '#fffbeb';
+    ctx.beginPath();
+    ctx.arc(-11.5, 7.5, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 👂 3. DISNEY BIG ROUND EARS (Bouncing / twitching)
+    const earBounce = isJumping ? Math.sin(time / 20) * 3 : (isMoving ? Math.sin(time / 30) * 2.5 : Math.sin(time / 300) * 0.8);
+    ctx.fillStyle = '#b45309';
+    ctx.beginPath();
+    ctx.arc(-8.5, -14.5 + earBounce, 6, 0, Math.PI * 2);
+    ctx.arc(8.5, -14.5 - earBounce, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fbcfe8';
+    ctx.beginPath();
+    ctx.arc(-8.5, -14.5 + earBounce, 3.2, 0, Math.PI * 2);
+    ctx.arc(8.5, -14.5 - earBounce, 3.2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 👁️ 4. BIG DISNEY EXPRESSIVE EYES, CHEEKS & SMILE
+    const eyeOffsetX = 2;
+
+    // Cheek Puffs
+    ctx.fillStyle = 'rgba(251, 146, 60, 0.45)';
+    ctx.beginPath();
+    ctx.arc(-6.5 + eyeOffsetX, -2.5, 3.5, 0, Math.PI * 2);
+    ctx.arc(4.5 + eyeOffsetX, -2.5, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Large Round Disney Eyes
+    ctx.fillStyle = '#1e1b4b';
+    ctx.beginPath();
+    ctx.ellipse(-4 + eyeOffsetX, -6.5, 3, Math.max(0.5, 4 * eyeHeightScale), 0, 0, Math.PI * 2);
+    ctx.ellipse(4 + eyeOffsetX, -6.5, 3, Math.max(0.5, 4 * eyeHeightScale), 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Big White Disney Catchlights
+    if (!isBlinking) {
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(-5 + eyeOffsetX, -8, 1.4, 0, Math.PI * 2);
+      ctx.arc(3 + eyeOffsetX, -8, 1.4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(-3 + eyeOffsetX, -5.2, 0.7, 0, Math.PI * 2);
+      ctx.arc(5 + eyeOffsetX, -5.2, 0.7, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Eyebrows
+    const browBounce = isJumping ? -2 : (isMoving ? Math.sin(time / 40) * 1.2 : 0);
+    ctx.strokeStyle = '#78350f';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(-4 + eyeOffsetX, -12 + browBounce, 2.5, Math.PI + 0.3, Math.PI*2 - 0.3);
+    ctx.arc(4 + eyeOffsetX, -12 - browBounce, 2.5, Math.PI + 0.3, Math.PI*2 - 0.3);
+    ctx.stroke();
+
+    // Button Nose & Smile
+    ctx.fillStyle = '#f43f5e';
+    ctx.beginPath();
+    ctx.arc(eyeOffsetX, -2, 2.2, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = '#78350f';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(9, 1); ctx.lineTo(16, -2);
-    ctx.moveTo(9, 1.5); ctx.lineTo(17, 1.5);
-    ctx.moveTo(9, 2); ctx.lineTo(15, 5);
+    ctx.arc(eyeOffsetX, -1, 2.5, 0.2, Math.PI - 0.2);
     ctx.stroke();
+
+    // 🐾 5. ARMS & WHITE GLOVES (JUMPING ARMS IN THE AIR vs GROUNDED SWING)
+    if (isJumping) {
+      // 🙌 JUMPING POSE: BOTH LITTLE ARMS RAISED JOYFULLY IN THE AIR (\o/)
+      const armWave = Math.sin(time / 30) * 2;
+      
+      // Left Arm (Raised Up)
+      ctx.fillStyle = '#d97706';
+      ctx.beginPath();
+      ctx.ellipse(-9, -12 + armWave, 3.5, 2.5, -Math.PI / 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff'; // White Disney Glove
+      ctx.beginPath();
+      ctx.arc(-11, -16 + armWave, 2.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Right Arm (Raised Up)
+      ctx.fillStyle = '#d97706';
+      ctx.beginPath();
+      ctx.ellipse(9, -12 - armWave, 3.5, 2.5, Math.PI / 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff'; // White Disney Glove
+      ctx.beginPath();
+      ctx.arc(11, -16 - armWave, 2.8, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      // 🚶 GROUNDED / WALKING POSE: ARMS AT SIDES SWINGING HAPPILY
+      const armSwing = isMoving ? Math.sin(time / walkSpeed) * 5 : Math.sin(time / 200) * 1;
+      
+      // Left Arm
+      ctx.fillStyle = '#d97706';
+      ctx.beginPath();
+      ctx.ellipse(-9.5, 2 + armSwing, 3.5, 2.5, Math.PI / 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff'; // White Glove
+      ctx.beginPath();
+      ctx.arc(-11, 4 + armSwing, 2.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Right Arm
+      ctx.fillStyle = '#d97706';
+      ctx.beginPath();
+      ctx.ellipse(9.5, 2 - armSwing, 3.5, 2.5, -Math.PI / 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff'; // White Glove
+      ctx.beginPath();
+      ctx.arc(11, 4 - armSwing, 2.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
     ctx.restore();
     ctx.restore();
