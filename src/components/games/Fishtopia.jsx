@@ -329,6 +329,30 @@ export default function Fishtopia({ onBack }) {
     return () => cancelAnimationFrame(gameLoopRef.current);
   }, []);
 
+  const maskCanvasRef = useRef(null);
+  const maskCtxRef = useRef(null);
+  const maskDataRef = useRef(null);
+
+  useEffect(() => {
+    // Load offscreen canvas mask for Level 1 directly from user's black-painted image!
+    const maskImg = new Image();
+    maskImg.src = '/assets/level1_mask.jpg';
+    maskImg.onload = () => {
+      const offCanvas = document.createElement('canvas');
+      offCanvas.width = WIDTH;
+      offCanvas.height = HEIGHT;
+      const offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
+      offCtx.drawImage(maskImg, 0, 0, WIDTH, HEIGHT);
+      maskCanvasRef.current = offCanvas;
+      maskCtxRef.current = offCtx;
+      try {
+        maskDataRef.current = offCtx.getImageData(0, 0, WIDTH, HEIGHT);
+      } catch (e) {
+        console.error("Mask getImageData failed:", e);
+      }
+    };
+  }, []);
+
   const getMapForLevel = () => {
     const lvl = stateRef.current?.rodLevel || 1;
     if (lvl === 2) return MAP_LEVEL_2;
@@ -345,31 +369,63 @@ export default function Fishtopia({ onBack }) {
     return activeMap[row][col];
   };
 
-  // --- HARD RULES FOR MOVEMENT / WALKABILITY (STRICT NIMBLE 14-POINT COLLISION SAMPLING) ---
-  // Hard Rule: Hamster CAN ONLY walk on Sand/Dirt Path (GRASS=0) or Wooden Pier Dock (PIER=5).
-  // Water (1), Forest/Trees/Bushes/Rocks/Long Grass/Cliffs (2), Fish Market structure (3), Question Booth structure (4) are 100% STRICTLY IMPASSABLE in ALL levels!
+  // --- HARD RULES FOR MOVEMENT / WALKABILITY (DIRECT PIXEL-COLOR MASKING FROM USER'S BLACK PATH IMAGE) ---
+  // Hard Rule: Hamster CAN ONLY walk on pixels painted BLACK (R<70, G<70, B<70) in the user's annotated image!
+  // Water, grass, rocks, forest, long grass, cliffs, and buildings are 100% STRICTLY IMPASSABLE!
   const checkCollisionAt = (px, py, size) => {
-    const colSize = 10; // Ultra-precise 10px collision box for responsive, smooth navigation strictly along black path
+    const rLevel = stateRef.current?.rodLevel || 1;
+
+    // For Level 1: Direct Pixel-Color Sampling from user's black path image!
+    if (rLevel === 1 && maskDataRef.current) {
+      const colSize = 8; // Nimble 8px collision box for smooth turning along black path
+      const points = [
+        { x: px - colSize/2, y: py - colSize/2 },
+        { x: px + colSize/2, y: py - colSize/2 },
+        { x: px - colSize/2, y: py + colSize/2 },
+        { x: px + colSize/2, y: py + colSize/2 },
+        { x: px, y: py }
+      ];
+
+      const imgData = maskDataRef.current.data;
+      for (let c of points) {
+        const cx = Math.floor(c.x);
+        const cy = Math.floor(c.y);
+
+        if (cx < 0 || cx >= WIDTH || cy < 0 || cy >= HEIGHT) return true; // Offscreen = BLOCKED!
+
+        const index = (cy * WIDTH + cx) * 4;
+        const r = imgData[index];
+        const g = imgData[index + 1];
+        const b = imgData[index + 2];
+
+        // Pixel is BLACK if Red < 70, Green < 70, Blue < 70
+        const isBlack = (r < 70 && g < 70 && b < 70);
+
+        if (!isBlack) {
+          return true; // BLOCKED! Only pixels painted black by the user are walkable!
+        }
+      }
+      return false; // Walkable!
+    }
+
+    // Grid fallback for other levels:
+    const colSize = 10;
     const points = [
       { x: px - colSize/2, y: py - colSize/2 },
       { x: px + colSize/2, y: py - colSize/2 },
       { x: px - colSize/2, y: py + colSize/2 },
       { x: px + colSize/2, y: py + colSize/2 },
-      { x: px, y: py - colSize/2 },
-      { x: px, y: py + colSize/2 },
-      { x: px - colSize/2, y: py },
-      { x: px + colSize/2, y: py }
+      { x: px, y: py }
     ];
 
     for (let c of points) {
       const tile = getTile(c.x, c.y);
-      // Hard Rule: If tile is NOT walkable Dirt/Sand Path (0) or Pier Dock (5), BLOCK MOVEMENT IMMEDIATELY!
       if (tile !== GRASS && tile !== PIER) {
-        return true; // BLOCKED! Strictly cannot walk on water, bushes, rocks, forest, long grass, or buildings!
+        return true;
       }
     }
 
-    return false; // Walkable!
+    return false;
   };
 
   // --- HARD RULES FOR INTERACTION TRIGGERS ---
@@ -383,13 +439,13 @@ export default function Fishtopia({ onBack }) {
     const currentTile = getTile(p.x, p.y);
 
     // Rule: Question Booth tab ONLY when standing directly in front facing North
-    if (tileInFrontFar === TEMPLE || tileInFrontMid === TEMPLE || tileInFrontNear === TEMPLE) return 'station';
+    if (tileInFrontFar === TEMPLE || tileInFrontMid === TEMPLE || tileInFrontNear === TEMPLE || (p.x >= 120 && p.x <= 240 && p.y >= 200 && p.y <= 280)) return 'station';
 
     // Rule: Fish Market / Trading tab ONLY when standing directly in front facing North
-    if (tileInFrontFar === MARKET || tileInFrontMid === MARKET || tileInFrontNear === MARKET) return 'market';
+    if (tileInFrontFar === MARKET || tileInFrontMid === MARKET || tileInFrontNear === MARKET || (p.x >= 400 && p.x <= 560 && p.y >= 120 && p.y <= 180)) return 'market';
 
     // Rule: Fishing tab ONLY when standing on the wooden fishing dock ("penton")
-    if (currentTile === PIER) return 'fish';
+    if (currentTile === PIER || (p.x >= 390 && p.y >= 340 && p.y <= 450)) return 'fish';
 
     return null;
   };
