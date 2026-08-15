@@ -439,8 +439,8 @@ export default function Fishtopia({ onBack }) {
     const tileInFrontNear = getTile(p.x, p.y - TILE * 0.25);
     const currentTile = getTile(p.x, p.y);
 
-    // Rule: Question Booth tab ONLY when standing directly in front facing North
-    if (tileInFrontFar === TEMPLE || tileInFrontMid === TEMPLE || tileInFrontNear === TEMPLE || (p.x >= 120 && p.x <= 240 && p.y >= 200 && p.y <= 280)) return 'station';
+    // Rule: Question Booth tab when standing at the front entrance base
+    if (tileInFrontFar === TEMPLE || tileInFrontMid === TEMPLE || tileInFrontNear === TEMPLE || (p.x >= 100 && p.x <= 240 && p.y >= 230 && p.y <= 300)) return 'station';
 
     // Rule: Fish Market / Trading tab ONLY when standing directly in front facing North
     if (tileInFrontFar === MARKET || tileInFrontMid === MARKET || tileInFrontNear === MARKET || (p.x >= 400 && p.x <= 560 && p.y >= 120 && p.y <= 180)) return 'market';
