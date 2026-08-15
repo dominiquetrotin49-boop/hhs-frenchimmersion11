@@ -876,29 +876,29 @@ export default function DontLookDown({ onBack }) {
     ctx.arc(eyeOffsetX, -1, 2.5, 0.2, Math.PI - 0.2);
     ctx.stroke();
 
-    // 🐾 5. ARMS & WHITE GLOVES (JUMPING ARMS IN THE AIR vs GROUNDED SWING)
+    // 🐾 5. ARMS & WHITE GLOVES (JUMPING ARMS AT 3/4 UP vs GROUNDED SWING)
     if (isJumping) {
-      // 🙌 JUMPING POSE: BOTH LITTLE ARMS RAISED JOYFULLY IN THE AIR (\o/)
-      const armWave = Math.sin(time / 30) * 2;
+      // 🙌 JUMPING POSE: ARMS 3/4 UP DIAGONALLY (\ /)
+      const armWave = Math.sin(time / 30) * 1.5;
       
-      // Left Arm (Raised Up)
+      // Left Arm (3/4 Up)
       ctx.fillStyle = '#d97706';
       ctx.beginPath();
-      ctx.ellipse(-9, -12 + armWave, 3.5, 2.5, -Math.PI / 3, 0, Math.PI * 2);
+      ctx.ellipse(-9.5, -4 + armWave, 3.5, 2.5, -Math.PI / 6, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = '#ffffff'; // White Disney Glove
       ctx.beginPath();
-      ctx.arc(-11, -16 + armWave, 2.8, 0, Math.PI * 2);
+      ctx.arc(-12, -8.5 + armWave, 2.6, 0, Math.PI * 2);
       ctx.fill();
 
-      // Right Arm (Raised Up)
+      // Right Arm (3/4 Up)
       ctx.fillStyle = '#d97706';
       ctx.beginPath();
-      ctx.ellipse(9, -12 - armWave, 3.5, 2.5, Math.PI / 3, 0, Math.PI * 2);
+      ctx.ellipse(9.5, -4 - armWave, 3.5, 2.5, Math.PI / 6, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = '#ffffff'; // White Disney Glove
       ctx.beginPath();
-      ctx.arc(11, -16 - armWave, 2.8, 0, Math.PI * 2);
+      ctx.arc(12, -8.5 - armWave, 2.6, 0, Math.PI * 2);
       ctx.fill();
     } else {
       // 🚶 GROUNDED / WALKING POSE: ARMS AT SIDES SWINGING HAPPILY
