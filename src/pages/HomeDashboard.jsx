@@ -48,7 +48,8 @@ export default function HomeDashboard() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              textAlign: 'left'
+              textAlign: 'left',
+              marginBottom: '1rem'
             }}
           >
             <div>
@@ -58,6 +59,30 @@ export default function HomeDashboard() {
             </div>
             <button style={{ padding: '0.7rem 1.2rem', background: '#f59e0b', border: 'none', borderRadius: '10px', color: '#0f172a', fontWeight: 'bold', cursor: 'pointer', whiteSpace: 'nowrap' }}>
               Lire le Roman →
+            </button>
+          </div>
+
+          <div 
+            onClick={() => window.location.href = '/reprise/amnesique'}
+            style={{ 
+              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.3))', 
+              border: '1px solid #3b82f6', 
+              padding: '1.5rem', 
+              borderRadius: '16px', 
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              textAlign: 'left'
+            }}
+          >
+            <div>
+              <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: '#60a5fa', fontWeight: 'bold' }}>🕵️ JEU DE REVISION — L'Amnésique en Ligne</span>
+              <h3 style={{ margin: '0.2rem 0', color: '#f8fafc', fontSize: '1.2rem' }}>Aidez le voyageur !</h3>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: '#cbd5e1' }}>Posez-lui des questions pour l'aider à retrouver son objet et son souvenir perdus.</p>
+            </div>
+            <button style={{ padding: '0.7rem 1.2rem', background: '#3b82f6', border: 'none', borderRadius: '10px', color: '#fff', fontWeight: 'bold', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+              Jouer →
             </button>
           </div>
         </div>
