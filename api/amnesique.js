@@ -1,7 +1,3 @@
-import { GoogleGenAI } from '@google/genai';
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
 const SYSTEM_INSTRUCTION = `Tu es un personnage amnésique qui essaie de se souvenir d'un objet et d'un événement secret de ses vacances d'été (par exemple, "une tente oubliée dans le train"). L'élève va te poser des questions pour t'aider à retrouver la mémoire.
 
 CONSIGNES PÉDAGOGIQUES STRICTES :
@@ -26,35 +22,65 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Limite de tours atteinte.' });
     }
 
-    // Expected format for multi-turn is array of { role: 'user' | 'model', parts: [{ text: '...' }] }
-    const formattedHistory = history.map((msg) => ({
+    // Map history to Google Gemini structure
+    const contents = history.map((msg) => ({
       role: msg.role === 'user' ? 'user' : 'model',
       parts: [{ text: msg.content }],
     }));
 
-    // Add the current user message to the history
-    const contents = [...formattedHistory, { role: 'user', parts: [{ text: message }] }];
+    // Add the current message
+    contents.push({
+      role: 'user',
+      parts: [{ text: message }]
+    });
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: contents,
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.7,
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ error: 'Clé API Gemini manquante dans la configuration du serveur.' });
+    }
+
+    // Call Gemini API directly using native fetch (zero dependencies)
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+    const response = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents,
+        systemInstruction: {
+          parts: [{ text: SYSTEM_INSTRUCTION }]
+        },
+        generationConfig: {
+          temperature: 0.7,
+        },
         safetySettings: [
           { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_LOW_AND_ABOVE' },
           { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_LOW_AND_ABOVE' },
           { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_LOW_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_LOW_AND_ABOVE' },
-        ],
-      },
+          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_LOW_AND_ABOVE' }
+        ]
+      })
     });
 
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Erreur retournée par Gemini API:', data);
+      return res.status(response.status).json({ error: data.error?.message || 'Erreur lors de la génération de la réponse.' });
+    }
+
+    const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!candidateText) {
+      return res.status(500).json({ error: 'Aucune réponse générée par le modèle (sécurité déclenchée ?)' });
+    }
+
     res.status(200).json({
-      text: response.text,
+      text: candidateText,
     });
   } catch (error) {
-    console.error('Erreur API Gemini:', error);
+    console.error('Erreur API Gemini (direct fetch):', error);
     res.status(500).json({ error: 'Erreur lors de la génération de la réponse.' });
   }
 }
