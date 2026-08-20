@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, RefreshCw, AlertCircle } from 'lucide-react';
+import './Amnesique.css';
 
 export default function Amnesique() {
   const [messages, setMessages] = useState([
@@ -104,29 +105,27 @@ export default function Amnesique() {
     const parts = text.split(/(\*\*.*?\*\*)/g);
     return parts.map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={i} className="text-blue-700">{part.slice(2, -2)}</strong>;
+        return <strong key={i}>{part.slice(2, -2)}</strong>;
       }
       return part;
     });
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-100px)] max-w-3xl mx-auto bg-gray-50 rounded-xl shadow-lg overflow-hidden border border-gray-200">
+    <div className="amnesique-container">
       {/* Header */}
-      <div className="bg-blue-600 text-white p-4 flex justify-between items-center shadow-md z-10">
-        <div>
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            L'Amnésique en Ligne 🕵️
-          </h2>
-          <p className="text-blue-100 text-sm">Posez des questions pour l'aider !</p>
+      <div className="amnesique-header">
+        <div className="amnesique-title-group">
+          <h2>L'Amnésique en Ligne 🕵️</h2>
+          <p>Posez des questions pour l'aider !</p>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="bg-blue-700 px-3 py-1 rounded-full text-sm font-semibold border border-blue-500">
+        <div className="amnesique-stats">
+          <div className="amnesique-turn-badge">
             🎯 Questions restantes : {maxTurns - turnCount}/{maxTurns}
           </div>
           <button 
             onClick={handleReset}
-            className="p-2 bg-blue-700 hover:bg-blue-800 rounded-full transition-colors"
+            className="amnesique-reset-btn"
             title="Recommencer"
           >
             <RefreshCw size={20} />
@@ -143,19 +142,13 @@ export default function Amnesique() {
       )}
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="amnesique-chat-area">
         {messages.map((msg, index) => (
           <div 
             key={index} 
-            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`amnesique-msg-wrapper ${msg.role === 'user' ? 'user' : 'model'}`}
           >
-            <div 
-              className={`max-w-[80%] p-4 rounded-2xl shadow-sm ${
-                msg.role === 'user' 
-                  ? 'bg-blue-500 text-white rounded-br-none' 
-                  : 'bg-white text-gray-800 rounded-bl-none border border-gray-100'
-              }`}
-            >
+            <div className="amnesique-bubble">
               <div className="whitespace-pre-wrap leading-relaxed">
                 {msg.role === 'model' ? renderFormattedText(msg.content) : msg.content}
               </div>
@@ -163,11 +156,11 @@ export default function Amnesique() {
           </div>
         ))}
         {isLoading && (
-          <div className="flex justify-start">
-            <div className="bg-white p-4 rounded-2xl rounded-bl-none border border-gray-100 shadow-sm flex gap-2">
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          <div className="amnesique-msg-wrapper model">
+            <div className="amnesique-typing-loader">
+              <div className="amnesique-dot" style={{ animationDelay: '0ms' }}></div>
+              <div className="amnesique-dot" style={{ animationDelay: '150ms' }}></div>
+              <div className="amnesique-dot" style={{ animationDelay: '300ms' }}></div>
             </div>
           </div>
         )}
@@ -175,8 +168,8 @@ export default function Amnesique() {
       </div>
 
       {/* Input Area */}
-      <div className="p-5 bg-white border-t border-gray-200">
-        <form onSubmit={handleSubmit} className="flex gap-2 relative">
+      <div className="amnesique-input-area">
+        <form onSubmit={handleSubmit} className="amnesique-form">
           <input
             ref={inputRef}
             type="text"
@@ -184,26 +177,26 @@ export default function Amnesique() {
             onChange={(e) => setInput(e.target.value)}
             disabled={isLoading || isGameOver}
             placeholder={isGameOver ? "Le jeu est terminé. Cliquez sur Recommencer." : "Écrivez votre question en français..."}
-            className="flex-1 p-6 pr-20 border border-gray-300 rounded-xl text-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-all shadow-inner font-medium"
+            className="amnesique-input"
           />
           <button
             type="submit"
             disabled={!input.trim() || isLoading || isGameOver}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-3.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="amnesique-submit-btn"
           >
             <Send size={24} />
           </button>
         </form>
 
         {/* Accent Bar */}
-        <div className="flex flex-wrap gap-2.5 mt-5 justify-center">
+        <div className="amnesique-accent-bar">
           {frenchAccents.map((char) => (
             <button
               key={char}
               type="button"
               onClick={() => handleAccentClick(char)}
               disabled={isLoading || isGameOver}
-              className="w-16 h-16 flex items-center justify-center bg-gray-100 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 border border-gray-200 text-gray-800 rounded-xl text-2xl font-bold active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
+              className="amnesique-accent-btn"
             >
               {char}
             </button>
