@@ -4,7 +4,7 @@ import { BookOpen, Film, GraduationCap } from 'lucide-react';
 import './Sidebar.css';
 
 const units = [
-  { id: 'reprise', name: 'Reprise', title: '', icon: BookOpen },
+  { id: 'reprise', name: '', title: 'Reprise', icon: BookOpen },
   { id: '1', name: 'Unité 1', title: 'Liberté de la presse', icon: BookOpen },
   { id: '2', name: 'Unité 2', title: 'L\'éducation', icon: BookOpen },
   { id: '3', name: 'Unité 3', title: 'La technologie', icon: BookOpen },
@@ -55,7 +55,7 @@ export default function Sidebar() {
                 >
                   <Icon className="nav-icon" size={20} />
                   <div className="nav-text">
-                    <span className="unit-name">{unit.name}</span>
+                    {unit.name && <span className="unit-name">{unit.name}</span>}
                     {unit.title && <span className="unit-title">{unit.title}</span>}
                   </div>
                 </NavLink>
