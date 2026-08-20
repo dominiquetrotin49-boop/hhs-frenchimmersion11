@@ -29,9 +29,11 @@ export default function UnitDashboard() {
   const [selectedGame1, setSelectedGame1] = useState(null); // 'escape' or 'fishtopia'
   const [selectedGame2, setSelectedGame2] = useState(null); // 'escape' or 'dld'
   const [selectedGame4, setSelectedGame4] = useState(null); // 'detective', 'director', 'auction'
+  const [selectedRepriseGame, setSelectedRepriseGame] = useState(null);
 
   useEffect(() => {
     setActiveTab(unitId === 'reprise' ? 'game' : 'grammar');
+    setSelectedRepriseGame(null);
   }, [unitId]);
 
   const isFilm = unitId?.startsWith('film');
@@ -171,7 +173,25 @@ export default function UnitDashboard() {
             {activeTab === 'game' && (
               <div className="section-content animate-in">
                 {unitId === 'reprise' ? (
-                  <Amnesique />
+                  selectedRepriseGame === 'amnesique' ? (
+                    <div>
+                      <button className="back-btn mb-4" onClick={() => setSelectedRepriseGame(null)}>← Retour aux jeux</button>
+                      <Amnesique />
+                    </div>
+                  ) : (
+                    <div>
+                      <h3 className="mb-4 text-center">Choisissez votre Jeu !</h3>
+                      <div className="game-cards-container">
+                        <div className="game-card glass-panel" onClick={() => setSelectedRepriseGame('amnesique')} style={{ cursor: 'pointer' }}>
+                          <Gamepad2 className="game-icon" style={{ color: '#3b82f6' }} size={48} />
+                          <h4>🕵️ JEU DE REVISION — L'AMNÉSIQUE EN LIGNE</h4>
+                          <h5 style={{ color: '#60a5fa', margin: '0.2rem 0', fontWeight: 'semibold' }}>Aidez le voyageur !</h5>
+                          <p style={{ opacity: 0.9 }}>Posez-lui des questions pour l'aider à retrouver son objet et son souvenir perdus.</p>
+                          <button className="play-btn" style={{ background: '#3b82f6', color: 'white' }}>Jouer</button>
+                        </div>
+                      </div>
+                    </div>
+                  )
                 ) : unitId === '4' ? (
                   selectedGame4 === 'detective' ? (
                     <ArtDetectiveGame onBack={() => setSelectedGame4(null)} />

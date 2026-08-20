@@ -63,7 +63,7 @@ export default function HomeDashboard() {
           </div>
 
           <div 
-            onClick={() => window.location.href = '/reprise/amnesique'}
+            onClick={() => window.location.href = '/unit/reprise'}
             style={{ 
               background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.3))', 
               border: '1px solid #3b82f6', 
