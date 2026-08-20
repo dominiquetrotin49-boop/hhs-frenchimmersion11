@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { BookOpen, Languages, PenTool, Gamepad2 } from 'lucide-react';
 import EscapeGame from '../components/EscapeGame';
@@ -10,6 +10,7 @@ import ArtAuctionGame from '../components/games/ArtAuctionGame';
 import PracticeMenu from '../components/games/PracticeMenu';
 import Fishtopia from '../components/games/Fishtopia';
 import DontLookDown from '../components/games/DontLookDown';
+import Amnesique from '../components/games/Amnesique';
 import VocabFillInTheBlank from '../components/VocabFillInTheBlank';
 import GrammarSection from '../components/GrammarSection';
 import UnitAvatarSpeaker from '../components/UnitAvatarSpeaker';
@@ -24,12 +25,17 @@ const TABS = [
 
 export default function UnitDashboard() {
   const { unitId } = useParams();
-  const [activeTab, setActiveTab] = useState('grammar');
+  const [activeTab, setActiveTab] = useState(unitId === 'reprise' ? 'game' : 'grammar');
   const [selectedGame1, setSelectedGame1] = useState(null); // 'escape' or 'fishtopia'
   const [selectedGame2, setSelectedGame2] = useState(null); // 'escape' or 'dld'
   const [selectedGame4, setSelectedGame4] = useState(null); // 'detective', 'director', 'auction'
 
+  useEffect(() => {
+    setActiveTab(unitId === 'reprise' ? 'game' : 'grammar');
+  }, [unitId]);
+
   const isFilm = unitId?.startsWith('film');
+  const isReprise = unitId === 'reprise';
   
   // Get specific unit titles
   let specificTitle = '';
@@ -39,7 +45,12 @@ export default function UnitDashboard() {
   else if (unitId === '4') specificTitle = ' - Les arts et la culture';
   else if (unitId === '5') specificTitle = ' - Les droits des femmes';
   else if (unitId === '6') specificTitle = ' - Halte aux inégalités';
-  const unitTitle = isFilm ? `Mini-unité Film ${unitId.replace('film', '')}` : `Unité ${unitId}${specificTitle}`;
+  
+  const unitTitle = isFilm 
+    ? `Mini-unité Film ${unitId.replace('film', '')}` 
+    : isReprise 
+      ? 'Reprise' 
+      : `Unité ${unitId}${specificTitle}`;
 
   const leaUnit1Script = "Salut tout le monde ! Bienvenue dans l'Unité 1 consacrée à la liberté de la presse et au monde des médias ! Dans cette unité, tu vas te glisser dans la peau d'un vrai journaliste. Tu vas apprendre le vocabulaire des médias, réviser la conjugaison des verbes au présent, et découvrir comment exprimer ton opinion avec conviction. N'oublie pas de tester nos jeux interactifs comme le Scoop Race et la Rédaction en Action ! Alors, prêt à décrocher ton premier scoop ? Choisis une section ci-dessous pour démarrer !";
   const hugoUnit2Script = "Salut ! Bienvenue dans l'Unité 2 ! Cette fois, on s'attaque à un grand sujet : l'éducation et la vie scolaire. Dans ce module, on va explorer des différents systèmes éducatifs, mais surtout bétonner la grammaire avec les 25 verbes irréguliers indispensables au présent. Tu vas en avoir besoin pour briller dans les activités d'écriture ! Pense aussi à essayer l'Escape Game de l'Unité 2 pour tester tes réflexes. Allez, bon courage et lance-toi vite dans les leçons !";
@@ -113,29 +124,55 @@ export default function UnitDashboard() {
       </header>
 
       <div className="dashboard-content">
-        {['1', '2', '3', '4'].includes(unitId) ? (
+        {['1', '2', '3', '4', 'reprise'].includes(unitId) ? (
           <>
             {activeTab === 'grammar' && (
               <div className="section-content animate-in">
-                <GrammarSection unitId={unitId} />
+                {unitId === 'reprise' ? (
+                  <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
+                    <BookOpen size={48} style={{margin: '0 auto', opacity: 0.5, marginBottom: '1rem'}} />
+                    <h3>Grammaire - Reprise</h3>
+                    <p style={{opacity: 0.8}}>Les fiches de révision de grammaire seront bientôt disponibles ici. Merci de votre patience !</p>
+                  </div>
+                ) : (
+                  <GrammarSection unitId={unitId} />
+                )}
               </div>
             )}
             
             {activeTab === 'vocabulary' && (
               <div className="section-content animate-in">
-                <VocabFillInTheBlank unitId={unitId} />
+                {unitId === 'reprise' ? (
+                  <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
+                    <Languages size={48} style={{margin: '0 auto', opacity: 0.5, marginBottom: '1rem'}} />
+                    <h3>Vocabulaire - Reprise</h3>
+                    <p style={{opacity: 0.8}}>Les listes de vocabulaire de reprise seront bientôt disponibles ici. Merci de votre patience !</p>
+                  </div>
+                ) : (
+                  <VocabFillInTheBlank unitId={unitId} />
+                )}
               </div>
             )}
 
             {activeTab === 'practice' && (
               <div className="section-content animate-in">
-                <PracticeMenu unitId={unitId} />
+                {unitId === 'reprise' ? (
+                  <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
+                    <PenTool size={48} style={{margin: '0 auto', opacity: 0.5, marginBottom: '1rem'}} />
+                    <h3>Pratique d'écriture</h3>
+                    <p style={{opacity: 0.8}}>Les exercices de rédaction et de pratique seront bientôt disponibles ici. Merci de votre patience !</p>
+                  </div>
+                ) : (
+                  <PracticeMenu unitId={unitId} />
+                )}
               </div>
             )}
 
             {activeTab === 'game' && (
               <div className="section-content animate-in">
-                {unitId === '4' ? (
+                {unitId === 'reprise' ? (
+                  <Amnesique />
+                ) : unitId === '4' ? (
                   selectedGame4 === 'detective' ? (
                     <ArtDetectiveGame onBack={() => setSelectedGame4(null)} />
                   ) : selectedGame4 === 'director' ? (
