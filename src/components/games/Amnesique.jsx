@@ -9,6 +9,9 @@ export default function Amnesique() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const frenchAccents = ['é', 'è', 'à', 'ù', 'ç', 'â', 'ê', 'î', 'ô', 'û', 'ë', 'ï', 'œ', 'æ'];
   
   // Exclude the initial greeting from the turn count to be fair to the student
   const turnCount = messages.filter(m => m.role === 'user').length;
@@ -74,6 +77,26 @@ export default function Amnesique() {
     ]);
     setInput('');
     setError(null);
+  };
+
+  const handleAccentClick = (char) => {
+    if (isLoading || isGameOver) return;
+    const el = inputRef.current;
+    if (!el) return;
+
+    const start = el.selectionStart || 0;
+    const end = el.selectionEnd || 0;
+    const text = el.value;
+
+    const newText = text.slice(0, start) + char + text.slice(end);
+    setInput(newText);
+
+    // Set focus and restore cursor position after render
+    setTimeout(() => {
+      el.focus();
+      const newPos = start + char.length;
+      el.setSelectionRange(newPos, newPos);
+    }, 0);
   };
 
   // Helper function to render bold markdown from the API
@@ -152,24 +175,40 @@ export default function Amnesique() {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 bg-white border-t border-gray-200">
+      <div className="p-5 bg-white border-t border-gray-200">
         <form onSubmit={handleSubmit} className="flex gap-2 relative">
           <input
+            ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isLoading || isGameOver}
             placeholder={isGameOver ? "Le jeu est terminé. Cliquez sur Recommencer." : "Écrivez votre question en français..."}
-            className="flex-1 p-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-all shadow-inner"
+            className="flex-1 p-6 pr-20 border border-gray-300 rounded-xl text-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-all shadow-inner font-medium"
           />
           <button
             type="submit"
             disabled={!input.trim() || isLoading || isGameOver}
-            className="absolute right-2 top-2 p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-3.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
           >
-            <Send size={18} />
+            <Send size={24} />
           </button>
         </form>
+
+        {/* Accent Bar */}
+        <div className="flex flex-wrap gap-2.5 mt-5 justify-center">
+          {frenchAccents.map((char) => (
+            <button
+              key={char}
+              type="button"
+              onClick={() => handleAccentClick(char)}
+              disabled={isLoading || isGameOver}
+              className="w-16 h-16 flex items-center justify-center bg-gray-100 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 border border-gray-200 text-gray-800 rounded-xl text-2xl font-bold active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
+            >
+              {char}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
