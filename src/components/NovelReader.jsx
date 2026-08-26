@@ -3,6 +3,69 @@ import { BookOpen, Volume2, VolumeX, CheckCircle, HelpCircle, ArrowRight, ArrowL
 import { NOVEL_CHAPTERS } from '../data/novelData';
 import './NovelReader.css';
 
+const getBaseVocabWords = (vocabList) => {
+  if (!vocabList) return [];
+  const words = [];
+  vocabList.forEach(item => {
+    let raw = item.word.split('(')[0].trim().toLowerCase();
+    const parts = raw.split('/').map(p => p.trim());
+    
+    parts.forEach(part => {
+      let w = part.replace(/^(un|une|des|le|la|les|l'|d')\s+/, '').trim();
+      if (!w) return;
+      
+      words.push(w);
+      
+      if (w.startsWith("s'") || w.startsWith("se ")) {
+        const verbCore = w.replace(/^(s'|se\s+)/, '');
+        words.push(verbCore);
+        if (verbCore.endsWith("er")) {
+          const stem = verbCore.slice(0, -2);
+          words.push("s'" + stem + "ent");
+          words.push("s'" + stem + "e");
+          words.push(stem + "ent");
+          words.push(stem + "e");
+        }
+      }
+    });
+  });
+  return Array.from(new Set(words));
+};
+
+const renderParagraphWithHighlights = (paragraph, vocabWords, pIdx) => {
+  const translationParts = paragraph.split(/(\([a-zA-Z\s,'’-]+\))/g);
+  
+  return (
+    <p key={pIdx} className="pdf-paragraph">
+      {translationParts.map((part, partIdx) => {
+        if (part.startsWith('(') && part.endsWith(')')) {
+          return <strong key={partIdx} className="inline-translation">{part}</strong>;
+        }
+        
+        if (!vocabWords || vocabWords.length === 0) {
+          return part;
+        }
+        
+        const escapedWords = vocabWords.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+        const regex = new RegExp(`(\\b(?:${escapedWords})s?\\b)`, 'gi');
+        
+        const subParts = part.split(regex);
+        return subParts.map((subPart, subPartIdx) => {
+          const isVocab = vocabWords.some(w => {
+            const cleanedSub = subPart.trim().toLowerCase().replace(/s$/, '');
+            return cleanedSub === w || (w.endsWith('s') && subPart.trim().toLowerCase() === w);
+          });
+          
+          if (isVocab) {
+            return <strong key={`${partIdx}-${subPartIdx}`} className="vocab-highlight">{subPart}</strong>;
+          }
+          return subPart;
+        });
+      })}
+    </p>
+  );
+};
+
 export default function NovelReader({ onBack }) {
   const [activeChapterIdx, setActiveChapterIdx] = useState(0);
   const [activePageIdx, setActivePageIdx] = useState(0);
@@ -17,6 +80,7 @@ export default function NovelReader({ onBack }) {
 
   const chapter = NOVEL_CHAPTERS[activeChapterIdx];
   const currentPage = chapter.pages[activePageIdx];
+  const vocabWords = getBaseVocabWords(chapter.vocabList);
   const isNarratorLea = chapter.narrator === 'lea';
 
   // Reset page and audio on chapter change
@@ -93,6 +157,42 @@ export default function NovelReader({ onBack }) {
     setQuizScore(score);
     setQuizSubmitted(true);
   };
+
+  const isVercel = (typeof process !== 'undefined' && process.env && process.env.VERCEL_URL) || window.location.hostname.includes('vercel');
+
+  if (isVercel && activeChapterIdx !== 0) {
+    return (
+      <div className="novel-container glass-panel animate-in">
+        <div className="novel-header">
+          <div className="novel-header-info">
+            <span className="novel-badge">📖 Roman Interactif — Le Secret du Manuscrit</span>
+          </div>
+          {onBack && (
+            <button className="novel-back-btn" onClick={onBack}>
+              ← Retour au tableau de bord
+            </button>
+          )}
+        </div>
+
+        <div className="chapter-selector-container">
+          {NOVEL_CHAPTERS.map((ch, idx) => (
+            <button
+              key={ch.id}
+              className={`chapter-tab-btn ${activeChapterIdx === idx ? 'active' : ''}`}
+              onClick={() => setActiveChapterIdx(idx)}
+            >
+              <span className="chapter-num">{ch.number}</span>
+              <span className="chapter-tab-title">{ch.title}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="section-content animate-in empty-state glass-panel" style={{ textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem' }}>
+          <h3>Nous n'y sommes pas encore.</h3>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="novel-container glass-panel animate-in">
@@ -195,20 +295,9 @@ export default function NovelReader({ onBack }) {
             )}
 
             <div className="page-body-text pdf-prose">
-              {currentPage.text.split('\n\n').map((paragraph, pIdx) => {
-                // Highlight words in parentheses as bold blue like in the PDF
-                const parts = paragraph.split(/(\([a-zA-Z\s,-]+\))/g);
-                return (
-                  <p key={pIdx} className="pdf-paragraph">
-                    {parts.map((part, partIdx) => {
-                      if (part.startsWith('(') && part.endsWith(')')) {
-                        return <strong key={partIdx} className="inline-translation">{part}</strong>;
-                      }
-                      return part;
-                    })}
-                  </p>
-                );
-              })}
+              {currentPage.text.split('\n\n').map((paragraph, pIdx) => 
+                renderParagraphWithHighlights(paragraph, vocabWords, pIdx)
+              )}
             </div>
           </div>
 

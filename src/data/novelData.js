@@ -14,25 +14,25 @@ export const NOVEL_CHAPTERS = [
         "pageNumber": 1,
         "title": "Page 1 : La Rédaction du Journal",
         "audioSrc": "/audio/novel_c1_page1.mp3",
-        "text": "Un peu plus tard par un mardi après-midi particulièrement pluvieux, Léa, Hugo, Antoine et Camille se retrouvent dans le local du journal du lycée Harwood. Les gouttes d'eau tapent régulièrement contre les hautes fenêtres du sous-sol. La pièce sent bon le papier fraîchement imprimé, le café chaud et l'encre des vieux journaux.\n\nLéa est la rédactrice en chef du journal. Elle veut être sûre d'organiser une édition spéciale mémorable. À côté d'elle, son ami Hugo ajuste soigneusement l'objectif de son appareil photo. En face, Antoine, le spécialiste informatique, vérifie la mise en page numérique, tandis que Camille dessine des illustrations pour la rubrique culturelle.\n\nPendant que l'équipe termine la relecture, Léa décide d'effectuer un grand nettoyage dans le fond de la pièce. Derrière une lourde pile de journaux datant de 1985, ses doigts touchent soudain un coffret en bois sculpté, fermé par une petite serrure rouillée.\n\n- Regardez tous ! venez voir ici ! dit Léa. À mon avis, personne n'a touché à ce coffret depuis au moins quarante ans !\n\n- Ouah ! dit Camille. C'est assez intrigant. Je me demande ce qu'il contient !"
+        "text": "Un peu plus tard par un mardi après-midi particulièrement pluvieux, Léa, Hugo, Antoine et Camille se retrouvent dans le local du journal du lycée Harwood. Les gouttes d'eau tapent régulièrement contre les hautes fenêtres du sous-sol. La pièce sent bon le papier fraîchement imprimé, le café chaud et l'encre des vieux journaux.\n\nLéa est la rédactrice en chef du journal. Elle veut être sûre d'organiser une édition spéciale mémorable. « Nous devons faire de notre mieux », pense-t-elle. À côté d'elle, son ami Hugo ajuste soigneusement l'objectif de son appareil photo. En face, Antoine, le spécialiste informatique, vérifie la mise en page numérique. « Vous pouvez compter sur moi pour le site web », dit-il, tandis que Camille dessine des illustrations pour la rubrique culturelle.\n\nPendant que l'équipe termine la relecture, Léa décide d'effectuer un grand nettoyage dans le fond de la pièce. « Nous prenons trop de place avec ces vieux dossiers, nous allons trier tout cela », annonce-t-elle. Derrière une lourde pile de journaux datant de 1985, ses doigts touchent soudain un coffret en bois sculpté, fermé par une petite serrure rouillée.\n\n- Regardez tous ! venez voir ici ! dit Léa. Je sais que ce coffret est très ancien. À mon avis, personne n'y a touché depuis au moins quarante ans !\n\n- Ouah ! dit Camille. C'est assez intrigant. Je me demande ce qu'il contient !"
       },
       {
         "pageNumber": 2,
         "title": "Page 2 : La Légende du Journaliste Disparu",
         "audioSrc": "/audio/novel_c1_page2.mp3",
-        "text": "Hugo pose immédiatement son chocolat chaud et s'approche avec son appareil photo. Antoine s'avance avec sa boîte à outils pour tenter de débloquer le vieux cadenas (padlock) sans abîmer le bois.\n\nPendant qu'Antoine manipule la serrure, Camille se rappelle une histoire passionnante du passé.\n\n- Vous souvenez-vous de la légende urbaine de notre lycée ? demande Camille. Dans les années 1990, un élève journaliste très doué enquêtait sur un secret municipal. Un jour, il a subitement arrêté de publier après avoir découvert une piste majeure !\n\nAntoine pousse un soupir de soulagement lorsque la serrure cède enfin avec un petit déclic. Le couvercle s'ouvre doucement. À l'intérieur, reposant sur du velours rouge fané, se trouve un magnifique carnet relié en cuir sombre. Sur la couverture, un symbole est gravé à la feuille d'or : une boussole (compass) entrelacée avec une plume d'écriture.\n\n- D'après moi, dit Camille, ce n'est pas un simple cahier de cours, c'est le carnet secret de cet ancien journaliste !"
+        "text": "Hugo pose immédiatement son chocolat chaud et s'approche. « Nous faisons une découverte incroyable ! » s'exclame-t-il, l'appareil photo à la main. Antoine s'avance avec sa boîte à outils pour tenter de débloquer le vieux cadenas sans abîmer le bois.\n\nPendant qu'Antoine manipule la serrure, Camille se rappelle une histoire passionnante du passé.\n\n- Vous souvenez-vous de la légende urbaine de notre lycée ? demande Camille. Dans les années 1990, un élève journaliste très doué enquêtait sur un secret municipal. Un jour, il a subitement arrêté de publier après avoir découvert une piste majeure !\n\nAntoine pousse un soupir de soulagement lorsque la serrure cède enfin avec un petit déclic. Le couvercle s'ouvre doucement. À l'intérieur, reposant sur du velours rouge fané, se trouve un magnifique carnet relié en cuir sombre. Sur la couverture, un symbole est gravé à la feuille d'or : une boussole entrelacée avec une plume d'écriture.\n\n- D'après moi, dit Camille, ce n'est pas un simple cahier de cours, c'est le carnet secret de cet ancien journaliste ! Je veux absolument en savoir plus."
       },
       {
         "pageNumber": 3,
         "title": "Page 3 : La Lecture du Manuscrit Secret",
         "audioSrc": "/audio/novel_c1_page3.mp3",
-        "text": "Léa tourne délicatement la première page jaunie par les années. L'écriture manuscrite est rédigée avec une encre bleue remarquable qui a conservé toute sa clarté.\n\n- Écoutez ce qui est écrit, dit Léa en lisant à voix haute : À ceux qui cherchent la vérité avec courage : la mémoire de notre ville de Harwood est préservée dans cinq trésors du patrimoine (heritage). Ceux qui sauront observer trouveront le chemin.\n\nSous ce message se trouve une énigme rédigée en vers : Le premier secret repose là où la jeunesse imagine et construit l'école de demain...\n\n- C'est incroyable ! dit Hugo en prenant une photo de la page. Je pense que nous tenons notre premier grand scoop (exclusive news) !\n\n- Je suis absolument d'accord avec Hugo, dit Antoine. Mais il faut procéder avec méthode et vérifier nos sources (sources)."
+        "text": "Léa tourne délicatement la première page jaunie par les années. L'écriture manuscrite est rédigée avec une encre bleue remarquable qui a conservé toute sa clarté.\n\n- Écoutez ce qui est écrit, dit Léa en lisant à voix haute : « Je mets par écrit ce message pour ceux qui cherchent la vérité avec courage : la mémoire de notre ville de Harwood est préservée dans cinq trésors du patrimoine. Ceux qui sauront observer trouveront le chemin. »\n\nSous ce message se trouve une énigme rédigée en vers : Le premier secret repose là où la jeunesse imagine et construit l'école de demain...\n\n- C'est incroyable ! dit Hugo en prenant une photo de la page. Je pense que nous tenons notre premier grand scoop !\n\n- Je crois qu'il a raison, dit Antoine. Je suis absolument d'accord avec Hugo, mais nous devons procéder avec méthode et vérifier nos sources."
       },
       {
         "pageNumber": 4,
         "title": "Page 4 : La Décision et l'Éthique du Groupe",
         "audioSrc": "/audio/novel_c1_page4.mp3",
-        "text": "Léa réfléchit un petit instant devant ses camarades passionnés.\n\n- En tant que jeunes reporters, dit Léa, nous devons respecter la liberté de la presse (freedom of the press) et l'éthique (ethics) du métier. Nous ne pouvons pas publier des rumeurs sans preuves concrètes.\n\n- C'est très juste ! dit Camille. Et j'ai une idée ! L'énigme parle de l'école de demain. C'est une référence évidente au tout nouveau campus éco-responsable qui vient d'ouvrir ses portes de l'autre côté de la ville !\n\n- Super ! répond Léa. Demain matin dès la première heure, notre investigation démarre sur le terrain.\n\n- Oui ! ajoute Hugo. Je vais préparer tous les objectifs de mon appareil photo pour capturer chaque indice.\n\n- Très bonne idée ! répond Léa avec enthousiasme."
+        "text": "Léa réfléchit un petit instant devant ses camarades passionnés.\n\n- En tant que jeunes reporters, dit Léa, nous devons respecter la liberté de la presse et l'éthique du métier. Nous ne pouvons pas publier des rumeurs sans preuves concrètes.\n\n- C'est très juste ! dit Camille. Et j'ai une idée ! L'énigme parle de l'école de demain. C'est une référence évidente au tout nouveau campus éco-responsable qui vient d'ouvrir ses portes de l'autre côté de la ville !\n\n- Super ! répond Léa. Nous allons sur le terrain demain matin dès la première heure.\n\n- Oui ! ajoute Hugo. Je vais préparer tous les objectifs de mon appareil photo pour capturer chaque indice.\n\n- Très bonne idée ! répond Léa avec enthousiasme."
       }
     ],
     "vocabList": [
@@ -49,8 +49,28 @@ export const NOVEL_CHAPTERS = [
         "definition": "L'ensemble des biens culturels et historiques transmis par les générations passées."
       },
       {
-        "word": "La liberté de la presse (freedom of the press)",
-        "definition": "Le droit fondamental de diffuser la vérité sans censure."
+        "word": "Les archives (archives/records)",
+        "definition": "Les documents historiques ou vieux dossiers conservés de manière ordonnée."
+      },
+      {
+        "word": "Un coffret (casket/box)",
+        "definition": "Une petite boîte précieuse, souvent fermée à clé, servant à ranger des secrets."
+      },
+      {
+        "word": "Un cadenas (padlock)",
+        "definition": "Une serrure mobile fermée par un anneau métallique."
+      },
+      {
+        "word": "Une énigme (riddle/enigma)",
+        "definition": "Une question ou phrase mystérieuse dont on doit trouver la réponse ou le sens."
+      },
+      {
+        "word": "Une rumeur (rumor)",
+        "definition": "Une nouvelle non vérifiée qui circule publiquement sans source officielle."
+      },
+      {
+        "word": "Un indice (clue)",
+        "definition": "Un signe ou élément qui aide à guider une enquête ou à résoudre un mystère."
       }
     ],
     "quiz": [
@@ -119,32 +139,32 @@ export const NOVEL_CHAPTERS = [
     "narratorName": "Hugo",
     "image": "/images/novel_c2.jpg",
     "theme": "Éducation & Projets d'Avenir",
-    "grammarFocus": "Verbes pronominaux & Conditionnel de souhait",
+    "grammarFocus": "Imparfait, Passé Composé & Pronoms Objets",
     "summary": "Le lendemain matin, Hugo, Léa, Amadou et Zoé explorent le nouveau campus éco-responsable pour retrouver la stèle historique de 1990.",
     "pages": [
       {
         "pageNumber": 1,
         "title": "Page 1 : L'Arrivée sur le Campus Futuriste",
         "audioSrc": "/audio/novel_c2_page1.mp3",
-        "text": "Dès le lendemain matin à huit heures, Hugo, Léa, Amadou et Zoé se retrouvent devant la grande grille du nouveau campus éco-responsable de Harwood. Le bâtiment est d'une beauté architecturale impressionnante, avec des murs végétalisés et de grands panneaux solaires (solar panels) sur les toits.\n\nAmadou est passionné d'écologie, tandis que Zoé est la présidente du club de théâtre. Les élèves se déplacent calmement dans les couloirs et s'entraident (help each other) avec le sourire.\n\n- Si j'avais la chance d'étudier ici, dit Hugo, j'aimerais profiter des laboratoires de médias et des studios de photographie ultramodernes !\n\n- C'est un endroit magnifique, répond Léa. Tout le monde semble très enthousiaste."
+        "text": "Dès le lendemain matin à huit heures, l'équipe est arrivée de bonne heure. Hugo, Léa, Amadou et Zoé se retrouvent devant la grande grille du nouveau campus éco-responsable de Harwood. Ce campus, ils le visitaient pour la première fois. Le bâtiment est d'une beauté architecturale impressionnante, avec des murs végétalisés et de grands panneaux solaires sur les toits.\n\nAmadou est passionné d'écologie, tandis que Zoé est la présidente du club de théâtre. Tout le monde s'y entraidait chaleureusement. Les élèves se déplacent calmement dans les couloirs et s'entraident avec le sourire.\n\n- Si j'avais la chance d'étudier ici, dit Hugo, j'aimerais profiter des laboratoires de médias et des studios de photographie ultramodernes !\n\n- C'est un endroit magnifique, répond Léa. Tout le monde semble très enthousiaste."
       },
       {
         "pageNumber": 2,
         "title": "Page 2 : La Rencontre avec le Professeur d'Histoire",
         "audioSrc": "/audio/novel_c2_page2.mp3",
-        "text": "En déambulant dans les couloirs lumineux, l'équipe croise Monsieur Dubois, un professeur d'histoire senior qui enseignait déjà dans l'ancien établissement.\n\n- Bonjour Monsieur Dubois ! lance Zoé avec aisance. Auriez-vous un instant à nous accorder ? Nous aimerions en savoir plus sur l'histoire de la reconstruction du lycée.\n\nMonsieur Dubois réfléchit un petit instant puis sourit chaleureusement.\n\n- Ah, l'ancienne école de 1990 ! dit Monsieur Dubois. C'était un bâtiment rempli de charme. Je me souviens particulièrement d'un jeune élève reporter qui posait toujours des questions sur la mémoire de la ville. Avant la démolition, la municipalité a conservé la stèle (stone monument) originale au centre de la cour intérieure.\n\n- Merci infiniment ! répond Léa. C'est une piste précieuse !"
+        "text": "En déambulant dans les couloirs lumineux, ils l'ont croisé : Monsieur Dubois, un professeur d'histoire senior qui enseignait déjà dans l'ancien établissement. En 1990, il y donnait déjà ses cours.\n\n- Bonjour Monsieur Dubois ! lance Zoé avec aisance. Auriez-vous un instant à nous accorder ? Le professeur nous a écoutés avec intérêt, puis il nous en a parlé avec beaucoup de nostalgie.\n\n- Ah, l'ancienne école de 1990 ! dit Monsieur Dubois. C'était un bâtiment rempli de charme. Je me souviens particulièrement d'un jeune élève reporter qui posait toujours des questions sur la mémoire de la ville. Avant la démolition, la municipalité a conservé la stèle originale au centre de la cour intérieure.\n\n- Merci infiniment ! répond Léa. C'est une piste précieuse !"
       },
       {
         "pageNumber": 3,
         "title": "Page 3 : Le Jardin Botanique et la Stèle Historique",
         "audioSrc": "/audio/novel_c2_page3.mp3",
-        "text": "Guidés par les indications du professeur, les quatre amis se dirigent vers le jardin botanique situé au cœur de la cour. C'est un havre de paix bordé d'arbres rares et de serres fleuries.\n\nAu milieu de l'allée, ils découvrent la stèle en pierre grise de 1990. Hugo s'agenouille sur l'herbe pour photographier les détails. Sous une légère couche de mousse végétale, la gravure de la boussole et de la plume d'écriture apparaît clairement.\n\n- Regardez ici ! dit Amadou en désignant une petite fente sur le côté. Si nous appuyions délicatement sur le centre du symbole, peut-être que le mécanisme s'activerait ?\n\n- Essayons tout de suite ! dit Zoé."
+        "text": "Guidés par les indications du professeur, les quatre amis se dirigent vers le jardin botanique situé au cœur de la cour. C'est un havre de paix bordé d'arbres rares et de serres fleuries.\n\nCette stèle historique, ils la cherchaient depuis plusieurs minutes. Au milieu de l'allée, quand ils l'ont enfin aperçue, Hugo a poussé un cri de joie. Sous une légère couche de mousse végétale, la gravure de la boussole et de la plume d'écriture apparaissait clairement. Hugo s'y est agenouillé pour photographier les détails.\n\n- Regardez ici ! dit Amadou en désignant une petite fente sur le côté. Si nous appuyions délicatement sur le centre du symbole, peut-être que le mécanisme s'activerait ?\n\n- Essayons tout de suite ! dit Zoé."
       },
       {
         "pageNumber": 4,
         "title": "Page 4 : Le Déclic du Mécanisme et la Clé USB",
         "audioSrc": "/audio/novel_c2_page4.mp3",
-        "text": "Léa pose doucement son pouce au centre de la boussole et pousse fermement. Soudain, un petit déclic métallique retentit et une trappe secrète se déverrouille au bas de la pierre !\n\nÀ l'intérieur de la cavité scellée, ils trouvent une clé USB (USB flash drive) ancienne en métal ainsi qu'un parchemin rédigé au passé.\n\n- Bravo toute l'équipe ! s'exclame Léa. Nous avons réussi la deuxième étape !\n\n- Attention, prévient Amadou. Il faut brancher cette clé sur un ordinateur sécurisé pour éviter tout risque de piratage.\n\n- Très bonne remarque ! répond Hugo. Direction la salle informatique du lycée !"
+        "text": "Léa a posé doucement son pouce au centre de la boussole et a poussé fermement. Soudain, un petit déclic métallique a retenti et la trappe secrète s'est ouverte au bas de la pierre !\n\nDans cette cavité scellée, ils l'ont trouvée : une clé USB ancienne en métal ainsi qu'un parchemin rédigé au passé.\n\n- Bravo toute l'équipe ! s'exclame Léa. Nous la tenons, cette fameuse clé !\n\n- Attention, prévient Amadou. Il faut la brancher sur un ordinateur sécurisé pour éviter tout risque de piratage.\n\n- Très bonne remarque ! répond Hugo. Nous y allons tout de suite, direction la salle informatique !"
       }
     ],
     "vocabList": [
@@ -159,6 +179,30 @@ export const NOVEL_CHAPTERS = [
       {
         "word": "Une clé USB (USB flash drive)",
         "definition": "Un petit périphérique de stockage de données informatiques."
+      },
+      {
+        "word": "La démolition (demolition)",
+        "definition": "L'action de détruire complètement un bâtiment ou une structure."
+      },
+      {
+        "word": "Une cavité (cavity/hollow space)",
+        "definition": "Un espace vide ou un trou à l'intérieur d'un objet solide."
+      },
+      {
+        "word": "Déverrouiller (to unlock)",
+        "definition": "Ouvrir ce qui était fermé par un mécanisme, un verrou ou une serrure."
+      },
+      {
+        "word": "Ancien / Ancienne (ancient/former)",
+        "definition": "Qui appartient au passé, qui n'est plus d'actualité."
+      },
+      {
+        "word": "Végétalisé (green/vegetated)",
+        "definition": "Recouvert de plantes ou de végétation naturelle."
+      },
+      {
+        "word": "Un havre de paix (haven of peace)",
+        "definition": "Un lieu calme et tranquille où l'on trouve le repos."
       }
     ],
     "quiz": [

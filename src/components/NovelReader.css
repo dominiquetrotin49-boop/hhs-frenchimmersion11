@@ -332,6 +332,10 @@
   font-style: normal;
 }
 
+.vocab-highlight {
+  font-weight: bold;
+}
+
 /* Page Navigation Controls */
 .page-nav-controls {
   display: flex;

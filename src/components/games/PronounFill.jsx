@@ -4,38 +4,38 @@ import './Games.css';
 const DIALOGUES = [
   {
     id: 1,
-    text: "— Tu as installé le nouvel antivirus ?\n— Oui, je ___ ai installé hier.",
+    text: "— Tu as installé le nouveau tableau interactif ?\n— Oui, je ___ ai installé hier.",
     options: ["le", "l'", "lui", "en"],
     correctIdx: 1,
-    explanation: "COD (le nouvel antivirus) avant une voyelle (ai) devient l'."
+    explanation: "COD (le nouveau tableau) avant une voyelle (ai) devient l'."
   },
   {
     id: 2,
-    text: "— Est-ce que tu penses souvent à ton empreinte numérique ?\n— Oui, j' ___ pense toujours avant de publier.",
+    text: "— Est-ce que tu penses souvent à ton orientation scolaire ?\n— Oui, j' ___ pense toujours avant les examens.",
     options: ["le", "la", "y", "en"],
     correctIdx: 2,
     explanation: "Penser À quelque chose -> y."
   },
   {
     id: 3,
-    text: "— Tu as parlé des paramètres de confidentialité aux élèves ?\n— Oui, je ___ en ai parlé.",
+    text: "— Tu as parlé des bourses d'études aux étudiants ?\n— Oui, je ___ en ai parlé ce matin.",
     options: ["les", "leur", "lui", "y"],
     correctIdx: 1,
-    explanation: "Parler À des personnes au pluriel (aux élèves) -> leur."
+    explanation: "Parler À des personnes au pluriel (aux étudiants) -> leur."
   },
   {
     id: 4,
-    text: "— Combien de comptes as-tu protégés ?\n— J' ___ ai protégé trois.",
+    text: "— Combien de livres as-tu empruntés ?\n— J' ___ ai emprunté trois.",
     options: ["y", "les", "en", "lui"],
     correctIdx: 2,
     explanation: "Une quantité (trois) -> en."
   },
   {
     id: 5,
-    text: "— Tu bloques les spams ?\n— Bien sûr, je ___ bloque tous les jours.",
+    text: "— Tu ranges les manuels de classe ?\n— Bien sûr, je ___ range tous les soirs.",
     options: ["le", "les", "la", "leur"],
     correctIdx: 1,
-    explanation: "COD pluriel (les spams) -> les."
+    explanation: "COD pluriel (les manuels) -> les."
   }
 ];
 
@@ -91,7 +91,7 @@ export default function PronounFill({ onBack }) {
 
       <div className="q-header text-center mb-6">
         <h3 className="text-gradient">Texte à trous : Les Pronoms</h3>
-        <p>Lisez le petit dialogue de cybersécurité et choisissez le pronom manquant.</p>
+        <p>Lisez le petit dialogue d'éducation et choisissez le pronom manquant.</p>
         
         <div className="text-xl mt-6 bg-white bg-opacity-50 p-6 rounded-xl text-left whitespace-pre-wrap font-mono">
           {parts[0]}

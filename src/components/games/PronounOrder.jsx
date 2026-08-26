@@ -3,22 +3,22 @@ import './Games.css';
 
 const SENTENCES = [
   {
-    fr: "Je donne le mot de passe au hacker.",
+    fr: "Je donne le manuel à mon ami.",
     words: ["Je", "le", "lui", "donne", "."],
     hint: "le (COD) avant lui (COI)."
   },
   {
-    fr: "Tu me prêtes ton ordinateur ?",
-    words: ["Tu", "me", "le", "prêtes", "?"],
-    hint: "me (1) avant le (2)."
+    fr: "Tu me prêtes tes notes de cours ?",
+    words: ["Tu", "me", "les", "prêtes", "?"],
+    hint: "me (1) avant les (2)."
   },
   {
-    fr: "Il parle de la cybersécurité à ses amis.",
+    fr: "Il parle de la scolarisation à ses collègues.",
     words: ["Il", "leur", "en", "parle", "."],
     hint: "leur (3) avant en (5)."
   },
   {
-    fr: "Nous envoyons les fichiers sur le serveur.",
+    fr: "Nous envoyons les bourses à l'école.",
     words: ["Nous", "les", "y", "envoyons", "."],
     hint: "les (2) avant y (4)."
   }

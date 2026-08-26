@@ -4,58 +4,58 @@ import './Games.css';
 const QUESTIONS = [
   {
     id: 1,
-    sentence: "Je télécharge [le fichier antivirus].",
+    sentence: "Je range [le manuel de français].",
     options: [
-      "Je la télécharge.",
-      "Je le télécharge.",
-      "Je les télécharge."
+      "Je la range.",
+      "Je le range.",
+      "Je les range."
     ],
     correctIdx: 1,
-    explanation: "COD masculin singulier (le fichier) -> le."
+    explanation: "COD masculin singulier (le manuel) -> le."
   },
   {
     id: 2,
-    sentence: "Elle parle [aux hackers].",
+    sentence: "Le professeur parle [aux élèves].",
     options: [
-      "Elle les parle.",
-      "Elle lui parle.",
-      "Elle leur parle."
+      "Le professeur les parle.",
+      "Le professeur lui parle.",
+      "Le professeur leur parle."
     ],
     correctIdx: 2,
-    explanation: "COI pluriel, personnes (aux hackers) -> leur."
+    explanation: "COI pluriel, personnes (aux élèves) -> leur."
   },
   {
     id: 3,
-    sentence: "Nous pensons [à notre cybersécurité].",
+    sentence: "Nous pensons [à notre système éducatif].",
     options: [
       "Nous y pensons.",
       "Nous la pensons.",
       "Nous en pensons."
     ],
     correctIdx: 0,
-    explanation: "'à' + chose (cybersécurité) -> y."
+    explanation: "'à' + chose (système éducatif) -> y."
   },
   {
     id: 4,
-    sentence: "Vous supprimez [les spams].",
+    sentence: "Vous réduisez [les inégalités scolaires].",
     options: [
-      "Vous les supprimez.",
-      "Vous en supprimez.",
-      "Vous y supprimez."
+      "Vous les réduisez.",
+      "Vous en réduisez.",
+      "Vous y réduisez."
     ],
     correctIdx: 0,
-    explanation: "COD pluriel (les spams) -> les."
+    explanation: "COD pluriel (les inégalités) -> les."
   },
   {
     id: 5,
-    sentence: "Tu as [beaucoup de mots de passe] ?",
+    sentence: "Tu as [beaucoup de devoirs] ?",
     options: [
       "Tu y as beaucoup ?",
       "Tu en as beaucoup ?",
       "Tu les as beaucoup ?"
     ],
     correctIdx: 1,
-    explanation: "Quantité / de + chose (beaucoup de mots de passe) -> en."
+    explanation: "Quantité / de + chose (beaucoup de devoirs) -> en."
   }
 ];
 

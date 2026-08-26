@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, TrendingUp, Flag } from 'lucide-react';
+import { Clock, TrendingUp, Flag, BookOpen } from 'lucide-react';
 import EditorChallenge from './EditorChallenge';
 import JournalistLadder from './JournalistLadder';
 import ScoopRace from './ScoopRace';
@@ -11,11 +11,16 @@ import PronounOrder from './PronounOrder';
 import PronounFill from './PronounFill';
 import GrammarFill from './GrammarFill';
 import Fishtopia from './Fishtopia';
-import { Grid3X3, PenTool, Volume2, Repeat, MoveHorizontal, Edit3, Gamepad2 } from 'lucide-react';
+import { Grid3X3, PenTool, Volume2, Repeat, MoveHorizontal, Edit3, Gamepad2, Shield, Layers } from 'lucide-react';
 import { IMPARFAIT_FILL_DATA, PC_FILL_DATA, MIXED_FILL_DATA } from '../../data/unit4GrammarGames';
 import ArtDetectiveGame from './ArtDetectiveGame';
 import FilmDirectorGame from './FilmDirectorGame';
 import ArtAuctionGame from './ArtAuctionGame';
+import ColdCaseDossier from './ColdCaseDossier';
+import WritingPrompt from './WritingPrompt';
+import VocabFlashcards from '../VocabFlashcards';
+import ReprisePractice from './ReprisePractice';
+import QuestionsPractice from './QuestionsPractice';
 import './Games.css';
 
 const ER_PUZZLE = {
@@ -168,8 +173,13 @@ const UNIT_4_PUZZLE = {
 };
 
 export default function PracticeMenu({ unitId }) {
+  if (unitId === 'reprise') {
+    return <QuestionsPractice />;
+  }
+
   const [activeGame, setActiveGame] = useState(null);
-  const [activeCategory, setActiveCategory] = useState('vocab');
+  const [activeCategory, setActiveCategory] = useState(unitId === 'reprise' ? 'grammar' : 'vocab');
+  const isVercel = (typeof process !== 'undefined' && process.env && process.env.VERCEL_URL) || window.location.hostname.includes('vercel');
 
   const getGameTitles = () => {
     switch(unitId) {
@@ -184,8 +194,8 @@ export default function PracticeMenu({ unitId }) {
           race: "Le Marathon des Examens",
           raceDesc: "Bâts ton rival pour être le premier à réussir les examens !",
           raceBtn: "Jouer (Course)",
-          writingTitle: "Créer une école innovante",
-          writingDesc: "Rédigez un paragraphe sur la création de votre école idéale en utilisant le présent !"
+          writingTitle: "Souvenirs d'école & Éducation",
+          writingDesc: "Décrivez vos souvenirs scolaires et votre parcours en utilisant l'imparfait, le passé composé et les pronoms objets !"
         };
       case '3':
         return {
@@ -237,6 +247,8 @@ export default function PracticeMenu({ unitId }) {
   if (activeGame === 'editor') return <EditorChallenge unitId={unitId} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'ladder') return <JournalistLadder unitId={unitId} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'race') return <ScoopRace unitId={unitId} onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'crossword-er') return <Crossword {...ER_PUZZLE} onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'crossword-ir') return <Crossword {...IR_PUZZLE} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'crossword-re') return <Crossword {...RE_PUZZLE} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'crossword-aux') return <Crossword {...AUX_PUZZLE} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'grammar-fill-imparfait') return <GrammarFill data={IMPARFAIT_FILL_DATA} title="L'Imparfait" description="Complétez avec le verbe conjugué à l'imparfait." onBack={() => setActiveGame(null)} />;
@@ -258,9 +270,65 @@ export default function PracticeMenu({ unitId }) {
   if (activeGame === 'pronoun-replace') return <PronounReplacement onBack={() => setActiveGame(null)} />;
   if (activeGame === 'pronoun-order') return <PronounOrder onBack={() => setActiveGame(null)} />;
   if (activeGame === 'pronoun-fill') return <PronounFill onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'reprise-practice') return <ReprisePractice onBack={() => setActiveGame(null)} />;
   
   if (activeGame === 'fishtopia') return <Fishtopia onBack={() => setActiveGame(null)} />;
   
+  if (activeGame === 'coldcase-present') {
+    if (isVercel) {
+      return (
+        <div className="practice-menu">
+          <button className="back-btn mb-4" onClick={() => setActiveGame(null)}>← Retour aux exercices</button>
+          <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
+            <h3>Nous n'y sommes pas encore.</h3>
+          </div>
+        </div>
+      );
+    }
+    return <ColdCaseDossier tense="present" onBack={() => setActiveGame(null)} />;
+  }
+  if (activeGame === 'coldcase-past') {
+    if (isVercel) {
+      return (
+        <div className="practice-menu">
+          <button className="back-btn mb-4" onClick={() => setActiveGame(null)}>← Retour aux exercices</button>
+          <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
+            <h3>Nous n'y sommes pas encore.</h3>
+          </div>
+        </div>
+      );
+    }
+    return <ColdCaseDossier tense="past" onBack={() => setActiveGame(null)} />;
+  }
+  if (activeGame === 'coldcase-negation') {
+    if (isVercel) {
+      return (
+        <div className="practice-menu">
+          <button className="back-btn mb-4" onClick={() => setActiveGame(null)}>← Retour aux exercices</button>
+          <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
+            <h3>Nous n'y sommes pas encore.</h3>
+          </div>
+        </div>
+      );
+    }
+    return <ColdCaseDossier tense="negation" onBack={() => setActiveGame(null)} />;
+  }
+  if (activeGame === 'writing-prompt') {
+    if (isVercel) {
+      return (
+        <div className="practice-menu">
+          <button className="back-btn mb-4" onClick={() => setActiveGame(null)}>← Retour aux exercices</button>
+          <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
+            <h3>Nous n'y sommes pas encore.</h3>
+          </div>
+        </div>
+      );
+    }
+    return <WritingPrompt onBack={() => setActiveGame(null)} />;
+  }
+  if (activeGame === 'flashcards') {
+    return <VocabFlashcards onBack={() => setActiveGame(null)} />;
+  }
   if (activeGame === 'writing') return <WritingPractice unitId={unitId} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'pronunciation') return <PronunciationPractice unitId={unitId} onBack={() => setActiveGame(null)} />;
 
@@ -269,30 +337,70 @@ export default function PracticeMenu({ unitId }) {
       <div className="flex-between mb-4" style={{ alignItems: 'flex-end' }}>
         <h3>Jeux Pratiques: Choisis ton défi !</h3>
         
-        <div className="tabs-container" style={{ alignSelf: 'auto' }}>
-          <button 
-            className={`tab-btn ${activeCategory === 'vocab' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('vocab')}
-          >
-            Vocabulaire
-          </button>
-          <button 
-            className={`tab-btn ${activeCategory === 'grammar' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('grammar')}
-          >
-            Grammaire
-          </button>
-          <button 
-            className={`tab-btn ${activeCategory === 'ecriture' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('ecriture')}
-          >
-            Production Écrite
-          </button>
-        </div>
+        {unitId !== 'reprise' && (
+          <div className="tabs-container novel-style" style={{ alignSelf: 'auto' }}>
+            <button 
+              className={`tab-btn ${activeCategory === 'vocab' ? 'active' : ''} novel-style`}
+              onClick={() => setActiveCategory('vocab')}
+            >
+              Vocabulaire
+            </button>
+            <button 
+              className={`tab-btn ${activeCategory === 'grammar' ? 'active' : ''} novel-style`}
+              onClick={() => setActiveCategory('grammar')}
+            >
+              Grammaire
+            </button>
+            <button 
+              className={`tab-btn ${activeCategory === 'ecriture' ? 'active' : ''} novel-style`}
+              onClick={() => setActiveCategory('ecriture')}
+            >
+              Production Écrite
+            </button>
+          </div>
+        )}
       </div>
       
       <div className="game-cards-container">
-        {activeCategory === 'vocab' && (
+        {unitId === 'reprise' ? (
+          isVercel ? (
+            <div className="empty-state glass-panel w-full shadow-sm" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
+              <h3>Nous n'y sommes pas encore.</h3>
+            </div>
+          ) : (
+            <>
+              <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('coldcase-present')}>
+                <Shield className="game-icon animate-pulse" style={{ color: '#60a5fa' }} size={48} />
+                <h4>Dossier d'Interrogatoire : Présent</h4>
+                <p>Déterminez la culpabilité des suspects en plaçant les doubles pronoms corrects au présent de l'indicatif.</p>
+                <button className="play-btn btn-accent" style={{ background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa' }}>Lancer l'Interrogatoire (Présent)</button>
+              </div>
+
+              <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('coldcase-past')}>
+                <Shield className="game-icon animate-pulse" style={{ color: '#fbbf24' }} size={48} />
+                <h4>Dossier d'Interrogatoire : Passé Composé</h4>
+                <p>Déterminez la culpabilité des suspects en plaçant les pronoms et l'accord du participe passé au passé composé.</p>
+                <button className="play-btn btn-accent" style={{ background: 'rgba(217, 119, 6, 0.2)', color: '#d97706' }}>Lancer l'Interrogatoire (Passé)</button>
+              </div>
+
+              <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('coldcase-negation')}>
+                <Shield className="game-icon animate-pulse" style={{ color: '#a78bfa' }} size={48} />
+                <h4>Dossier d'Interrogatoire : La Négation</h4>
+                <p>Pratiquez la négation complexe au présent (ne... jamais, ne... rien, ne... personne, ne... plus, ne... aucun, ne... pas de).</p>
+                <button className="play-btn btn-accent" style={{ background: 'rgba(167, 139, 250, 0.2)', color: '#a78bfa' }}>Lancer l'Interrogatoire (Négation)</button>
+              </div>
+
+              <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('writing-prompt')}>
+                <PenTool className="game-icon animate-pulse" style={{ color: '#f43f5e' }} size={48} />
+                <h4>Atelier d'Écriture : Le Présent</h4>
+                <p>Rédigez un court paragraphe de 150 caractères maximum et recevez des corrections de grammaire et d'accords immédiates !</p>
+                <button className="play-btn btn-accent" style={{ background: 'rgba(244, 63, 94, 0.2)', color: '#f43f5e' }}>Lancer l'Atelier</button>
+              </div>
+            </>
+          )
+        ) : (
+          <>
+            {activeCategory === 'vocab' && (
           <>
             <div className="game-card glass-panel" onClick={() => setActiveGame('pronunciation')}>
               <Volume2 className="game-icon" style={{ color: '#f1c40f' }} size={48} />
@@ -321,6 +429,15 @@ export default function PracticeMenu({ unitId }) {
               <p>{titles.raceDesc}</p>
               <button className="play-btn btn-accent">{titles.raceBtn}</button>
             </div>
+            
+            {unitId === '1' && (
+              <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('flashcards')}>
+                <Layers className="game-icon animate-pulse" style={{ color: '#3b82f6' }} size={48} />
+                <h4>Cartes-Éclairs 3D</h4>
+                <p>Révisez le vocabulaire de la liberté de la presse avec des cartes mémoires interactives en trois dimensions.</p>
+                <button className="play-btn btn-accent" style={{ background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa' }}>Lancer l'activité</button>
+              </div>
+            )}
             
             {unitId === '4' && (
               <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-u4')}>
@@ -362,11 +479,7 @@ export default function PracticeMenu({ unitId }) {
               <p>Révisez les deux auxiliaires les plus importants de la langue française !</p>
               <button className="play-btn btn-danger">Jouer (Grille Auxiliaires)</button>
             </div>
-          </>
-        )}
 
-        {activeCategory === 'grammar' && unitId === '2' && (
-          <>
             <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-irr1')}>
               <Grid3X3 className="game-icon" style={{ color: '#fdf6e3' }} size={48} />
               <h4>Grille 1: Super Irréguliers & -OIR</h4>
@@ -390,12 +503,12 @@ export default function PracticeMenu({ unitId }) {
           </>
         )}
 
-        {activeCategory === 'grammar' && unitId === '3' && (
+        {activeCategory === 'grammar' && unitId === '2' && (
           <>
             <div className="game-card glass-panel" onClick={() => setActiveGame('pronoun-replace')}>
               <Repeat className="game-icon" style={{ color: '#fdf6e3' }} size={48} />
               <h4>Jeu 1: Remplacement (QCM)</h4>
-              <p>Choisissez le bon pronom objet pour remplacer le nom lié à la cybersécurité.</p>
+              <p>Choisissez le bon pronom objet pour remplacer le nom lié à l'éducation.</p>
               <button className="play-btn" style={{ background: 'rgba(255, 255, 255, 0.2)' }}>Jouer</button>
             </div>
 
@@ -409,44 +522,67 @@ export default function PracticeMenu({ unitId }) {
             <div className="game-card glass-panel" onClick={() => setActiveGame('pronoun-fill')}>
               <Edit3 className="game-icon text-success" size={48} />
               <h4>Jeu 3: Texte à Trous (Pronoms)</h4>
-              <p>Lisez le dialogue tech et complétez les blancs avec le bon pronom objet court.</p>
+              <p>Lisez le dialogue sur l'éducation et complétez les blancs avec le bon pronom objet court.</p>
               <button className="play-btn btn-success">Jouer</button>
             </div>
-          </>
-        )}
 
-        {activeCategory === 'grammar' && unitId === '4' && (
-          <>
             <div className="game-card glass-panel" onClick={() => setActiveGame('grammar-fill-imparfait')}>
               <Edit3 className="game-icon text-success" size={48} />
-              <h4>Jeu 1: L'Imparfait</h4>
+              <h4>Jeu 4: L'Imparfait</h4>
               <p>Pratiquez les terminaisons et les irréguliers (être/avoir) à l'imparfait.</p>
               <button className="play-btn btn-success">Jouer</button>
             </div>
 
             <div className="game-card glass-panel" onClick={() => setActiveGame('grammar-fill-pc')}>
               <Edit3 className="game-icon text-accent" size={48} />
-              <h4>Jeu 2: Le Passé Composé</h4>
+              <h4>Jeu 5: Le Passé Composé</h4>
               <p>Pratiquez le choix de l'auxiliaire (Avoir/Être) et l'accord du participe.</p>
               <button className="play-btn btn-accent">Jouer</button>
             </div>
 
             <div className="game-card glass-panel" onClick={() => setActiveGame('grammar-fill-mixed')}>
               <Gamepad2 className="game-icon" style={{ color: '#8b5cf6' }} size={48} />
-              <h4>Jeu 3: Imparfait vs Passé Composé</h4>
+              <h4>Jeu 6: Imparfait vs Passé Composé</h4>
               <p>Entraînez-vous à combiner le décor (imparfait) et l'action soudaine (PC).</p>
               <button className="play-btn" style={{ background: '#8b5cf6', color: 'white' }}>Jouer</button>
+            </div>
+
+            <div className="game-card glass-panel" onClick={() => setActiveGame('reprise-practice')}>
+              <BookOpen className="game-icon" style={{ color: '#38bdf8' }} size={48} />
+              <h4>Exercices de Révision</h4>
+              <p>Pratiquez les pronoms et la conjugaison de révision avant de commencer les unités.</p>
+              <button className="play-btn" style={{ background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8' }}>S'entraîner</button>
+            </div>
+          </>
+        )}
+
+        {activeCategory === 'grammar' && unitId === '3' && (
+          <>
+            <div className="empty-state glass-panel w-full" style={{ textAlign: 'center', padding: '2rem' }}>
+              <p>Aucune activité de grammaire pour le moment.</p>
+            </div>
+          </>
+        )}
+
+        {activeCategory === 'grammar' && unitId === '4' && (
+          <>
+            <div className="empty-state glass-panel w-full" style={{ textAlign: 'center', padding: '2rem' }}>
+              <p>Aucune activité de grammaire pour le moment.</p>
             </div>
           </>
         )}
 
         {activeCategory === 'ecriture' && (
-          <div className="game-card glass-panel" onClick={() => setActiveGame('writing')}>
-            <PenTool className="game-icon text-accent" size={48} />
-            <h4>{titles.writingTitle}</h4>
-            <p>{titles.writingDesc}</p>
-            <button className="play-btn btn-accent">Commencer à écrire</button>
-          </div>
+          <>
+            <div className="game-card glass-panel" onClick={() => setActiveGame('writing')}>
+              <PenTool className="game-icon text-accent" size={48} />
+              <h4>{titles.writingTitle}</h4>
+              <p>{titles.writingDesc}</p>
+              <button className="play-btn btn-accent">Commencer à écrire</button>
+            </div>
+          </>
+        )}
+          </>
         )}
       </div>
     </div>

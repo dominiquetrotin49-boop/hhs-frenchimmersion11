@@ -51,6 +51,14 @@ export default function PronunciationPractice({ unitId, onBack }) {
     }
   };
 
+  const playAudio = (url, fallbackText) => {
+    const audio = new Audio(url);
+    audio.play().catch(err => {
+      console.warn(`Local audio not found or blocked: ${url}. Falling back to TTS.`, err);
+      speak(fallbackText);
+    });
+  };
+
   return (
     <div className="pronunciation-practice">
       <button className="back-btn" onClick={onBack}>
@@ -71,7 +79,13 @@ export default function PronunciationPractice({ unitId, onBack }) {
               <h3>{item.word}</h3>
               <button 
                 className="speak-btn"
-                onClick={() => speak(item.word)}
+                onClick={() => {
+                  if (unitId === '1') {
+                    playAudio(`/audio/vocab/word_${item.id}.mp3`, item.word);
+                  } else {
+                    speak(item.word);
+                  }
+                }}
                 title="Écouter le mot"
               >
                 <Volume2 size={24} />
@@ -85,7 +99,13 @@ export default function PronunciationPractice({ unitId, onBack }) {
             {/* Optional secondary button for definition reading */}
             <button 
               className="speak-def-btn" 
-              onClick={() => speak(item.definition)}
+              onClick={() => {
+                if (unitId === '1') {
+                  playAudio(`/audio/vocab/def_${item.id}.mp3`, item.definition);
+                } else {
+                  speak(item.definition);
+                }
+              }}
             >
               <Volume2 size={12} style={{marginRight: '4px'}}/> Écouter la définition
             </button>

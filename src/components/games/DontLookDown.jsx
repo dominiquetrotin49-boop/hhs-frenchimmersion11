@@ -17,23 +17,23 @@ const TOTAL_HEIGHT = 6000;
 // Z4: 1500 to 0    -> Genève (Le Jet d'Eau, Lac Léman, Alpes)
 
 const GRAMMAR_QUESTIONS = [
-  { q: "Je ___ (aller) au cinéma.", opts: ["vais", "vas", "va"], ans: 0 },
-  { q: "Tu ___ (avoir) un stylo ?", opts: ["a", "as", "ai"], ans: 1 },
-  { q: "Il ___ (être) très intelligent.", opts: ["est", "es", "suis"], ans: 0 },
-  { q: "Nous ___ (faire) du sport.", opts: ["faisons", "faites", "font"], ans: 0 },
-  { q: "Vous ___ (pouvoir) m'aider ?", opts: ["pouvez", "pouvons", "peuvent"], ans: 0 },
-  { q: "Ils ___ (vouloir) un croissant.", opts: ["voulons", "voulez", "veulent"], ans: 2 },
-  { q: "Je ___ (devoir) partir maintenant.", opts: ["dois", "doit", "devons"], ans: 0 },
-  { q: "Elle ___ (savoir) la réponse.", opts: ["sais", "sait", "savent"], ans: 1 },
-  { q: "Nous ___ (voir) la Tour Eiffel.", opts: ["voyons", "voyez", "voient"], ans: 0 },
-  { q: "Tu ___ (prendre) le métro ?", opts: ["prends", "prend", "prenons"], ans: 0 },
-  { q: "Vous ___ (mettre) un manteau.", opts: ["mettons", "mettez", "mettent"], ans: 1 },
-  { q: "Ils ___ (lire) un livre.", opts: ["lit", "lisons", "lisent"], ans: 2 },
-  { q: "Je ___ (dire) la vérité.", opts: ["dis", "dit", "disons"], ans: 0 },
-  { q: "Tu ___ (écrire) une lettre.", opts: ["écris", "écrit", "écrivent"], ans: 0 },
-  { q: "Elle ___ (venir) de Paris.", opts: ["viens", "vient", "venons"], ans: 1 },
-  { q: "Nous ___ (tenir) la corde.", opts: ["tenons", "tenez", "tiennent"], ans: 0 },
-  { q: "Vous ___ (connaître) ce film ?", opts: ["connaissez", "connais", "connaissent"], ans: 0 }
+  { q: "Quand j'étais petit, je ___ (jouer) dans la cour.", opts: ["jouais", "jouait", "jouaient"], ans: 0 },
+  { q: "Chaque jour, nous ___ (étudier) à la bibliothèque.", opts: ["étudions", "étudiions", "étudiaient"], ans: 1 },
+  { q: "Pendant que le maître parlait, les élèves ___ (écouter).", opts: ["écoutaient", "écoutait", "écoutions"], ans: 0 },
+  { q: "Autrefois, l'école ___ (être) gratuite.", opts: ["était", "étiez", "étions"], ans: 0 },
+  { q: "Tu ___ (avoir) toujours de bonnes notes.", opts: ["avais", "avait", "aviez"], ans: 0 },
+  { q: "Hier, elle ___ (entrer) dans la classe.", opts: ["est entrée", "a entré", "est entré"], ans: 0 },
+  { q: "Ils ___ (choisir) une bonne université.", opts: ["ont choisi", "sont choisis", "ont choisit"], ans: 0 },
+  { q: "Nous ___ (devenir) de bons étudiants.", opts: ["sommes devenus", "avons devenu", "sommes devenu"], ans: 0 },
+  { q: "La directrice ___ (écrire) une lettre.", opts: ["a écrit", "est écrite", "a écrite"], ans: 0 },
+  { q: "Elles ___ (se lever) tôt pour le cours.", opts: ["se sont levées", "ont levé", "se sont levé"], ans: 0 },
+  { q: "Tu ranges ton manuel ? - Oui, je ___ range.", opts: ["le", "la", "lui"], ans: 0 },
+  { q: "Elle parle aux élèves ? - Oui, elle ___ parle.", opts: ["les", "leur", "y"], ans: 1 },
+  { q: "Tu as des manuels ? - Oui, j'___ ai trois.", opts: ["en", "y", "les"], ans: 0 },
+  { q: "Tu vas à l'école ? - Oui, j'___ vais.", opts: ["y", "en", "le"], ans: 0 },
+  { q: "Je donne le devoir au prof. - Je le ___ donne.", opts: ["lui", "leur", "me"], ans: 0 },
+  { q: "Tu me passes tes notes ? - Oui, je te ___ passe.", opts: ["les", "la", "lui"], ans: 0 },
+  { q: "Il s'intéresse à l'éducation ? - Oui, il ___ s'intéresse.", opts: ["y", "en", "la"], ans: 0 }
 ];
 
 const VOCAB_QUESTIONS = UNIT_2_VOCAB.slice(0, 17).map(v => {

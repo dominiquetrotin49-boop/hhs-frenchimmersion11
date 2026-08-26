@@ -21,7 +21,7 @@ export default function Sidebar() {
       <div className="sidebar-header">
         <NavLink to="/" className="logo-container" style={{ textDecoration: 'none', color: 'inherit' }}>
           <GraduationCap className="logo-icon" size={32} />
-          <h1 className="logo-text">Français<br/><span className="text-gradient">Immersion</span></h1>
+          <h1 className="logo-text">Français<br/><span className="text-gradient">Immersion 11</span></h1>
         </NavLink>
       </div>
       

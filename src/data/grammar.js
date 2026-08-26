@@ -171,12 +171,8 @@ export const GRAMMAR_DATA = [
         ]
       }
     ]
-  }
-];
-
-
-export const GRAMMAR_DATA_UNIT_2 = [
-  {
+  },
+{
     "id": "grp1",
     "title": "Groupe 1 : Les Super Irréguliers",
     "rules": [
@@ -946,122 +942,7 @@ export const GRAMMAR_DATA_UNIT_2 = [
 ];
 
 
-export const GRAMMAR_DATA_UNIT_3 = [
-  {
-    "id": "cod",
-    "title": "1. Les Pronoms COD (le, la, l', les)",
-    "rules": [
-      "Le Complément d'Objet Direct (COD) répond à la question 'Qui ?' ou 'Quoi ?' après le verbe.",
-      "Il n'y a pas de préposition entre le verbe et le COD.",
-      "Les pronoms COD remplacent une personne ou une chose spécifique.",
-      "Pronoms : me, te, le, la, l', nous, vous, les.",
-      "Le pronom se place toujours AVANT le verbe conjugué."
-    ],
-    "example": {
-      "infinitive": "Exemples avec COD",
-      "conjugation": [
-        {
-          "pronoun": "Je télécharge",
-          "verb": "le fichier -> Je le télécharge."
-        },
-        {
-          "pronoun": "Tu protèges",
-          "verb": "tes données -> Tu les protèges."
-        },
-        {
-          "pronoun": "Il efface",
-          "verb": "son empreinte -> Il l'efface."
-        }
-      ]
-    },
-    "irregulars": []
-  },
-  {
-    "id": "coi",
-    "title": "2. Les Pronoms COI (lui, leur)",
-    "rules": [
-      "Le Complément d'Objet Indirect (COI) répond à la question 'À qui ?'.",
-      "Il s'utilise avec des verbes construits avec la préposition 'À' (parler à, donner à, envoyer à...).",
-      "ATTENTION : lui et leur ne remplacent QUE des personnes animées.",
-      "Pronoms : me, te, lui, nous, vous, leur.",
-      "Se place aussi AVANT le verbe."
-    ],
-    "example": {
-      "infinitive": "Exemples avec COI",
-      "conjugation": [
-        {
-          "pronoun": "J'écris",
-          "verb": "à l'informaticien -> Je lui écris."
-        },
-        {
-          "pronoun": "Elle parle",
-          "verb": "aux hackers -> Elle leur parle."
-        }
-      ]
-    },
-    "irregulars": []
-  },
-  {
-    "id": "yen",
-    "title": "3. Les Pronoms Y et EN",
-    "rules": [
-      "Le pronom Y remplace un lieu (Je vais à Paris -> J'y vais) ou une chose introduite par 'À' (Je pense à mon mot de passe -> J'y pense).",
-      "Le pronom EN remplace une quantité (J'ai beaucoup d'applications -> J'en ai beaucoup) ou une chose introduite par 'DE' (Je parle de la cybersécurité -> J'en parle).",
-      "Y et EN ne remplacent presque jamais des personnes."
-    ],
-    "example": {
-      "infinitive": "Exemples Y / EN",
-      "conjugation": [
-        {
-          "pronoun": "Je vais",
-          "verb": "sur le dark web -> J'y vais."
-        },
-        {
-          "pronoun": "Je supprime",
-          "verb": "des spams -> J'en supprime."
-        },
-        {
-          "pronoun": "Tu as",
-          "verb": "un antivirus ? -> Oui, j'en ai un."
-        }
-      ]
-    },
-    "irregulars": []
-  },
-  {
-    "id": "ordre",
-    "title": "4. L'Ordre des Doubles Pronoms",
-    "rules": [
-      "Quand on utilise deux pronoms dans la même phrase, il faut respecter un ordre très strict avant le verbe :",
-      "1️⃣ Me, Te, Se, Nous, Vous (Personne qui subit)",
-      "2️⃣ Le, La, L', Les (Le COD)",
-      "3️⃣ Lui, Leur (Le COI, la cible)",
-      "4️⃣ Y (Le lieu, 'à' + chose)",
-      "5️⃣ En (Quantité, 'de' + chose)",
-      "ASTUCE : Pensez à l'ordre alphabétique pour (Le/La/Les) et (Lui/Leur) : L(e) vient avant L(u)."
-    ],
-    "example": {
-      "infinitive": "Exemples d'ordre",
-      "conjugation": [
-        {
-          "pronoun": "Je donne le mot de passe",
-          "verb": "à mon frère -> Je le lui donne. (2 puis 3)"
-        },
-        {
-          "pronoun": "Tu me prêtes",
-          "verb": "ton ordinateur ? -> Tu me le prêtes. (1 puis 2)"
-        },
-        {
-          "pronoun": "Il parle de la bulle de filtre",
-          "verb": "à ses amis -> Il leur en parle. (3 puis 5)"
-        }
-      ]
-    },
-    "irregulars": []
-  }
-];
-
-export const GRAMMAR_DATA_UNIT_4 = [
+export const GRAMMAR_DATA_UNIT_2 = [
   {
     id: 'imparfait',
     title: "1. L'Imparfait (Le Passé Continu)",
@@ -1204,6 +1085,130 @@ export const GRAMMAR_DATA_UNIT_4 = [
     },
     irregulars: []
   },
+  {
+    "id": "cod",
+    "title": "1. Les Pronoms COD (le, la, l', les)",
+    "rules": [
+      "Le Complément d'Objet Direct (COD) répond à la question 'Qui ?' ou 'Quoi ?' après le verbe.",
+      "Il n'y a pas de préposition entre le verbe et le COD.",
+      "Les pronoms COD remplacent une personne ou une chose spécifique.",
+      "Pronoms : me, te, le, la, l', nous, vous, les.",
+      "Le pronom se place toujours AVANT le verbe conjugué."
+    ],
+    "example": {
+      "infinitive": "Exemples avec COD",
+      "conjugation": [
+        {
+          "pronoun": "Je télécharge",
+          "verb": "le fichier -> Je le télécharge."
+        },
+        {
+          "pronoun": "Tu protèges",
+          "verb": "tes données -> Tu les protèges."
+        },
+        {
+          "pronoun": "Il efface",
+          "verb": "son empreinte -> Il l'efface."
+        }
+      ]
+    },
+    "irregulars": []
+  },
+  {
+    "id": "coi",
+    "title": "2. Les Pronoms COI (lui, leur)",
+    "rules": [
+      "Le Complément d'Objet Indirect (COI) répond à la question 'À qui ?'.",
+      "Il s'utilise avec des verbes construits avec la préposition 'À' (parler à, donner à, envoyer à...).",
+      "ATTENTION : lui et leur ne remplacent QUE des personnes animées.",
+      "Pronoms : me, te, lui, nous, vous, leur.",
+      "Se place aussi AVANT le verbe."
+    ],
+    "example": {
+      "infinitive": "Exemples avec COI",
+      "conjugation": [
+        {
+          "pronoun": "J'écris",
+          "verb": "à l'informaticien -> Je lui écris."
+        },
+        {
+          "pronoun": "Elle parle",
+          "verb": "aux hackers -> Elle leur parle."
+        }
+      ]
+    },
+    "irregulars": []
+  },
+  {
+    "id": "yen",
+    "title": "3. Les Pronoms Y et EN",
+    "rules": [
+      "Le pronom Y remplace un lieu (Je vais à Paris -> J'y vais) ou une chose introduite par 'À' (Je pense à mon mot de passe -> J'y pense).",
+      "Le pronom EN remplace une quantité (J'ai beaucoup d'applications -> J'en ai beaucoup) ou une chose introduite par 'DE' (Je parle de la cybersécurité -> J'en parle).",
+      "Y et EN ne remplacent presque jamais des personnes."
+    ],
+    "example": {
+      "infinitive": "Exemples Y / EN",
+      "conjugation": [
+        {
+          "pronoun": "Je vais",
+          "verb": "sur le dark web -> J'y vais."
+        },
+        {
+          "pronoun": "Je supprime",
+          "verb": "des spams -> J'en supprime."
+        },
+        {
+          "pronoun": "Tu as",
+          "verb": "un antivirus ? -> Oui, j'en ai un."
+        }
+      ]
+    },
+    "irregulars": []
+  },
+  {
+    "id": "ordre",
+    "title": "4. L'Ordre des Doubles Pronoms",
+    "rules": [
+      "Quand on utilise deux pronoms dans la même phrase, il faut respecter un ordre très strict avant le verbe :",
+      "1️⃣ Me, Te, Se, Nous, Vous (Personne qui subit)",
+      "2️⃣ Le, La, L', Les (Le COD)",
+      "3️⃣ Lui, Leur (Le COI, la cible)",
+      "4️⃣ Y (Le lieu, 'à' + chose)",
+      "5️⃣ En (Quantité, 'de' + chose)",
+      "ASTUCE : Pensez à l'ordre alphabétique pour (Le/La/Les) et (Lui/Leur) : L(e) vient avant L(u)."
+    ],
+    "example": {
+      "infinitive": "Exemples d'ordre",
+      "conjugation": [
+        {
+          "pronoun": "Je donne le mot de passe",
+          "verb": "à mon frère -> Je le lui donne. (2 puis 3)"
+        },
+        {
+          "pronoun": "Tu me prêtes",
+          "verb": "ton ordinateur ? -> Tu me le prêtes. (1 puis 2)"
+        },
+        {
+          "pronoun": "Il parle de la bulle de filtre",
+          "verb": "à ses amis -> Il leur en parle. (3 puis 5)"
+        }
+      ]
+    },
+    "irregulars": []
+  }
+];
+
+
+
+
+
+
+export const GRAMMAR_DATA_UNIT_3 = [];
+
+
+
+export const GRAMMAR_DATA_UNIT_4 = [
   {
     id: 'connecteurs',
     title: '5. Les Connecteurs Logiques',

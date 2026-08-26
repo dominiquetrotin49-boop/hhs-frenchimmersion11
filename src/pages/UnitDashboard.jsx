@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { BookOpen, Languages, PenTool, Gamepad2 } from 'lucide-react';
+import { BookOpen, Languages, PenTool, Gamepad2, Layers } from 'lucide-react';
 import EscapeGame from '../components/EscapeGame';
 import Unit2EscapeGame from '../components/Unit2EscapeGame';
 import Unit3EscapeGame from '../components/Unit3EscapeGame';
@@ -13,6 +13,8 @@ import DontLookDown from '../components/games/DontLookDown';
 import Amnesique from '../components/games/Amnesique';
 import VocabFillInTheBlank from '../components/VocabFillInTheBlank';
 import GrammarSection from '../components/GrammarSection';
+import VocabHangman from '../components/games/VocabHangman';
+import RepriseGrammar from '../components/RepriseGrammar';
 import UnitAvatarSpeaker from '../components/UnitAvatarSpeaker';
 import './UnitDashboard.css';
 
@@ -25,6 +27,18 @@ const TABS = [
 
 export default function UnitDashboard() {
   const { unitId } = useParams();
+  // Block access on Vercel for units other than Reprise and Chapter 1
+  const allowedUnits = ['reprise', '1', '2'];
+  const isVercel = (typeof process !== 'undefined' && process.env && process.env.VERCEL_URL) || window.location.hostname.includes('vercel');
+  if (isVercel && !allowedUnits.includes(unitId)) {
+    return (
+      <div className="dashboard-container">
+        <div className="section-content animate-in empty-state glass-panel" style={{ textAlign: 'center', padding: '3rem 2rem', marginTop: '2rem' }}>
+          <h3>Nous n'y sommes pas encore.</h3>
+        </div>
+      </div>
+    );
+  }
   const [activeTab, setActiveTab] = useState(unitId === 'reprise' ? 'game' : 'grammar');
   const [selectedGame1, setSelectedGame1] = useState(null); // 'escape' or 'fishtopia'
   const [selectedGame2, setSelectedGame2] = useState(null); // 'escape' or 'dld'
@@ -69,13 +83,13 @@ export default function UnitDashboard() {
             <h2 className="unit-title text-gradient">{unitTitle}</h2>
           </div>
           
-          <div className="tabs-container">
+          <div className="tabs-container novel-style">
             {TABS.map((tab) => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
-                  className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+                  className={`tab-btn ${activeTab === tab.id ? 'active' : ''} novel-style`}
                   onClick={() => setActiveTab(tab.id)}
                 >
                   <Icon size={18} />
@@ -129,13 +143,9 @@ export default function UnitDashboard() {
         {['1', '2', '3', '4', 'reprise'].includes(unitId) ? (
           <>
             {activeTab === 'grammar' && (
-              <div className="section-content animate-in">
+              <div className="section-content animate-in novel-frame-container">
                 {unitId === 'reprise' ? (
-                  <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
-                    <BookOpen size={48} style={{margin: '0 auto', opacity: 0.5, marginBottom: '1rem'}} />
-                    <h3>Grammaire - Reprise</h3>
-                    <p style={{opacity: 0.8}}>Les fiches de révision de grammaire seront bientôt disponibles ici. Merci de votre patience !</p>
-                  </div>
+                  <RepriseGrammar />
                 ) : (
                   <GrammarSection unitId={unitId} />
                 )}
@@ -143,13 +153,9 @@ export default function UnitDashboard() {
             )}
             
             {activeTab === 'vocabulary' && (
-              <div className="section-content animate-in">
+              <div className="section-content animate-in novel-frame-container">
                 {unitId === 'reprise' ? (
-                  <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
-                    <Languages size={48} style={{margin: '0 auto', opacity: 0.5, marginBottom: '1rem'}} />
-                    <h3>Vocabulaire - Reprise</h3>
-                    <p style={{opacity: 0.8}}>Les listes de vocabulaire de reprise seront bientôt disponibles ici. Merci de votre patience !</p>
-                  </div>
+                  <VocabHangman />
                 ) : (
                   <VocabFillInTheBlank unitId={unitId} />
                 )}
@@ -157,21 +163,13 @@ export default function UnitDashboard() {
             )}
 
             {activeTab === 'practice' && (
-              <div className="section-content animate-in">
-                {unitId === 'reprise' ? (
-                  <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
-                    <PenTool size={48} style={{margin: '0 auto', opacity: 0.5, marginBottom: '1rem'}} />
-                    <h3>Pratique d'écriture</h3>
-                    <p style={{opacity: 0.8}}>Les exercices de rédaction et de pratique seront bientôt disponibles ici. Merci de votre patience !</p>
-                  </div>
-                ) : (
-                  <PracticeMenu unitId={unitId} />
-                )}
+              <div className="section-content animate-in novel-frame-container">
+                <PracticeMenu unitId={unitId} />
               </div>
             )}
 
             {activeTab === 'game' && (
-              <div className="section-content animate-in">
+              <div className="section-content animate-in novel-frame-container">
                 {unitId === 'reprise' ? (
                   selectedRepriseGame === 'amnesique' ? (
                     <div>

@@ -33,27 +33,27 @@ export default function WritingPractice({ unitId, onBack }) {
   const isUnit3 = unitId === '3';
   const isUnit4 = unitId === '4';
   const targetVocab = isUnit4 ? VOCAB_WORDS_UNIT_4 : isUnit3 ? VOCAB_WORDS_UNIT_3 : isUnit2 ? VOCAB_WORDS_UNIT_2 : VOCAB_WORDS_UNIT_1;
-  const promptSubject = isUnit4 ? "Critique d'Art & Récit Culturel" : isUnit3 ? "Se protéger en ligne" : isUnit2 ? "Créer une école innovante" : "Journaliste en Action";
+  const promptSubject = isUnit4 ? "Critique d'Art & Récit Culturel" : isUnit3 ? "Se protéger en ligne" : isUnit2 ? "Souvenirs d'école & Vision de l'éducation" : "Journaliste en Action";
   const promptText = isUnit4
     ? "Rédigez la critique d'un film, d'une œuvre d'art ou le récit d'un souvenir culturel marquant (au moins 50 mots). Vous devez utiliser le PASSÉ COMPOSÉ et l'IMPARFAIT (décor vs événement), au moins un VERBE RÉFLÉCHI (se passionner, se dérouler...), et des CONNECTEURS LOGIQUES (tout d'abord, cependant, en conclusion)."
     : isUnit3
     ? "Écrivez un court e-mail (au moins 50 mots au PRÉSENT) à un ami pour lui expliquer comment vous protégez vos données sur Internet. Vous devez utiliser au moins 3 PRONOMS OBJETS (me, te, se, nous, vous, le, la, les, lui, leur, y, en) pour éviter les répétitions."
     : isUnit2 
-    ? "Vous avez une opportunité unique de créer votre propre école innovante. Écrivez un court paragraphe (au moins 50 mots) au PRÉSENT pour décrire la vision de votre école, quelles matières sont enseignées, et comment vous aidez vos élèves."
+    ? "Rédigez un court paragraphe (au moins 50 mots) pour décrire vos souvenirs de votre ancienne école (à l'IMPARFAIT) et ce que vous avez fait récemment pour améliorer vos études (au PASSÉ COMPOSÉ). Vous devez aussi utiliser au moins 3 PRONOMS OBJETS (le, la, les, lui, leur, y, en) pour éviter les répétitions."
     : "Vous êtes un jeune journaliste. Écrivez un court paragraphe (au moins 50 mots) au PRÉSENT pour décrire comment vous trouvez vos informations, comment vous écrivez vos articles, et pourquoi la liberté de la presse est importante.";
   const perfectScoreMsg = isUnit4
     ? "Félicitations ! Votre critique artistique est magnifiquement rédigée au passé avec le vocabulaire de l'Unité 4 ! 🎨🎬✨"
     : isUnit3
     ? "Excellent e-mail ! Vos conseils en cybersécurité sont très clairs. 🛡️✨"
     : isUnit2
-    ? "Excellent travail ! Votre école innovante semble fantastique. 🏫✨"
+    ? "Excellent travail ! Votre texte sur l'éducation utilise parfaitement les temps du passé et les pronoms objets ! 🏫✨"
     : "Excellent travail ! Vous avez le talent d'un vrai journaliste. 📰✨";
   const vocabWarningMsg = isUnit4
     ? "Essayez d'ajouter: chef-d'œuvre, scénario, exposition, bande originale, fresque, etc."
     : isUnit3
     ? "Essayez d'ajouter: cybersécurité, hameçonnage, données, mot de passe, empreinte..."
     : isUnit2
-    ? "Essayez d'ajouter: école, éducation, inclusive, pédagogie, etc."
+    ? "Essayez d'ajouter: école, éducation, scolarisation, pédagogie, inégalités, etc."
     : "Essayez d'ajouter: journaliste, source, liberté, etc.";
   const [text, setText] = useState('');
   const [feedback, setFeedback] = useState(null);
@@ -224,8 +224,8 @@ export default function WritingPractice({ unitId, onBack }) {
       notes.push({ type: 'success', msg: `Excellente maîtrise des conjugaisons du présent (${validConjugations} verbes corrects).` });
     }
 
-    // 4. Pronouns Check & Rules (Unit 3)
-    if (isUnit3) {
+    // 4. Pronouns Check & Rules (Unit 3 & Unit 2)
+    if (isUnit3 || isUnit2) {
       const rank = {
         'me': 1, "m'": 1, 'te': 1, "t'": 1, 'se': 1, "s'": 1, 'nous': 1, 'vous': 1,
         'le': 2, 'la': 2, 'les': 2, "l'": 2,
@@ -281,20 +281,10 @@ export default function WritingPractice({ unitId, onBack }) {
       }
     }
     
-    // 5. Grammar checks for Unit 4 (Connecteurs logiques, Imparfait/PC, Verbes réfléchis)
-    if (isUnit4) {
-      const connecteurs = ['d\'abord', 'tout d\'abord', 'premièrement', 'ensuite', 'de plus', 'en outre', 'cependant', 'pourtant', 'néanmoins', 'par conséquent', 'donc', 'en conclusion', 'enfin'];
-      const reflechis = ['me', 'te', 'se', "m'", "t'", "s'", 'nous', 'vous'];
+    // 5. Grammar checks for Unit 4 and Unit 2 (Past Tenses, logical connectors, reflexive verbs)
+    if (isUnit4 || isUnit2) {
       const pastAux = ['ai', 'as', 'a', 'avons', 'avez', 'ont', 'suis', 'es', 'est', 'sommes', 'êtes', 'sont', 'étais', 'était', 'étions', 'étiez', 'étaient', 'avais', 'avait', 'avions', 'aviez', 'avaient'];
-      
-      let foundConnecteur = false;
       let foundPast = false;
-      let foundReflechi = false;
-
-      const fullTextLower = text.toLowerCase();
-      if (connecteurs.some(c => fullTextLower.includes(c))) {
-        foundConnecteur = true;
-      }
 
       for (let i = 0; i < tokens.length; i++) {
         const word = tokens[i];
@@ -303,24 +293,6 @@ export default function WritingPractice({ unitId, onBack }) {
         if (word.endsWith('ais') || word.endsWith('ait') || word.endsWith('ions') || word.endsWith('iez') || word.endsWith('aient') || pastAux.includes(word)) {
           foundPast = true;
         }
-
-        // Check for reflexive verb structure (pronom + verb)
-        if (reflechis.includes(word) && i < tokens.length - 1) {
-          const nextWord = tokens[i+1];
-          if (nextWord.length > 2 && (nextWord.endsWith('er') || nextWord.endsWith('ir') || nextWord.endsWith('re') || Object.values(exactMatches).some(verbs => verbs.includes(nextWord)) || nextWord.endsWith('é') || nextWord.endsWith('i') || nextWord.endsWith('u') || nextWord.endsWith('s') || nextWord.endsWith('t') || nextWord.endsWith('e'))) {
-            // Very rudimentary check: if it's a reflexive pronoun followed by something that looks like a verb
-            if (!['le', 'la', 'les'].includes(nextWord)) { // prevent false positives
-               foundReflechi = true;
-            }
-          }
-        }
-      }
-
-      if (!foundConnecteur) {
-        score -= 1;
-        notes.push({ type: 'warning', msg: "Il manque des connecteurs logiques (ex: tout d'abord, ensuite, cependant)." });
-      } else {
-        notes.push({ type: 'success', msg: "Bon usage des connecteurs logiques pour structurer votre texte !" });
       }
 
       if (!foundPast) {
@@ -330,11 +302,43 @@ export default function WritingPractice({ unitId, onBack }) {
         notes.push({ type: 'success', msg: "Bien joué pour l'utilisation des temps du passé !" });
       }
 
-      if (!foundReflechi) {
-        score -= 1;
-        notes.push({ type: 'warning', msg: "N'oubliez pas d'utiliser au moins un verbe réfléchi/réciproque (ex: ils se battent, il se retrouve)." });
-      } else {
-        notes.push({ type: 'success', msg: "Super utilisation des verbes pronominaux !" });
+      if (isUnit4) {
+        const connecteurs = ['d\'abord', 'tout d\'abord', 'premièrement', 'ensuite', 'de plus', 'en outre', 'cependant', 'pourtant', 'néanmoins', 'par conséquent', 'donc', 'en conclusion', 'enfin'];
+        const reflechis = ['me', 'te', 'se', "m'", "t'", "s'", 'nous', 'vous'];
+        let foundConnecteur = false;
+        let foundReflechi = false;
+
+        const fullTextLower = text.toLowerCase();
+        if (connecteurs.some(c => fullTextLower.includes(c))) {
+          foundConnecteur = true;
+        }
+
+        for (let i = 0; i < tokens.length; i++) {
+          const word = tokens[i];
+          // Check for reflexive verb structure (pronom + verb)
+          if (reflechis.includes(word) && i < tokens.length - 1) {
+            const nextWord = tokens[i+1];
+            if (nextWord.length > 2 && (nextWord.endsWith('er') || nextWord.endsWith('ir') || nextWord.endsWith('re') || Object.values(exactMatches).some(verbs => verbs.includes(nextWord)) || nextWord.endsWith('é') || nextWord.endsWith('i') || nextWord.endsWith('u') || nextWord.endsWith('s') || nextWord.endsWith('t') || nextWord.endsWith('e'))) {
+              if (!['le', 'la', 'les'].includes(nextWord)) { // prevent false positives
+                 foundReflechi = true;
+              }
+            }
+          }
+        }
+
+        if (!foundConnecteur) {
+          score -= 1;
+          notes.push({ type: 'warning', msg: "Il manque des connecteurs logiques (ex: tout d'abord, ensuite, cependant)." });
+        } else {
+          notes.push({ type: 'success', msg: "Bon usage des connecteurs logiques pour structurer votre texte !" });
+        }
+
+        if (!foundReflechi) {
+          score -= 1;
+          notes.push({ type: 'warning', msg: "N'oubliez pas d'utiliser au moins un verbe réfléchi/réciproque (ex: ils se battent, il se retrouve)." });
+        } else {
+          notes.push({ type: 'success', msg: "Super utilisation des verbes pronominaux !" });
+        }
       }
     }
 
