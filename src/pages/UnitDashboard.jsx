@@ -28,7 +28,7 @@ const TABS = [
 export default function UnitDashboard() {
   const { unitId } = useParams();
   // Block access on Vercel for units other than Reprise and Chapter 1
-  const allowedUnits = ['reprise', '1', '2'];
+  const allowedUnits = ['reprise', '1'];
   const isVercel = (typeof process !== 'undefined' && process.env && process.env.VERCEL_URL) || window.location.hostname.includes('vercel');
   if (isVercel && !allowedUnits.includes(unitId)) {
     return (

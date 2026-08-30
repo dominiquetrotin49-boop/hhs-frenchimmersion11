@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { BookOpen, RefreshCw, Send, CheckCircle2, AlertTriangle, HelpCircle } from 'lucide-react';
+import { analyzeFrenchText } from '../../utils/frenchTextAnalyzer';
 
 const WRITING_PROMPTS = [
   {
@@ -47,279 +48,6 @@ const UNIT1_PROMPTS = [
   }
 ];
 
-const localAnalyzeText = (text, prompt) => {
-  const textClean = text.trim();
-  const textLower = textClean.toLowerCase();
-  
-  const spellingErrors = [];
-  const verbAgreements = [];
-  const adjectiveAgreements = [];
-  const nounGenders = [];
-  const wordChoices = [];
-
-  // 1. Verb: je me leve -> je me lève
-  const leveMatch = textClean.match(/\b(je\s+me|je|tu|il|elle|on|ils|elles)\s+leve(s)?\b/i);
-  if (leveMatch) {
-    const pronom = leveMatch[1].toLowerCase();
-    let correctVerb = "lève";
-    if (pronom === "tu") correctVerb = "lèves";
-    if (pronom === "ils" || pronom === "elles") correctVerb = "lèvent";
-    
-    verbAgreements.push({
-      error: leveMatch[2] ? `${leveMatch[1]} leve${leveMatch[2]}` : `${leveMatch[1]} leve`,
-      subject: leveMatch[1],
-      correction: `${leveMatch[1]} ${correctVerb}`,
-      explanation: "Le verbe pronominal « se lever » prend un accent grave (è) au présent pour la prononciation : je me lève."
-    });
-  }
-
-  // 2. Preposition a vs à
-  // Match 'a' followed by space and then a common noun, article, city, or digit
-  const aPrepMatch = textClean.match(/\ba\s+(la|l'|un|une|des|le|les|paris|canada|france|l'école|l'hôtel|l'hôpital|\d+)\b/i);
-  if (aPrepMatch) {
-    wordChoices.push({
-      error: `a ${aPrepMatch[1]}`,
-      correction: `à ${aPrepMatch[1]}`,
-      explanation: "La préposition de lieu ou de temps s'écrit « à » avec un accent grave. Le mot « a » sans accent est la troisième personne du verbe avoir."
-    });
-  }
-
-  // 3. Verb: prend -> prends (je prend, tu prend)
-  const prendMatch = textClean.match(/\b(je|tu)\s+prend\b/i);
-  if (prendMatch) {
-    verbAgreements.push({
-      error: `${prendMatch[1]} prend`,
-      subject: prendMatch[1],
-      correction: `${prendMatch[1]} prends`,
-      explanation: "Au présent de l'indicatif, le verbe « prendre » prend un « -s » avec les sujets je/tu : je prends, tu prends."
-    });
-  }
-
-  // 4. Noun Gender: ma déjeuner -> mon déjeuner
-  const dejeunerMatch = textClean.match(/\b(ma|la)\s+dé?jeuner\b/i);
-  if (dejeunerMatch) {
-    nounGenders.push({
-      error: dejeunerMatch[0],
-      correction: dejeunerMatch[1].toLowerCase() === 'ma' ? "mon déjeuner" : "le déjeuner",
-      explanation: "Le nom « déjeuner » est masculin. On dit « le déjeuner » ou « mon déjeuner »."
-    });
-  }
-
-  // 5. Elision/Preposition: a la école / la école / a la ecole
-  const ecoleMatch = textClean.match(/\b(a\s+)?la\s+é?cole\b/i);
-  if (ecoleMatch) {
-    wordChoices.push({
-      error: ecoleMatch[0],
-      correction: "à l'école",
-      explanation: "Devant un nom commençant par une voyelle comme école, l'article 'la' s'élide en 'l\''. De plus, on utilise la préposition « à » : à l'école."
-    });
-  }
-
-  // 5.5. Spelling/Elision for ercole: ercole -> école
-  const ercoleMatch = textClean.match(/\b(a\s+)?(la\s+)?(l['’]\s*)?ercole(s)?\b/i);
-  if (ercoleMatch) {
-    let corr = "école";
-    let expl = "Le mot s'écrit « école » avec un accent aigu sur le premier 'e' (et sans la lettre 'r').";
-    if (ercoleMatch[1] || ercoleMatch[2] || ercoleMatch[3]) {
-      corr = ercoleMatch[1] ? "à l'école" : "l'école";
-      expl = "Le mot s'écrit « école » avec un accent aigu sur le premier 'e' (et sans la lettre 'r'). Devant école (qui commence par une voyelle), l'article s'élide en l'.";
-    }
-    spellingErrors.push({
-      error: ercoleMatch[0],
-      correction: corr,
-      explanation: expl
-    });
-  }
-
-  // 6. Possessive agreement: mon amis
-  const monAmisMatch = textClean.match(/\bmon\s+ami(e)?s\b/i);
-  if (monAmisMatch) {
-    adjectiveAgreements.push({
-      error: monAmisMatch[0],
-      noun: "amis",
-      correction: "mon ami (singulier) ou mes amis (pluriel)",
-      explanation: "L'adjectif possessif doit s'accorder en nombre avec le nom. Utilisez « mon » avec un nom singulier ou « mes » avec un nom pluriel."
-    });
-  }
-
-  // 7. Context word choices: sur le bus -> dans le bus
-  const surBusMatch = textClean.match(/\bsur\s+(le|un|les)\s+bus\b/i);
-  if (surBusMatch) {
-    wordChoices.push({
-      error: surBusMatch[0],
-      correction: `dans ${surBusMatch[1]} bus`,
-      explanation: "En français, on voyage « dans le bus » (à l'intérieur) ou « en bus ». « Sur le bus » signifie sur le toit du véhicule !"
-    });
-  }
-
-  // 7.5. Irregular Verb conjugation: je va / tu va / il vais
-  const jeVaMatch = textClean.match(/\bje\s+va(s)?\b/i);
-  if (jeVaMatch) {
-    verbAgreements.push({
-      error: jeVaMatch[0],
-      subject: "je",
-      correction: "je vais",
-      explanation: "Au présent de l'indicatif, la forme correcte du verbe « aller » avec le sujet « je » est « vais » : je vais."
-    });
-  }
-  const tuVaMatch = textClean.match(/\btu\s+va\b/i);
-  if (tuVaMatch) {
-    verbAgreements.push({
-      error: tuVaMatch[0],
-      subject: "tu",
-      correction: "tu vas",
-      explanation: "Au présent de l'indicatif, la forme correcte du verbe « aller » avec le sujet « tu » prend un 's' : tu vas."
-    });
-  }
-  const ilVaisMatch = textClean.match(/\b(il|elle|on)\s+vai(s|t)\b/i);
-  if (ilVaisMatch) {
-    verbAgreements.push({
-      error: ilVaisMatch[0],
-      subject: ilVaisMatch[1],
-      correction: `${ilVaisMatch[1]} va`,
-      explanation: "Au présent de l'indicatif, la forme correcte du verbe « aller » avec la troisième personne (il/elle/on) est « va » : il/elle/on va."
-    });
-  }
-
-  // 8. General verb agreements
-  // Je + verb ending in -es (ex: je manges)
-  const jeEsMatch = textClean.match(/\b(je)\s+(\w+es)\b/i);
-  if (jeEsMatch && !leveMatch) {
-    verbAgreements.push({
-      error: jeEsMatch[2],
-      subject: "je",
-      correction: jeEsMatch[2].slice(0, -1),
-      explanation: "Au présent de l'indicatif, la terminaison avec le pronom sujet « je » est « -e » pour les verbes du premier groupe (-er)."
-    });
-  }
-
-  // Nous + verb ending in -e, -es, -ez (ex: nous mange)
-  const nousMatch = textClean.match(/\b(nous)\s+(\w+[^ons\s])\b/i);
-  if (nousMatch && !["sommes"].includes(nousMatch[2])) {
-    const verb = nousMatch[2];
-    if (verb.endsWith("e") || verb.endsWith("es") || verb.endsWith("ez")) {
-      verbAgreements.push({
-        error: verb,
-        subject: "nous",
-        correction: verb.replace(/e(s|z)?$/, "ons"),
-        explanation: "Au présent, la terminaison avec le sujet « nous » est « -ons » (ex: nous mangeons)."
-      });
-    }
-  }
-
-  // Vous + verb ending in -e, -es (ex: vous manges)
-  const vousMatch = textClean.match(/\b(vous)\s+(\w+[^ez\s])\b/i);
-  if (vousMatch && !["êtes", "faites", "dites"].includes(vousMatch[2])) {
-    const verb = vousMatch[2];
-    if (verb.endsWith("e") || verb.endsWith("es")) {
-      verbAgreements.push({
-        error: verb,
-        subject: "vous",
-        correction: verb.replace(/e(s)?$/, "ez"),
-        explanation: "Au présent, la terminaison avec le sujet « vous » est « -ez » (ex: vous mangez)."
-      });
-    }
-  }
-
-  // Ils/Elles + verb ending in -e, -es, -ez (ex: ils mange)
-  const ilsMatch = textClean.match(/\b(ils|elles)\s+(\w+[^ent\s])\b/i);
-  if (ilsMatch && !["sont", "ont", "font", "vont"].includes(ilsMatch[2])) {
-    const verb = ilsMatch[2];
-    if (verb.endsWith("e") || verb.endsWith("es") || verb.endsWith("ez")) {
-      verbAgreements.push({
-        error: verb,
-        subject: ilsMatch[1],
-        correction: verb.replace(/e(s|z)?$/, "ent"),
-        explanation: "Au présent, les verbes se terminent par « -ent » au pluriel avec les pronoms sujets « ils / elles »."
-      });
-    }
-  }
-
-  // Noun genders check
-  if (textLower.includes("le table")) {
-    nounGenders.push({
-      error: "le table",
-      correction: "la table",
-      explanation: "Le nom « table » est féminin."
-    });
-  }
-  if (textLower.includes("un pomme")) {
-    nounGenders.push({
-      error: "un pomme",
-      correction: "une pomme",
-      explanation: "Le nom « pomme » est féminin."
-    });
-  }
-  if (textLower.includes("la livre") && !textLower.includes("la livre sterling")) {
-    nounGenders.push({
-      error: "la livre",
-      correction: "le livre",
-      explanation: "Le nom « livre » (book) est masculin."
-    });
-  }
-
-  // Common spelling errors
-  if (textLower.includes("bocou")) {
-    spellingErrors.push({
-      error: "bocou",
-      correction: "beaucoup",
-      explanation: "L'adverbe d'intensité s'écrit toujours « beaucoup »."
-    });
-  }
-  if (textLower.includes("trés")) {
-    spellingErrors.push({
-      error: "trés",
-      correction: "très",
-      explanation: "L'accent sur le 'e' de « très » est un accent grave."
-    });
-  }
-  if (textLower.includes("deja")) {
-    spellingErrors.push({
-      error: "deja",
-      correction: "déjà",
-      explanation: "Le mot « déjà » s'écrit avec un accent aigu sur le premier 'e' et un accent grave sur le 'a'."
-    });
-  }
-
-  // Catch dejeuner without accent
-  const dejeunerSpelling = textClean.match(/\bdejeuner(s)?\b/i);
-  if (dejeunerSpelling) {
-    spellingErrors.push({
-      error: dejeunerSpelling[0],
-      correction: dejeunerSpelling[1] ? "déjeuners" : "déjeuner",
-      explanation: "Le mot s'écrit « déjeuner » avec un accent aigu sur le premier 'e'."
-    });
-  }
-
-  // Catch ecole without accent
-  const ecoleSpelling = textClean.match(/\becole(s)?\b/i);
-  if (ecoleSpelling) {
-    spellingErrors.push({
-      error: ecoleSpelling[0],
-      correction: ecoleSpelling[1] ? "écoles" : "école",
-      explanation: "Le mot s'écrit « école » avec un accent aigu sur le premier 'e'."
-    });
-  }
-
-  const isValid = spellingErrors.length === 0 && 
-                  verbAgreements.length === 0 && 
-                  adjectiveAgreements.length === 0 && 
-                  nounGenders.length === 0 && 
-                  wordChoices.length === 0;
-
-  return {
-    isValid,
-    spellingErrors,
-    verbAgreements,
-    adjectiveAgreements,
-    nounGenders,
-    wordChoices,
-    generalFeedback: isValid 
-      ? "Excellent travail ! Votre paragraphe est bien rédigé et ne contient aucune erreur de syntaxe ou de grammaire."
-      : "Vous avez fait quelques erreurs dans votre texte. Examinez les corrections détaillées ci-dessous pour vous améliorer."
-  };
-};
-
 const ACCENTS = ["é", "è", "à", "ù", "ç", "â", "ê", "î", "ô", "û", "ë", "ï", "œ"];
 
 export default function WritingPrompt({ onBack, unitId }) {
@@ -327,7 +55,6 @@ export default function WritingPrompt({ onBack, unitId }) {
 
   const [promptIdx, setPromptIdx] = useState(0);
   const [text, setText] = useState("");
-  const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [error, setError] = useState(null);
   
@@ -363,57 +90,10 @@ export default function WritingPrompt({ onBack, unitId }) {
     }
   };
 
-  const handleSubmit = async () => {
-    if (!text.trim() || loading) return;
-
-    setLoading(true);
-    setError(null);
-    setFeedback(null);
-
-    try {
-      const response = await fetch('/api/writing-feedback', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: text.trim(),
-          prompt: activePrompt.prompt
-        })
-      });
-
-      const textRes = await response.text();
-      
-      // If we receive an HTML page (such as Vite SPA fallback in local dev), fall back to client-side checker
-      if (textRes.trim().startsWith("<!DOCTYPE") || textRes.trim().startsWith("<html")) {
-        const localFeedback = localAnalyzeText(text.trim(), activePrompt.prompt);
-        setFeedback(localFeedback);
-        return;
-      }
-
-      let data;
-      try {
-        data = JSON.parse(textRes);
-      } catch (parseErr) {
-        // Fall back to client-side rule checker if the string format is not JSON
-        const localFeedback = localAnalyzeText(text.trim(), activePrompt.prompt);
-        setFeedback(localFeedback);
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error(data.error || "Une erreur s'est produite lors de l'analyse.");
-      }
-
-      setFeedback(data);
-    } catch (err) {
-      console.error(err);
-      // As a last-resort safety, fall back to the local checker
-      const localFeedback = localAnalyzeText(text.trim(), activePrompt.prompt);
-      setFeedback(localFeedback);
-    } finally {
-      setLoading(false);
-    }
+  const handleSubmit = () => {
+    if (!text.trim()) return;
+    const result = analyzeFrenchText(text.trim(), { unitId: '1' });
+    setFeedback(result);
   };
 
   const handleNextPrompt = () => {
@@ -481,7 +161,6 @@ export default function WritingPrompt({ onBack, unitId }) {
                 {ACCENTS.map((char) => (
                   <button
                     key={char}
-                    disabled={loading}
                     onClick={() => handleAccentClick(char)}
                     className="accent-key-btn"
                   >
@@ -497,7 +176,6 @@ export default function WritingPrompt({ onBack, unitId }) {
                 ref={textareaRef}
                 value={text}
                 onChange={handleTextChange}
-                disabled={loading}
                 placeholder="Rédigez votre réponse ici (en français)..."
                 className="wp-textarea"
                 rows="6"
@@ -515,18 +193,18 @@ export default function WritingPrompt({ onBack, unitId }) {
           <div className="flex items-center justify-between border-t border-slate-800 pt-4 mt-6">
             <button
               onClick={handleReset}
-              disabled={loading || !text.trim()}
+              disabled={!text.trim()}
               className="wp-secondary-btn"
             >
               Effacer
             </button>
             <button
               onClick={handleSubmit}
-              disabled={loading || !text.trim()}
+              disabled={!text.trim()}
               className="wp-primary-btn"
             >
               <Send size={14} />
-              {loading ? "Analyse en cours..." : "Soumettre pour correction"}
+              Soumettre pour correction
             </button>
           </div>
         </div>
@@ -550,16 +228,8 @@ export default function WritingPrompt({ onBack, unitId }) {
                 </div>
               )}
 
-              {/* Loading State */}
-              {loading && (
-                <div className="flex flex-col items-center justify-center py-16 gap-3">
-                  <div className="wp-loader" />
-                  <p className="text-sm text-slate-400 font-medium">Gemini analyse votre grammaire, accords et orthographe...</p>
-                </div>
-              )}
-
               {/* Empty state before submit */}
-              {!feedback && !loading && !error && (
+              {!feedback && !error && (
                 <div className="text-center py-16 text-slate-500">
                   <HelpCircle size={40} className="mx-auto opacity-40 mb-3" />
                   <p className="text-sm font-semibold">Aucun texte soumis pour le moment.</p>
@@ -568,9 +238,17 @@ export default function WritingPrompt({ onBack, unitId }) {
               )}
 
               {/* Feedback Content */}
-              {feedback && !loading && (
+              {feedback && (
                 <div className="space-y-4 max-h-[380px] overflow-y-auto pr-1">
                   
+                  {/* Score */}
+                  <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: '0.25rem' }}>
+                      <span style={{ fontSize: '2.5rem', fontWeight: 900, color: feedback.score >= 7 ? '#16a34a' : feedback.score >= 5 ? '#d97706' : '#dc2626' }}>{feedback.score}</span>
+                      <span style={{ fontSize: '1rem', fontWeight: 700, color: '#94a3b8' }}>/ 10</span>
+                    </div>
+                  </div>
+
                   {/* General feedback */}
                   <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-1">Retour général</span>
@@ -667,6 +345,21 @@ export default function WritingPrompt({ onBack, unitId }) {
                             <span className="text-emerald-400 font-bold">➔ {err.correction}</span>
                           </div>
                           <p className="text-slate-400 leading-relaxed mt-1">{err.explanation}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Structure & Grammar Notes */}
+                  {feedback.structureNotes && feedback.structureNotes.length > 0 && (
+                    <div className="space-y-2">
+                      <span style={{ fontSize: '10px', fontWeight: 900, color: '#0891b2', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block' }}>Structure & Conjugaisons</span>
+                      {feedback.structureNotes.map((note, idx) => (
+                        <div key={idx} style={{ padding: '0.5rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.05)', background: note.type === 'success' ? 'rgba(22,163,74,0.05)' : note.type === 'warning' ? 'rgba(217,119,6,0.05)' : 'rgba(220,38,38,0.05)', fontSize: '0.75rem', fontWeight: 600, color: '#334155' }}>
+                          {note.type === 'success' && '✅ '}
+                          {note.type === 'warning' && '⚠️ '}
+                          {note.type === 'error' && '❌ '}
+                          {note.msg}
                         </div>
                       ))}
                     </div>

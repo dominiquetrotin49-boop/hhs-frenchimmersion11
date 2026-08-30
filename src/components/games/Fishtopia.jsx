@@ -289,7 +289,7 @@ export default function Fishtopia({ onBack }) {
   const audioElRef = useRef(null);
 
   useEffect(() => {
-    const audio = new window.Audio('/music/amber_road.mp3');
+    const audio = new window.Audio('/music/amber_road.m4a');
     audio.loop = true;
     audioElRef.current = audio;
     
