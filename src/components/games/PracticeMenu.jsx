@@ -26,19 +26,19 @@ import './Games.css';
 const ER_PUZZLE = {
   title: "Mots Croisés: Verbes en -ER",
   description: "Remplissez la grille avec les conjugaisons correctes au présent.",
-  numRows: 13,
-  numCols: 18,
+  numRows: 21,
+  numCols: 12,
   puzzleData: [
-    { id: 1, word: "TRAVAILLENT", r: 7, c: 6, dir: "across", clue: "Ils + Travailler" },
-    { id: 2, word: "ECOUTONS", r: 3, c: 6, dir: "down", clue: "Nous + Écouter" },
-    { id: 3, word: "TROUVENT", r: 3, c: 9, dir: "down", clue: "Ils + Trouver" },
-    { id: 4, word: "PARLONS", r: 4, c: 12, dir: "down", clue: "Nous + Parler" },
-    { id: 5, word: "HABITEZ", r: 2, c: 14, dir: "down", clue: "Vous + Habiter" },
-    { id: 6, word: "REGARDE", r: 3, c: 0, dir: "across", clue: "Je + Regarder" },
-    { id: 7, word: "ETUDIES", r: 6, c: 16, dir: "down", clue: "Tu + Étudier" },
-    { id: 8, word: "MANGES", r: 10, c: 1, dir: "across", clue: "Tu + Manger" },
-    { id: 9, word: "JOUE", r: 0, c: 1, dir: "down", clue: "Je + Jouer" },
-    { id: 10, word: "AIME", r: 3, c: 14, dir: "across", clue: "Elle + Aimer" }
+    { id: 1, word: "HABITEZ", r: 0, c: 9, dir: "down", clue: "Vous + Habiter" },
+    { id: 2, word: "TRAVAILLENT", r: 4, c: 3, dir: "down", clue: "Ils + Travailler" },
+    { id: 3, word: "REGARDE", r: 5, c: 3, dir: "across", clue: "Je + Regarder" },
+    { id: 4, word: "AIME", r: 3, c: 8, dir: "across", clue: "Elle + Aimer" },
+    { id: 5, word: "PARLONS", r: 8, c: 2, dir: "across", clue: "Nous + Parler" },
+    { id: 6, word: "JOUE", r: 12, c: 0, dir: "across", clue: "Je + Jouer" },
+    { id: 7, word: "ECOUTONS", r: 12, c: 5, dir: "down", clue: "Nous + Écouter" },
+    { id: 8, word: "MANGES", r: 12, c: 9, dir: "down", clue: "Tu + Manger" },
+    { id: 9, word: "TROUVENT", r: 14, c: 3, dir: "across", clue: "Ils + Trouver" },
+    { id: 10, word: "ETUDIES", r: 16, c: 4, dir: "across", clue: "Tu + Étudier" }
   ]
 };
 
@@ -53,12 +53,14 @@ const IR_PUZZLE = {
     { id: 3, word: "MAIGRISSEZ", r: 3, c: 8, dir: "down", clue: "Vous + Maigrir" },
     { id: 4, word: "FINISSONS", r: 3, c: 6, dir: "down", clue: "Nous + Finir" },
     { id: 5, word: "CHOISIS", r: 1, c: 10, dir: "down", clue: "Tu + Choisir" },
-    { id: 6, word: "REUSSIS", r: 11, c: 0, dir: "across", clue: "Je + Réussir" },
+    { id: 6, word: "RÉUSSIS", r: 11, c: 0, dir: "across", clue: "Je + Réussir" },
     { id: 7, word: "ROUGIT", r: 0, c: 13, dir: "down", clue: "Elle + Rougir" },
-    { id: 8, word: "OBEIS", r: 13, c: 2, dir: "across", clue: "Tu + Obéir" },
+    { id: 8, word: "OBÉIS", r: 9, c: 1, dir: "down", clue: "Tu + Obéir" },
     { id: 9, word: "PUNIS", r: 2, c: 12, dir: "across", clue: "Tu + Punir" },
     { id: 10, word: "AGIT", r: 15, c: 1, dir: "across", clue: "Il + Agir" }
   ]
+,
+  cellSize: 24
 };
 
 const RE_PUZZLE = {
