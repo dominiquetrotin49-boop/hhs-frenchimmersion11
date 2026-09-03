@@ -1,3 +1,4 @@
+import AtelierDictee from "./AtelierDictee";
 import React, { useState } from 'react';
 import { Clock, TrendingUp, Flag, BookOpen } from 'lucide-react';
 import EditorChallenge from './EditorChallenge';
