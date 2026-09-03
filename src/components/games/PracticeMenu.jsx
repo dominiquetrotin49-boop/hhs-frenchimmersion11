@@ -85,19 +85,17 @@ const RE_PUZZLE = {
 const AUX_PUZZLE = {
   title: "Mots Croisés: Être & Avoir",
   description: "Remplissez la grille avec les conjugaisons correctes de Être et Avoir.",
-  numRows: 8,
-  numCols: 7,
+  numRows: 11,
+  numCols: 9,
   puzzleData: [
-    { id: 1, word: "SOMMES", r: 4, c: 1, dir: "across", clue: "Nous (Être)" },
-    { id: 2, word: "AVONS", r: 0, c: 1, dir: "down", clue: "Nous (Avoir)" },
-    { id: 3, word: "AVEZ", r: 0, c: 1, dir: "across", clue: "Vous (Avoir)" },
-    { id: 4, word: "ETES", r: 4, c: 5, dir: "down", clue: "Vous (Être)" },
-    { id: 5, word: "SONT", r: 2, c: 0, dir: "across", clue: "Ils (Être)" },
-    { id: 6, word: "SUIS", r: 1, c: 6, dir: "down", clue: "Je (Être)" },
-    { id: 7, word: "EST", r: 0, c: 3, dir: "down", clue: "Il (Être)" },
-    { id: 8, word: "ONT", r: 4, c: 2, dir: "down", clue: "Ils (Avoir)" },
-    { id: 9, word: "ES", r: 6, c: 5, dir: "across", clue: "Tu (Être)" },
-    { id: 10, word: "AS", r: 7, c: 4, dir: "across", clue: "Tu (Avoir)" }
+    { id: 1, word: "AVONS", r: 3, c: 4, dir: "across", clue: "nous — avoir" },
+    { id: 2, word: "SOMMES", r: 5, c: 0, dir: "across", clue: "nous — être" },
+    { id: 3, word: "SONT", r: 8, c: 0, dir: "across", clue: "ils — être" },
+    { id: 4, word: "ES", r: 10, c: 2, dir: "across", clue: "tu — être" },
+    { id: 5, word: "AS", r: 2, c: 8, dir: "down", clue: "tu — avoir" },
+    { id: 6, word: "AVEZ", r: 3, c: 4, dir: "down", clue: "vous — avoir" },
+    { id: 7, word: "SUIS", r: 5, c: 0, dir: "down", clue: "je — être" },
+    { id: 8, word: "ÊTES", r: 7, c: 3, dir: "down", clue: "vous — être" }
   ]
 };
 
