@@ -315,19 +315,7 @@ export default function PracticeMenu({ unitId }) {
     }
     return <ColdCaseDossier tense="negation" onBack={() => setActiveGame(null)} />;
   }
-  if (activeGame === 'writing-prompt') {
-    if (isVercel) {
-      return (
-        <div className="practice-menu">
-          <button className="back-btn mb-4" onClick={() => setActiveGame(null)}>← Retour aux exercices</button>
-          <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
-            <h3>Nous n'y sommes pas encore.</h3>
-          </div>
-        </div>
-      );
-    }
-    return <WritingPrompt onBack={() => setActiveGame(null)} />;
-  }
+  if (activeGame === 'writing-prompt' || activeGame === 'writing') return <WritingPrompt unitId={unitId} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'flashcards') {
     return <VocabFlashcards onBack={() => setActiveGame(null)} />;
   }

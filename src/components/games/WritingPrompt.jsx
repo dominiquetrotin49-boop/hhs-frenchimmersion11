@@ -363,7 +363,7 @@ export default function WritingPrompt({ onBack, unitId }) {
     const newVal = currentVal.slice(0, start) + char + currentVal.slice(end);
     
     // Check characters count
-    if (newVal.length > 150) return;
+    if (newVal.length > 600) return;
 
     setText(newVal);
 
@@ -376,7 +376,7 @@ export default function WritingPrompt({ onBack, unitId }) {
 
   const handleTextChange = (e) => {
     const val = e.target.value;
-    if (val.length <= 150) {
+    if (val.length <= 600) {
       setText(val);
     }
   };
