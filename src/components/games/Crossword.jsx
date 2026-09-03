@@ -40,6 +40,7 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
   const [activeCell, setActiveCell] = useState(null);
   const [showErrors, setShowErrors] = useState(false);
   const [isWon, setIsWon] = useState(false);
+  const [feedbackMsg, setFeedbackMsg] = useState(null);
   
   const inputRefs = useRef({});
 
@@ -142,22 +143,38 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
   };
 
   const checkAnswers = () => {
-    let correct = true;
-    for (let r = 0; r < numRows; r++) {
-      for (let c = 0; c < numCols; c++) {
+    setShowErrors(true);
+    let totalCells = 0;
+    let correctCells = 0;
+    let emptyCells = 0;
+    let wrongCells = 0;
+
+    for (let r = 0; r < NUM_ROWS; r++) {
+      for (let c = 0; c < NUM_COLS; c++) {
         if (gridMeta[r][c].isActive) {
-          const expected = gridMeta[r][c].answer.toUpperCase();
-          const actual = (inputs[`${r}-${c}`] || '').toUpperCase();
-          if (actual !== expected) {
-            correct = false;
+          totalCells++;
+          const val = (inputs[`${r}-${c}`] || "").toUpperCase();
+          if (!val) {
+            emptyCells++;
+          } else if (val === gridMeta[r][c].answer.toUpperCase()) {
+            correctCells++;
+          } else {
+            wrongCells++;
           }
         }
       }
     }
-    
-    setShowErrors(true);
-    if (correct) {
+
+    if (correctCells === totalCells) {
       setIsWon(true);
+      setFeedbackMsg({ type: "success", text: "Bravo ! Toutes les réponses sont correctes !" });
+    } else {
+      setIsWon(false);
+    setFeedbackMsg(null);
+      setFeedbackMsg({
+        type: "info",
+        text: `${correctCells} / ${totalCells} lettres correctes. (${wrongCells} erreur${wrongCells > 1 ? "s" : ""}, ${emptyCells} case${emptyCells > 1 ? "s" : ""} vide${emptyCells > 1 ? "s" : ""})`
+      });
     }
   };
 
@@ -173,33 +190,82 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
 
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.75rem" }}>
         <button
           onClick={onBack}
           style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            background: 'rgba(255, 255, 255, 0.15)',
-            color: '#ffffff',
-            border: '1px solid rgba(255, 255, 255, 0.25)',
-            borderRadius: '0.5rem',
-            padding: '0.5rem 1rem',
-            cursor: 'pointer',
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            background: "rgba(255, 255, 255, 0.15)",
+            color: "#ffffff",
+            border: "1px solid rgba(255, 255, 255, 0.25)",
+            borderRadius: "0.5rem",
+            padding: "0.5rem 1rem",
+            cursor: "pointer",
             fontWeight: 600
           }}
         >
           <ArrowLeft size={16} /> Retour au menu
         </button>
 
-        {isWon && (
-          <div style={{ background: '#22c55e', color: '#ffffff', padding: '0.4rem 1rem', borderRadius: '0.5rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <CheckCircle2 size={18} /> Félicitations ! Grille complétée !
-          </div>
-        )}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <button
+            onClick={checkAnswers}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              background: "#22c55e",
+              color: "#ffffff",
+              border: "none",
+              borderRadius: "0.5rem",
+              padding: "0.5rem 1.25rem",
+              fontWeight: 700,
+              cursor: "pointer",
+              boxShadow: "0 2px 8px rgba(34, 197, 94, 0.35)"
+            }}
+          >
+            <CheckCircle2 size={18} /> Vérifier mes réponses
+          </button>
+          <button
+            onClick={handleReset}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              background: "rgba(255, 255, 255, 0.12)",
+              color: "#e2e8f0",
+              border: "1px solid rgba(255, 255, 255, 0.2)",
+              borderRadius: "0.5rem",
+              padding: "0.5rem 1rem",
+              fontWeight: 600,
+              cursor: "pointer"
+            }}
+          >
+            <RefreshCw size={16} /> Réinitialiser
+          </button>
+        </div>
       </div>
 
-      <div style={{ background: 'rgba(255, 255, 255, 0.08)', borderRadius: '1rem', padding: '1rem 1.5rem', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
+      {feedbackMsg && (
+        <div style={{
+          padding: "0.75rem 1.25rem",
+          borderRadius: "0.75rem",
+          fontWeight: 600,
+          display: "flex",
+          alignItems: "center",
+          gap: "0.75rem",
+          background: feedbackMsg.type === "success" ? "rgba(34, 197, 94, 0.2)" : "rgba(59, 130, 246, 0.2)",
+          border: feedbackMsg.type === "success" ? "1px solid #22c55e" : "1px solid #3b82f6",
+          color: "#ffffff"
+        }}>
+          <CheckCircle2 size={20} color={feedbackMsg.type === "success" ? "#4ade80" : "#60a5fa"} />
+          <span>{feedbackMsg.text}</span>
+        </div>
+      )}
+
+      <div style={{ background: "rgba(255, 255, 255, 0.08)", borderRadius: '1rem', padding: '1rem 1.5rem', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
         <h2 style={{ color: '#ffffff', margin: 0, fontSize: '1.5rem', fontWeight: 700 }}>{title}</h2>
         <p style={{ color: '#cbd5e1', margin: '0.35rem 0 0 0', fontSize: '0.95rem' }}>{description}</p>
       </div>
