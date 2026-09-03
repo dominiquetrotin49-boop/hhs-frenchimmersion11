@@ -256,7 +256,7 @@ export default function PracticeMenu({ unitId }) {
   if (activeGame === 'grammar-fill-imparfait') return <GrammarFill data={IMPARFAIT_FILL_DATA} title="L'Imparfait" description="Complétez avec le verbe conjugué à l'imparfait." onBack={() => setActiveGame(null)} />;
   if (activeGame === 'grammar-fill-pc') return <GrammarFill data={PC_FILL_DATA} title="Le Passé Composé" description="Choisissez le bon auxiliaire et participe passé." onBack={() => setActiveGame(null)} />;
   if (activeGame === 'grammar-fill-mixed') return <GrammarFill data={MIXED_FILL_DATA} title="Imparfait vs Passé Composé" description="Choisissez le temps approprié pour chaque situation." onBack={() => setActiveGame(null)} />;
-  if (activeGame === 'writing') return <WritingPractice unitId={unitId} onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'writing') return <WritingPrompt unitId={unitId} onBack={() => setActiveGame(null)} />;
   // Unit 2 puzzles
   if (activeGame === 'crossword-irr1') return <Crossword {...IRR_PUZZLE_1} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'crossword-irr2') return <Crossword {...IRR_PUZZLE_2} onBack={() => setActiveGame(null)} />;
@@ -331,7 +331,7 @@ export default function PracticeMenu({ unitId }) {
   if (activeGame === 'flashcards') {
     return <VocabFlashcards onBack={() => setActiveGame(null)} />;
   }
-  if (activeGame === 'writing') return <WritingPractice unitId={unitId} onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'writing') return <WritingPrompt unitId={unitId} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'pronunciation') return <PronunciationPractice unitId={unitId} onBack={() => setActiveGame(null)} />;
 
   return (

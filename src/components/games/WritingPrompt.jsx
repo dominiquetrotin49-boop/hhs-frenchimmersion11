@@ -24,28 +24,46 @@ const WRITING_PROMPTS = [
   }
 ];
 
+
 const UNIT1_PROMPTS = [
-  {
-    id: 1,
-    title: "Votre héros ou héroïne préféré(e)",
-    prompt: "Décrivez votre héros ou héroïne préféré(e) (réel ou fictif) au présent. Quelles sont ses qualités morales et ses pouvoirs ?"
-  },
-  {
-    id: 2,
-    title: "Le portrait d'un anti-héros",
-    prompt: "Présentez un anti-héros célèbre (de livre ou de film) au présent. Expliquez pourquoi ce personnage est complexe et quelles sont ses faiblesses."
-  },
-  {
-    id: 3,
-    title: "Si vous étiez un super-héros",
-    prompt: "Si vous étiez un super-héros, quel serait votre pouvoir spécial ? Décrivez vos actions quotidiennes pour sauver le monde au présent."
-  },
-  {
-    id: 4,
-    title: "Le rival ou le méchant",
-    prompt: "Décrivez un méchant ou un rival marquant d'une histoire au présent. Quelles sont ses motivations et ses traits de caractère principaux ?"
-  }
+  { id: 1, title: "Journaliste en action", prompt: "Vous êtes un jeune journaliste. Écrivez un court texte (au moins 50 mots) au PRÉSENT pour décrire comment vous trouvez vos informations, comment vous écrivez vos articles, et pourquoi la liberté de la presse est importante." },
+  { id: 2, title: "La déontologie des médias", prompt: "Pourquoi est-il crucial de vérifier ses sources et de lutter contre la désinformation ? Exprimez votre point de vue avec les mots de l'unité." }
 ];
+
+const UNIT2_PROMPTS = [
+  { id: 1, title: "Souvenirs d'école & Éducation", prompt: "Rédigez un paragraphe (au moins 50 mots) pour décrire vos souvenirs de votre ancienne école (à l'IMPARFAIT) et ce que vous avez fait récemment pour améliorer vos études (au PASSÉ COMPOSÉ). Utilisez des pronoms objets (le, la, les, lui, leur, y, en)." },
+  { id: 2, title: "L'école idéale", prompt: "Décrivez comment l'école peut être plus inclusive et réduire les inégalités scolaires." }
+];
+
+const UNIT3_PROMPTS = [
+  { id: 1, title: "Se protéger en ligne", prompt: "Écrivez un court e-mail (au moins 50 mots au PRÉSENT) à un ami pour lui expliquer comment vous protégez vos données et votre empreinte numérique sur Internet. Utilisez au moins 3 pronoms objets (me, te, se, le, la, les, lui, y, en)." },
+  { id: 2, title: "Les pièges du web", prompt: "Expliquez comment reconnaître une tentative d'hameçonnage et pourquoi la sécurité des mots de passe est primordiale." }
+];
+
+const UNIT4_PROMPTS = [
+  { id: 1, title: "Critique d'art ou de film", prompt: "Rédigez la critique d'un film ou d'une œuvre d'art marquante (au moins 50 mots). Utilisez le PASSÉ COMPOSÉ et l'IMPARFAIT, un verbe pronominal réfléchi, et des connecteurs logiques." },
+  { id: 2, title: "Les inégalités et la solidarité", prompt: "Décrivez l'action d'une association caritative pour lutter contre la précarité ou l'exclusion sociale." }
+];
+
+const UNIT5_PROMPTS = [
+  { id: 1, title: "Sciences, Société et Avenir", prompt: "Rédigez un paragraphe réfléchi (au moins 50 mots) sur les découvertes scientifiques et leur impact sur notre société. Utilisez le futur ou le conditionnel pour exprimer vos projections." },
+  { id: 2, title: "L'éthique technologique", prompt: "Quelles sont les responsabilités de la société face au progrès technologique rapide ? Donnez des arguments concrets." }
+];
+
+const UNIT6_PROMPTS = [
+  { id: 1, title: "Identité culturelle et Francophonie", prompt: "Présentez un aspect culturel ou une tradition du monde francophone qui vous intéresse particulièrement (au moins 50 mots). Expliquez pourquoi il enrichit la diversité culturelle." },
+  { id: 2, title: "Mon engagement citoyen", prompt: "Rédigez un texte décrivant comment vous souhaitez contribuer positivement à votre communauté locale ou mondiale." }
+];
+
+const PROMPTS_BY_UNIT = {
+  "1": UNIT1_PROMPTS,
+  "2": UNIT2_PROMPTS,
+  "3": UNIT3_PROMPTS,
+  "4": UNIT4_PROMPTS,
+  "5": UNIT5_PROMPTS,
+  "6": UNIT6_PROMPTS,
+  "reprise": WRITING_PROMPTS
+};
 
 const localAnalyzeText = (text, prompt) => {
   const textClean = text.trim();
@@ -323,7 +341,7 @@ const localAnalyzeText = (text, prompt) => {
 const ACCENTS = ["é", "è", "à", "ù", "ç", "â", "ê", "î", "ô", "û", "ë", "ï", "œ"];
 
 export default function WritingPrompt({ onBack, unitId }) {
-  const promptsList = unitId === '1' ? UNIT1_PROMPTS : WRITING_PROMPTS;
+  const promptsList = PROMPTS_BY_UNIT[String(unitId)] || WRITING_PROMPTS;
 
   const [promptIdx, setPromptIdx] = useState(0);
   const [text, setText] = useState("");
