@@ -140,20 +140,22 @@ const IRR_PUZZLE_2 = {
 
 const IRR_PUZZLE_3 = {
   title: "Mots Croisés: Autres Irréguliers",
-  description: "Conjuguez Mettre, Dire, Lire, Écrire, Boire, Croire, Sortir, Partir, Dormir.",
+  description: "Conjuguez boire, mettre, envoyer, partir, croire, sortir, écrire, dormir.",
   numRows: 12,
   numCols: 14,
   puzzleData: [
-    { "id": 1, "word": "ECRIVENT", "r": 4, "c": 6, "dir": "across", "clue": "Ils + Écrire" },
-    { "id": 2, "word": "CROIENT", "r": 0, "c": 6, "dir": "down", "clue": "Ils + Croire" },
-    { "id": 3, "word": "PARTONS", "r": 2, "c": 8, "dir": "down", "clue": "Nous + Partir" },
-    { "id": 4, "word": "DORMENT", "r": 0, "c": 11, "dir": "down", "clue": "Ils + Dormir" },
-    { "id": 5, "word": "BOIVENT", "r": 6, "c": 0, "dir": "across", "clue": "Ils + Boire" },
-    { "id": 6, "word": "METTEZ", "r": 2, "c": 13, "dir": "down", "clue": "Vous + Mettre" },
-    { "id": 7, "word": "DISONS", "r": 8, "c": 6, "dir": "across", "clue": "Nous + Dire" },
-    { "id": 8, "word": "BUVONS", "r": 6, "c": 0, "dir": "down", "clue": "Nous + Boire" },
-    { "id": 9, "word": "SORTEZ", "r": 2, "c": 4, "dir": "down", "clue": "Vous + Sortir" },
-    { "id": 10, "word": "PAYENT", "r": 3, "c": 7, "dir": "across", "clue": "Ils + Payer" }
+    { id: 1, word: "MET", r: 1, c: 8, dir: "across", clue: "il — mettre" },
+    { id: 2, word: "ENVOYONS", r: 4, c: 6, dir: "across", clue: "nous — envoyer" },
+    { id: 3, word: "BOIVENT", r: 6, c: 0, dir: "across", clue: "ils — boire" },
+    { id: 4, word: "PARTONS", r: 8, c: 6, dir: "across", clue: "nous — partir" },
+    { id: 5, word: "BOIS", r: 10, c: 6, dir: "across", clue: "tu — boire" },
+    { id: 6, word: "CROIENT", r: 0, c: 6, dir: "down", clue: "ils — croire" },
+    { id: 7, word: "METTONS", r: 0, c: 9, dir: "down", clue: "nous — mettre" },
+    { id: 8, word: "SORTEZ", r: 2, c: 4, dir: "down", clue: "vous — sortir" },
+    { id: 9, word: "ÉCRIVENT", r: 3, c: 2, dir: "down", clue: "ils — écrire" },
+    { id: 10, word: "DORMENT", r: 3, c: 11, dir: "down", clue: "ils — dormir" },
+    { id: 11, word: "BUVONS", r: 6, c: 0, dir: "down", clue: "nous — boire" },
+    { id: 12, word: "CROIS", r: 7, c: 8, dir: "down", clue: "je — croire" }
   ]
 };
 
