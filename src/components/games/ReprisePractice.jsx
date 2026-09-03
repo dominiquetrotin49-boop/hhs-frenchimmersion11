@@ -90,6 +90,34 @@ const REPRISE_ACTIVITIES = [
     title: 'Activité 4 : Atelier d\'Écriture',
     description: 'Entraînez-vous à rédiger au présent et recevez des corrections de grammaire et d\'accords immédiates.',
     questions: []
+  },
+  {
+    id: 'negations',
+    title: 'Activité 5 : Négations',
+    description: "Complétez chaque phrase avec l'expression négative qui convient le mieux selon le contexte : ne… pas | ne… jamais | ne… plus | ne… rien | ne… aucun(e) | ne… personne. (N'oubliez pas d'élider ne en n' devant une voyelle ou un h muet si nécessaire.)",
+    dualBlank: true,
+    questions: [
+      { id: 'n_1', textBefore: "Julien adorait le chocolat quand il était petit, mais maintenant il", textMiddle: "en mange", textAfter: ".", hint: "ne… pas | ne… jamais | ne… plus | ne… rien | ne… aucun(e) | ne… personne", answer1: "n'", answer2: "plus" },
+      { id: 'n_2', textBefore: "La salle d'interrogatoire est complètement vide ; il", textMiddle: "y a", textAfter: "à l'intérieur.", hint: "", answer1: "n'", answer2: "rien" },
+      { id: 'n_3', textBefore: "Je cherche mes clés depuis ce matin, mais je", textMiddle: "les trouve", textAfter: ".", hint: "", answer1: "ne", answer2: "pas" },
+      { id: 'n_4', textBefore: "Claire a très peur de l'avion, donc elle", textMiddle: "a", textAfter: "voyagé en dehors du pays.", hint: "", answer1: "n'", answer2: "jamais" },
+      { id: 'n_5', textBefore: "L'inspecteur a fouillé la maison de fond en comble, mais il", textMiddle: "a trouvé", textAfter: "indice.", hint: "", answer1: "n'", answer2: "aucun" },
+      { id: 'n_6', textBefore: "Tu as faim ? Non merci, je", textMiddle: "veux", textAfter: "manger avant le dîner.", hint: "", answer1: "ne", answer2: "rien" },
+      { id: 'n_7', textBefore: "Marc a déménagé le mois dernier ; il", textMiddle: "habite", textAfter: "dans ce quartier.", hint: "", answer1: "n'", answer2: "plus" },
+      { id: 'n_8', textBefore: "Malgré ses nombreuses recherches, elle", textMiddle: "a", textAfter: "doute sur la culpabilité du suspect.", hint: "", answer1: "n'", answer2: "aucun" },
+      { id: 'n_9', textBefore: "C'est un secret absolu : je", textMiddle: "ai parlé de cette affaire à", textAfter: ".", hint: "", answer1: "n'", answer2: "personne" },
+      { id: 'n_10', textBefore: "Nous", textMiddle: "avons", textAfter: "compris à cette consigne ; pouvez-vous la réexpliquer ?", hint: "", answer1: "n'", answer2: "rien" },
+      { id: 'n_11', textBefore: "Elle a une mémoire excellente : elle", textMiddle: "oublie", textAfter: "un anniversaire.", hint: "", answer1: "n'", answer2: "jamais" },
+      { id: 'n_12', textBefore: "Le détective a interrogé tout le monde, mais", textMiddle: "n'a voulu témoigner.", textAfter: "", hint: "", answer1: "personne", answer2: "" },
+      { id: 'n_13', textBefore: "Ce magasin a fait faillite ; il", textMiddle: "est", textAfter: "ouvert le week-end.", hint: "", answer1: "n'", answer2: "plus" },
+      { id: 'n_14', textBefore: "Vous", textMiddle: "avez fait", textAfter: "erreur dans cet exercice de grammaire, bravo !", hint: "", answer1: "n'", answer2: "aucune" },
+      { id: 'n_15', textBefore: "Je suis fatigué ce soir, je", textMiddle: "ai", textAfter: "envie de sortir.", hint: "", answer1: "n'", answer2: "aucune" },
+      { id: 'n_16', textBefore: "Dans le coffre-fort abandonné, les policiers", textMiddle: "ont découvert", textAfter: ".", hint: "", answer1: "n'", answer2: "rien" },
+      { id: 'n_17', textBefore: "Sophie est très timide ; elle", textMiddle: "prend", textAfter: "la parole en public.", hint: "", answer1: "ne", answer2: "jamais" },
+      { id: 'n_18', textBefore: "Il fait tellement noir dans ce couloir que je", textMiddle: "vois", textAfter: ".", hint: "", answer1: "ne", answer2: "rien" },
+      { id: 'n_19', textBefore: "Après leur dispute, ils", textMiddle: "se parlent", textAfter: "du tout.", hint: "", answer1: "ne", answer2: "plus" },
+      { id: 'n_20', textBefore: "", textMiddle: "n'est venu à la réunion ce matin ; la salle était déserte.", textAfter: "", hint: "", answer1: "Personne", answer2: "" }
+    ]
   }
 ];
 
@@ -139,16 +167,31 @@ export default function ReprisePractice({ onBack }) {
     const results = {};
 
     activity.questions.forEach(q => {
-      const userVal = (userAnswers[q.id] || '').trim().toLowerCase();
-      const expectedVal = q.answer.trim().toLowerCase();
-      const isCorrect = userVal === expectedVal;
-      if (isCorrect) {
-        score++;
+      if (activity.dualBlank) {
+        const userVal1 = (userAnswers[q.id + '_1'] || '').trim().toLowerCase();
+        const userVal2 = (userAnswers[q.id + '_2'] || '').trim().toLowerCase();
+        const expectedVal1 = (q.answer1 || '').trim().toLowerCase();
+        const expectedVal2 = (q.answer2 || '').trim().toLowerCase();
+        const isCorrect = userVal1 === expectedVal1 && userVal2 === expectedVal2;
+        if (isCorrect) {
+          score++;
+        }
+        results[q.id] = {
+          isCorrect,
+          expected: q.answer2 ? `${q.answer1}… ${q.answer2}` : q.answer1
+        };
+      } else {
+        const userVal = (userAnswers[q.id] || '').trim().toLowerCase();
+        const expectedVal = q.answer.trim().toLowerCase();
+        const isCorrect = userVal === expectedVal;
+        if (isCorrect) {
+          score++;
+        }
+        results[q.id] = {
+          isCorrect,
+          expected: q.answer
+        };
       }
-      results[q.id] = {
-        isCorrect,
-        expected: q.answer
-      };
     });
 
     setValidationResults(prev => ({
@@ -168,6 +211,8 @@ export default function ReprisePractice({ onBack }) {
     const newUserAnswers = { ...userAnswers };
     activity.questions.forEach(q => {
       delete newUserAnswers[q.id];
+      delete newUserAnswers[q.id + '_1'];
+      delete newUserAnswers[q.id + '_2'];
     });
     setUserAnswers(newUserAnswers);
 
@@ -260,20 +305,56 @@ export default function ReprisePractice({ onBack }) {
                 <div key={q.id} className="reprise-question-card">
                   <div className="reprise-question-content">
                     <span className="reprise-number-badge">{idx + 1}</span>
-                    <span>{q.textBefore}</span>
-                    <input
-                      id={q.id}
-                      type="text"
-                      value={userAnswers[q.id] || ""}
-                      onChange={(e) => handleInputChange(q.id, e.target.value)}
-                      onFocus={() => handleFocus(q.id)}
-                      disabled={isChecked}
-                      className={`reprise-input ${inputClass}`}
-                      placeholder="..."
-                      autoComplete="off"
-                    />
-                    <span>{q.textAfter}</span>
-                    <span className="reprise-hint-pill">Indice: {q.hint}</span>
+                    {currentActivity.dualBlank ? (
+                      <>
+                        {q.textBefore && <span>{q.textBefore} </span>}
+                        <input
+                          id={q.id + '_1'}
+                          type="text"
+                          value={userAnswers[q.id + '_1'] || ""}
+                          onChange={(e) => handleInputChange(q.id + '_1', e.target.value)}
+                          onFocus={() => handleFocus(q.id + '_1')}
+                          disabled={isChecked}
+                          className={`reprise-input ${inputClass}`}
+                          placeholder="..."
+                          autoComplete="off"
+                          style={{ width: '5rem' }}
+                        />
+                        {q.textMiddle && <span> {q.textMiddle} </span>}
+                        {q.answer2 !== "" && (
+                          <input
+                            id={q.id + '_2'}
+                            type="text"
+                            value={userAnswers[q.id + '_2'] || ""}
+                            onChange={(e) => handleInputChange(q.id + '_2', e.target.value)}
+                            onFocus={() => handleFocus(q.id + '_2')}
+                            disabled={isChecked}
+                            className={`reprise-input ${inputClass}`}
+                            placeholder="..."
+                            autoComplete="off"
+                            style={{ width: '6rem' }}
+                          />
+                        )}
+                        {q.textAfter && <span> {q.textAfter}</span>}
+                      </>
+                    ) : (
+                      <>
+                        <span>{q.textBefore}</span>
+                        <input
+                          id={q.id}
+                          type="text"
+                          value={userAnswers[q.id] || ""}
+                          onChange={(e) => handleInputChange(q.id, e.target.value)}
+                          onFocus={() => handleFocus(q.id)}
+                          disabled={isChecked}
+                          className={`reprise-input ${inputClass}`}
+                          placeholder="..."
+                          autoComplete="off"
+                        />
+                        <span>{q.textAfter}</span>
+                      </>
+                    )}
+                    {q.hint && <span className="reprise-hint-pill">Indice : {q.hint}</span>}
                   </div>
 
                   {isChecked && !result.isCorrect && (

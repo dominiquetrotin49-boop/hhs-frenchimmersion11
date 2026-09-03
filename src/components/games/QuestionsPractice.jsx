@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { CheckCircle2, RefreshCw, XCircle, Award, Send, AlertTriangle, HelpCircle } from 'lucide-react';
+import { analyzeFrenchText } from '../../utils/frenchTextAnalyzer';
 import './ReprisePractice.css';
 
 const QUESTIONS_ACTIVITIES = [
@@ -46,215 +47,39 @@ const QUESTIONS_ACTIVITIES = [
     title: 'Activité 4 : Production Écrite',
     description: 'Créez un dialogue court pour pratiquer l\'interrogation sous toutes ses formes.',
     questions: []
+  },
+  {
+    id: 'negations',
+    title: 'Activité 5 : Négations',
+    description: "Complétez chaque phrase avec l'expression négative qui convient le mieux selon le contexte : ne… pas | ne… jamais | ne… plus | ne… rien | ne… aucun(e) | ne… personne. (N'oubliez pas d'élider ne en n' devant une voyelle ou un h muet si nécessaire.)",
+    dualBlank: true,
+    questions: [
+      { id: 'n_1', textBefore: "Julien adorait le chocolat quand il était petit, mais maintenant il", textMiddle: "en mange", textAfter: ".", hint: "ne… pas | ne… jamais | ne… plus | ne… rien | ne… aucun(e) | ne… personne", answer1: "n'", answer2: "plus" },
+      { id: 'n_2', textBefore: "La salle d'interrogatoire est complètement vide ; il", textMiddle: "y a", textAfter: "à l'intérieur.", hint: "", answer1: "n'", answer2: "rien" },
+      { id: 'n_3', textBefore: "Je cherche mes clés depuis ce matin, mais je", textMiddle: "les trouve", textAfter: ".", hint: "", answer1: "ne", answer2: "pas" },
+      { id: 'n_4', textBefore: "Claire a très peur de l'avion, donc elle", textMiddle: "a", textAfter: "voyagé en dehors du pays.", hint: "", answer1: "n'", answer2: "jamais" },
+      { id: 'n_5', textBefore: "L'inspecteur a fouillé la maison de fond en comble, mais il", textMiddle: "a trouvé", textAfter: "indice.", hint: "", answer1: "n'", answer2: "aucun" },
+      { id: 'n_6', textBefore: "Tu as faim ? Non merci, je", textMiddle: "veux", textAfter: "manger avant le dîner.", hint: "", answer1: "ne", answer2: "rien" },
+      { id: 'n_7', textBefore: "Marc a déménagé le mois dernier ; il", textMiddle: "habite", textAfter: "dans ce quartier.", hint: "", answer1: "n'", answer2: "plus" },
+      { id: 'n_8', textBefore: "Malgré ses nombreuses recherches, elle", textMiddle: "a", textAfter: "doute sur la culpabilité du suspect.", hint: "", answer1: "n'", answer2: "aucun" },
+      { id: 'n_9', textBefore: "C'est un secret absolu : je", textMiddle: "ai parlé de cette affaire à", textAfter: ".", hint: "", answer1: "n'", answer2: "personne" },
+      { id: 'n_10', textBefore: "Nous", textMiddle: "avons", textAfter: "compris à cette consigne ; pouvez-vous la réexpliquer ?", hint: "", answer1: "n'", answer2: "rien" },
+      { id: 'n_11', textBefore: "Elle a une mémoire excellente : elle", textMiddle: "oublie", textAfter: "un anniversaire.", hint: "", answer1: "n'", answer2: "jamais" },
+      { id: 'n_12', textBefore: "Le détective a interrogé tout le monde, mais", textMiddle: "n'a voulu témoigner.", textAfter: "", hint: "", answer1: "personne", answer2: "" },
+      { id: 'n_13', textBefore: "Ce magasin a fait faillite ; il", textMiddle: "est", textAfter: "ouvert le week-end.", hint: "", answer1: "n'", answer2: "plus" },
+      { id: 'n_14', textBefore: "Vous", textMiddle: "avez fait", textAfter: "erreur dans cet exercice de grammaire, bravo !", hint: "", answer1: "n'", answer2: "aucune" },
+      { id: 'n_15', textBefore: "Je suis fatigué ce soir, je", textMiddle: "ai", textAfter: "envie de sortir.", hint: "", answer1: "n'", answer2: "aucune" },
+      { id: 'n_16', textBefore: "Dans le coffre-fort abandonné, les policiers", textMiddle: "ont découvert", textAfter: ".", hint: "", answer1: "n'", answer2: "rien" },
+      { id: 'n_17', textBefore: "Sophie est très timide ; elle", textMiddle: "prend", textAfter: "la parole en public.", hint: "", answer1: "ne", answer2: "jamais" },
+      { id: 'n_18', textBefore: "Il fait tellement noir dans ce couloir que je", textMiddle: "vois", textAfter: ".", hint: "", answer1: "ne", answer2: "rien" },
+      { id: 'n_19', textBefore: "Après leur dispute, ils", textMiddle: "se parlent", textAfter: "du tout.", hint: "", answer1: "ne", answer2: "plus" },
+      { id: 'n_20', textBefore: "", textMiddle: "n'est venu à la réunion ce matin ; la salle était déserte.", textAfter: "", hint: "", answer1: "Personne", answer2: "" }
+    ]
   }
 ];
 
 const ACCENTS = ["é", "è", "à", "ù", "ç", "â", "ê", "î", "ô", "û", "ë", "ï", "œ", "-"];
 
-const localAnalyzeText = (text) => {
-  const textClean = text.trim();
-  const textLower = textClean.toLowerCase();
-  
-  const spellingErrors = [];
-  const verbAgreements = [];
-  const adjectiveAgreements = [];
-  const nounGenders = [];
-  const wordChoices = [];
-  const questionRequirements = [];
-
-  // 1. spelling errors
-  // cooment -> comment
-  if (textLower.includes("cooment") || textLower.includes("commant") || textLower.includes("coment")) {
-    const errorWord = textClean.match(/\bcooment|commant|coment\b/i)?.[0] || "cooment";
-    spellingErrors.push({
-      error: errorWord,
-      correction: "comment",
-      explanation: "L'adverbe interrogatif s'écrit « comment »."
-    });
-  }
-
-  // quel age -> quel âge
-  const ageAccentMatch = textClean.match(/\b(quel\s+)?age\b/i);
-  if (ageAccentMatch) {
-    spellingErrors.push({
-      error: ageAccentMatch[0],
-      correction: ageAccentMatch[1] ? "quel âge" : "âge",
-      explanation: "Le mot « âge » s'écrit avec un accent circonflexe sur le 'a'."
-    });
-  }
-
-  // bocou / trés / deja
-  if (textLower.includes("bocou")) {
-    spellingErrors.push({ error: "bocou", correction: "beaucoup", explanation: "S'écrit toujours « beaucoup »." });
-  }
-  if (textLower.includes("trés")) {
-    spellingErrors.push({ error: "trés", correction: "très", explanation: "S'écrit avec un accent grave : très." });
-  }
-
-  // 2. verb agreement errors
-  // j'habites -> j'habite (verbs in -er with je)
-  const jHabitesMatch = textClean.match(/\bj['’](\w+es)\b/i);
-  if (jHabitesMatch) {
-    const verb = jHabitesMatch[1];
-    const correctVerb = verb.slice(0, -1);
-    verbAgreements.push({
-      error: `j'${verb}`,
-      subject: "je",
-      correction: `j'${correctVerb}`,
-      explanation: "Avec le pronom 'je' (ou j'), les verbes du premier groupe (-er) se terminent par '-e' au présent, pas '-es'."
-    });
-  }
-
-  // je manges -> je mange
-  const jeEsMatch = textClean.match(/\b(je)\s+(\w+es)\b/i);
-  if (jeEsMatch) {
-    verbAgreements.push({
-      error: jeEsMatch[2],
-      subject: "je",
-      correction: jeEsMatch[2].slice(0, -1),
-      explanation: "Avec le pronom sujet « je », la terminaison est « -e » pour les verbes du premier groupe (-er)."
-    });
-  }
-
-  // 3. word choices / syntax
-  // je suis 15 ans -> j'ai 15 ans
-  const jeSuisAgeMatch = textClean.match(/\b(je\s+suis|tu\s+es|il\s+est|elle\s+est|nous\s+sommes|vous\s+êtes|ils\s+sont|elles\s+sont)\s+(\d+)\s+ans\b/i);
-  if (jeSuisAgeMatch) {
-    const errorText = jeSuisAgeMatch[0];
-    const subject = jeSuisAgeMatch[1].toLowerCase().trim();
-    const age = jeSuisAgeMatch[2];
-    
-    let correction = `j'ai ${age} ans`;
-    if (subject.includes("tu")) correction = `tu as ${age} ans`;
-    if (subject.includes("il") || subject.includes("elle")) correction = `${subject.split(" ")[0]} a ${age} ans`;
-    
-    wordChoices.push({
-      error: errorText,
-      correction: correction,
-      explanation: "En français, on exprime l'âge avec le verbe « avoir », pas « être » (ex: j'ai 15 ans)."
-    });
-  }
-
-  // a Boston / a Paris (preposition à before cities/places)
-  const aCityMatch = textClean.match(/\ba\s+([A-Z]\w+)\b/);
-  if (aCityMatch) {
-    wordChoices.push({
-      error: `a ${aCityMatch[1]}`,
-      correction: `à ${aCityMatch[1]}`,
-      explanation: "La préposition devant un nom de ville ou de lieu s'écrit « à » avec un accent grave."
-    });
-  }
-
-  // a vs à general
-  const aPrepMatch = textClean.match(/\ba\s+(la|l'|un|une|des|le|les|l'école|l'hôtel|\d+)\b/i);
-  if (aPrepMatch && !aCityMatch) {
-    wordChoices.push({
-      error: `a ${aPrepMatch[1]}`,
-      correction: `à ${aPrepMatch[1]}`,
-      explanation: "La préposition de lieu ou de temps s'écrit « à » avec un accent grave."
-    });
-  }
-
-  // Ou habites-tu -> Où habites-tu (Ou interrogatif)
-  const ouInterrogatifMatch = textClean.match(/\bOu\s+(\w+-tu|\w+-il|\w+-elle|est-ce|tu|vous)\b/);
-  if (ouInterrogatifMatch) {
-    wordChoices.push({
-      error: `Ou ${ouInterrogatifMatch[1]}`,
-      correction: `Où ${ouInterrogatifMatch[1]}`,
-      explanation: "L'adverbe interrogatif s'écrit « où » avec un accent grave pour indiquer le lieu."
-    });
-  }
-
-  // comment appelles-tu -> comment t'appelles-tu
-  if (textLower.includes("comment appelles-tu") || textLower.includes("appelles-tu")) {
-    const rawMatch = textClean.match(/(comment\s+)?appelles-tu/i)?.[0];
-    if (rawMatch) {
-      wordChoices.push({
-        error: rawMatch,
-        correction: rawMatch.toLowerCase().startsWith("comment") ? "comment t'appelles-tu" : "t'appelles-tu",
-        explanation: "Le verbe s'appeler est pronominal. N'oubliez pas le pronom réfléchi (t') : comment t'appelles-tu ?"
-      });
-    }
-  }
-
-  // Questions Checks:
-  // Must contain a question mark
-  const hasQuestionMark = textClean.includes("?");
-  if (!hasQuestionMark) {
-    questionRequirements.push({
-      status: "warning",
-      msg: "Votre dialogue doit contenir au moins un point d'interrogation (?) pour former une question."
-    });
-  }
-
-  // Uses Est-ce que
-  const hasEstCeQue = textLower.includes("est-ce que") || textLower.includes("est-ce qu");
-  
-  // Uses inversion (hyphenated verb-subject)
-  const hasInversion = /\b(as-tu|es-tu|parles-tu|fais-tu|aimes-tu|étudies-tu|aime-t-il|aime-t-elle|parle-t-il|parle-t-elle|voulez-vous|faites-vous|avez-vous|êtes-vous|appelles-tu|habites-tu)\b/i.test(textClean);
-
-  // Interrogative words
-  const interrogatifs = ["où", "quand", "pourquoi", "comment", "qui", "combien", "que", "quoi", "ou"]; // include "ou" in case they missed the accent
-  const foundInterrogatif = interrogatifs.find(word => textLower.includes(word));
-
-  if (hasQuestionMark) {
-    if (hasEstCeQue) {
-      questionRequirements.push({
-        status: "success",
-        msg: "Structure « Est-ce que » bien détectée !"
-      });
-    } else {
-      questionRequirements.push({
-        status: "info",
-        msg: "Conseil : Essayez d'ajouter une question avec « Est-ce que » pour pratiquer ce registre."
-      });
-    }
-
-    if (hasInversion) {
-      questionRequirements.push({
-        status: "success",
-        msg: "Inversion sujet-verbe bien détectée !"
-      });
-    } else {
-      questionRequirements.push({
-        status: "info",
-        msg: "Conseil : Essayez d'utiliser l'inversion sujet-verbe (ex: As-tu... ? Parles-tu... ?) pour l'une de vos questions."
-      });
-    }
-
-    if (foundInterrogatif) {
-      questionRequirements.push({
-        status: "success",
-        msg: `Mot interrogatif (« ${foundInterrogatif === 'ou' ? 'où' : foundInterrogatif} ») bien détecté !`
-      });
-    } else {
-      questionRequirements.push({
-        status: "info",
-        msg: "Conseil : Essayez d'utiliser un mot interrogatif (ex: Où, Quand, Pourquoi, Comment)."
-      });
-    }
-  }
-
-  const isValid = spellingErrors.length === 0 && 
-                  verbAgreements.length === 0 && 
-                  adjectiveAgreements.length === 0 && 
-                  nounGenders.length === 0 && 
-                  wordChoices.length === 0 &&
-                  hasQuestionMark;
-
-  return {
-    isValid,
-    spellingErrors,
-    verbAgreements,
-    adjectiveAgreements,
-    nounGenders,
-    wordChoices,
-    questionRequirements,
-    generalFeedback: isValid 
-      ? "Excellent travail ! Votre conversation utilise correctement les structures de questions sans faute grammaticale."
-      : "Voici des corrections détaillées pour parfaire votre grammaire et vos structures de questions."
-  };
-};
 
 export default function QuestionsPractice({ onBack }) {
   const [activeTab, setActiveTab] = useState('est_ce_que');
@@ -335,14 +160,28 @@ export default function QuestionsPractice({ onBack }) {
     const results = {};
 
     activity.questions.forEach((q) => {
-      const uAns = userAnswers[q.id] || '';
-      const isCorrect = sanitize(uAns) === sanitize(q.answer);
-      if (isCorrect) score++;
-      results[q.id] = {
-        isCorrect,
-        expected: q.answer,
-        actual: uAns
-      };
+      if (activity.dualBlank) {
+        const uAns1 = (userAnswers[q.id + '_1'] || '').trim().toLowerCase();
+        const uAns2 = (userAnswers[q.id + '_2'] || '').trim().toLowerCase();
+        const exp1 = (q.answer1 || '').trim().toLowerCase();
+        const exp2 = (q.answer2 || '').trim().toLowerCase();
+        const isCorrect = uAns1 === exp1 && uAns2 === exp2;
+        if (isCorrect) score++;
+        results[q.id] = {
+          isCorrect,
+          expected: q.answer2 ? `${q.answer1}… ${q.answer2}` : q.answer1,
+          actual: `${uAns1}… ${uAns2}`
+        };
+      } else {
+        const uAns = userAnswers[q.id] || '';
+        const isCorrect = sanitize(uAns) === sanitize(q.answer);
+        if (isCorrect) score++;
+        results[q.id] = {
+          isCorrect,
+          expected: q.answer,
+          actual: uAns
+        };
+      }
     });
 
     setValidationResults(prev => ({
@@ -368,68 +207,18 @@ export default function QuestionsPractice({ onBack }) {
         const copy = { ...prev };
         activity.questions.forEach(q => {
           delete copy[q.id];
+          delete copy[q.id + '_1'];
+          delete copy[q.id + '_2'];
         });
         return copy;
       });
     }
   };
 
-  const handleWritingSubmit = async () => {
-    if (!writingText.trim() || loading) return;
-
-    setLoading(true);
-    setError(null);
-    setWritingFeedback(null);
-
-    const promptText = "Dialogue de questions: Rédigez une conversation courte (au moins 3 répliques) entre deux élèves. Une personne doit poser des questions à l'autre en variant les registres (l'intonation, « est-ce que » et l'inversion sujet-verbe) et en utilisant au moins un mot interrogatif.";
-
-    try {
-      const response = await fetch('/api/writing-feedback', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: writingText.trim(),
-          prompt: promptText
-        })
-      });
-
-      const textRes = await response.text();
-      
-      // If we receive an HTML page (such as Vite SPA fallback in local dev), fall back to client-side checker
-      if (textRes.trim().startsWith("<!DOCTYPE") || textRes.trim().startsWith("<html")) {
-        const localFeedback = localAnalyzeText(writingText.trim());
-        setWritingFeedback(localFeedback);
-        return;
-      }
-
-      let data;
-      try {
-        data = JSON.parse(textRes);
-      } catch (parseErr) {
-        const localFeedback = localAnalyzeText(writingText.trim());
-        setWritingFeedback(localFeedback);
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error(data.error || "Une erreur s'est produite lors de l'analyse.");
-      }
-
-      // Add local question requirements checklist to the Gemini feedback object
-      const localQFeedback = localAnalyzeText(writingText.trim());
-      data.questionRequirements = localQFeedback.questionRequirements;
-      
-      setWritingFeedback(data);
-    } catch (err) {
-      console.error(err);
-      // Fallback
-      const localFeedback = localAnalyzeText(writingText.trim());
-      setWritingFeedback(localFeedback);
-    } finally {
-      setLoading(false);
-    }
+  const handleWritingSubmit = () => {
+    if (!writingText.trim()) return;
+    const result = analyzeFrenchText(writingText.trim(), { mode: 'questions' });
+    setWritingFeedback(result);
   };
 
   const handleWritingReset = () => {
@@ -548,17 +337,16 @@ export default function QuestionsPractice({ onBack }) {
                 <button
                   onClick={handleWritingReset}
                   className="wp-secondary-btn"
-                  disabled={loading}
                 >
                   Effacer
                 </button>
                 <button
                   onClick={handleWritingSubmit}
-                  disabled={loading || !writingText.trim()}
+                  disabled={!writingText.trim()}
                   className="wp-primary-btn"
                 >
                   <Send size={14} />
-                  {loading ? "Analyse en cours..." : "Soumettre pour correction"}
+                  Soumettre pour correction
                 </button>
               </div>
             </div>
@@ -580,14 +368,7 @@ export default function QuestionsPractice({ onBack }) {
                   </div>
                 )}
 
-                {loading && (
-                  <div className="flex flex-col items-center justify-center py-16 gap-3">
-                    <div className="wp-loader" />
-                    <p style={{ color: '#475569', fontSize: '0.85rem', fontWeight: 500, margin: 0 }}>Gemini analyse votre grammaire, accords et orthographe...</p>
-                  </div>
-                )}
-
-                {!writingFeedback && !loading && (
+                {!writingFeedback && (
                   <div className="text-center py-16">
                     <HelpCircle size={40} className="mx-auto opacity-40 mb-3" style={{ color: '#64748b' }} />
                     <p style={{ color: '#475569', fontWeight: 650, fontSize: '0.875rem', margin: 0 }}>Aucun texte soumis pour le moment.</p>
@@ -595,8 +376,16 @@ export default function QuestionsPractice({ onBack }) {
                   </div>
                 )}
 
-                {writingFeedback && !loading && (
+                {writingFeedback && (
                   <div className="space-y-4 max-h-[350px] overflow-y-auto pr-1">
+
+                    {/* Score */}
+                    <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: '0.25rem' }}>
+                        <span style={{ fontSize: '2.5rem', fontWeight: 900, color: writingFeedback.score >= 7 ? '#16a34a' : writingFeedback.score >= 5 ? '#d97706' : '#dc2626' }}>{writingFeedback.score}</span>
+                        <span style={{ fontSize: '1rem', fontWeight: 700, color: '#94a3b8' }}>/ 10</span>
+                      </div>
+                    </div>
                     
                     {/* General feedback */}
                     <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
@@ -719,6 +508,21 @@ export default function QuestionsPractice({ onBack }) {
                       </div>
                     )}
 
+                    {/* Structure & Grammar Notes */}
+                    {writingFeedback.structureNotes && writingFeedback.structureNotes.length > 0 && (
+                      <div className="space-y-2">
+                        <span style={{ fontSize: '10px', fontWeight: 900, color: '#0891b2', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.25rem' }}>Structure & Conjugaisons</span>
+                        {writingFeedback.structureNotes.map((note, idx) => (
+                          <div key={idx} style={{ padding: '0.5rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.05)', background: note.type === 'success' ? 'rgba(22,163,74,0.05)' : note.type === 'warning' ? 'rgba(217,119,6,0.05)' : 'rgba(220,38,38,0.05)', fontSize: '0.75rem', fontWeight: 600, color: '#334155' }}>
+                            {note.type === 'success' && '✅ '}
+                            {note.type === 'warning' && '⚠️ '}
+                            {note.type === 'error' && '❌ '}
+                            {note.msg}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
                   </div>
                 )}
               </div>
@@ -769,21 +573,57 @@ export default function QuestionsPractice({ onBack }) {
                 <div key={q.id} className="reprise-question-card">
                   <div className="reprise-question-content">
                     <span className="reprise-number-badge">{idx + 1}</span>
-                    <span>{q.textBefore}</span>
-                    <input
-                      id={q.id}
-                      type="text"
-                      value={userAnswers[q.id] || ""}
-                      onChange={(e) => handleInputChange(q.id, e.target.value)}
-                      onFocus={() => handleFocus(q.id)}
-                      disabled={isChecked}
-                      className={`reprise-input ${inputClass}`}
-                      style={{ minWidth: '320px' }}
-                      placeholder="..."
-                      autoComplete="off"
-                    />
-                    <span>{q.textAfter}</span>
-                    {idx === 0 && <span className="reprise-hint-pill">Indice: {q.hint}</span>}
+                    {currentActivity.dualBlank ? (
+                      <>
+                        {q.textBefore && <span>{q.textBefore} </span>}
+                        <input
+                          id={q.id + '_1'}
+                          type="text"
+                          value={userAnswers[q.id + '_1'] || ""}
+                          onChange={(e) => handleInputChange(q.id + '_1', e.target.value)}
+                          onFocus={() => handleFocus(q.id + '_1')}
+                          disabled={isChecked}
+                          className={`reprise-input ${inputClass}`}
+                          style={{ width: '5rem' }}
+                          placeholder="..."
+                          autoComplete="off"
+                        />
+                        {q.textMiddle && <span> {q.textMiddle} </span>}
+                        {q.answer2 !== "" && (
+                          <input
+                            id={q.id + '_2'}
+                            type="text"
+                            value={userAnswers[q.id + '_2'] || ""}
+                            onChange={(e) => handleInputChange(q.id + '_2', e.target.value)}
+                            onFocus={() => handleFocus(q.id + '_2')}
+                            disabled={isChecked}
+                            className={`reprise-input ${inputClass}`}
+                            style={{ width: '6rem' }}
+                            placeholder="..."
+                            autoComplete="off"
+                          />
+                        )}
+                        {q.textAfter && <span> {q.textAfter}</span>}
+                      </>
+                    ) : (
+                      <>
+                        <span>{q.textBefore}</span>
+                        <input
+                          id={q.id}
+                          type="text"
+                          value={userAnswers[q.id] || ""}
+                          onChange={(e) => handleInputChange(q.id, e.target.value)}
+                          onFocus={() => handleFocus(q.id)}
+                          disabled={isChecked}
+                          className={`reprise-input ${inputClass}`}
+                          style={{ minWidth: '320px' }}
+                          placeholder="..."
+                          autoComplete="off"
+                        />
+                        <span>{q.textAfter}</span>
+                      </>
+                    )}
+                    {q.hint && idx === 0 && <span className="reprise-hint-pill">Indice : {q.hint}</span>}
                   </div>
 
                   {isChecked && !result.isCorrect && (
