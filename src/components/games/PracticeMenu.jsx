@@ -101,39 +101,40 @@ const AUX_PUZZLE = {
 
 const IRR_PUZZLE_1 = {
   title: "Mots Croisés: Super Irréguliers & -OIR",
-  description: "Conjuguez Être, Avoir, Aller, Faire, Pouvoir, Vouloir, Devoir, Savoir, Voir.",
-  numRows: 9,
-  numCols: 15,
+  description: "Conjuguez les verbes irréguliers (aller, faire, savoir, vouloir, devoir, avoir).",
+  numRows: 12,
+  numCols: 13,
   puzzleData: [
-    { "id": 1, "word": "PEUVENT", "r": 7, "c": 4, "dir": "across", "clue": "Ils + Pouvoir" },
-    { "id": 2, "word": "SOMMES", "r": 3, "c": 5, "dir": "down", "clue": "Nous + Être" },
-    { "id": 3, "word": "FAITES", "r": 3, "c": 8, "dir": "down", "clue": "Vous + Faire" },
-    { "id": 4, "word": "SAVENT", "r": 2, "c": 10, "dir": "down", "clue": "Ils + Savoir" },
-    { "id": 5, "word": "VOYONS", "r": 3, "c": 0, "dir": "across", "clue": "Nous + Voir" },
-    { "id": 6, "word": "AVONS", "r": 3, "c": 10, "dir": "across", "clue": "Nous + Avoir" },
-    { "id": 7, "word": "VAIS", "r": 0, "c": 14, "dir": "down", "clue": "Je + Aller" },
-    { "id": 8, "word": "VEUT", "r": 3, "c": 0, "dir": "down", "clue": "Il + Vouloir" },
-    { "id": 9, "word": "DOIS", "r": 2, "c": 3, "dir": "down", "clue": "Tu + Devoir" },
-    { "id": 10, "word": "FONT", "r": 2, "c": 12, "dir": "down", "clue": "Ils + Faire" }
+    { id: 1, word: "VAIS", r: 0, c: 7, dir: "across", clue: "je — aller" },
+    { id: 2, word: "FAISONS", r: 2, c: 4, dir: "across", clue: "nous — faire" },
+    { id: 3, word: "SAVEZ", r: 4, c: 8, dir: "across", clue: "vous — savoir" },
+    { id: 4, word: "FONT", r: 6, c: 2, dir: "across", clue: "ils — faire" },
+    { id: 5, word: "DOIS", r: 8, c: 0, dir: "across", clue: "je — devoir" },
+    { id: 6, word: "DEVONS", r: 10, c: 1, dir: "across", clue: "nous — devoir" },
+    { id: 7, word: "AVONS", r: 0, c: 8, dir: "down", clue: "nous — avoir" },
+    { id: 8, word: "SAVENT", r: 1, c: 5, dir: "down", clue: "ils — savoir" },
+    { id: 9, word: "VEUX", r: 4, c: 10, dir: "down", clue: "je — vouloir" },
+    { id: 10, word: "FAITES", r: 6, c: 2, dir: "down", clue: "vous — faire" },
+    { id: 11, word: "VONT", r: 8, c: 5, dir: "down", clue: "ils — aller" }
   ]
 };
 
 const IRR_PUZZLE_2 = {
-  title: "Mots Croisés: Les verbes 'Botte'",
-  description: "Conjuguez Venir, Tenir, Prendre, Acheter, Préférer, Appeler, Payer.",
-  numRows: 14,
-  numCols: 16,
+  title: "Mots Croisés: Les verbes \x27Botte\x27",
+  description: "Conjuguez Venir, Tenir, Prendre, Acheter, Appeler, Payer.",
+  numRows: 15,
+  numCols: 13,
   puzzleData: [
-    { "id": 1, "word": "TIENNENT", "r": 7, "c": 4, "dir": "across", "clue": "Ils + Tenir" },
-    { "id": 2, "word": "APPELONS", "r": 4, "c": 6, "dir": "down", "clue": "Nous + Appeler" },
-    { "id": 3, "word": "VIENNENT", "r": 0, "c": 4, "dir": "down", "clue": "Ils + Venir" },
-    { "id": 4, "word": "ACHETENT", "r": 1, "c": 8, "dir": "down", "clue": "Ils + Acheter" },
-    { "id": 5, "word": "PRENONS", "r": 4, "c": 10, "dir": "down", "clue": "Nous + Prendre" },
-    { "id": 6, "word": "ACHETES", "r": 11, "c": 0, "dir": "across", "clue": "Tu + Acheter" },
-    { "id": 7, "word": "PREFERE", "r": 2, "c": 0, "dir": "across", "clue": "Elle + Préférer" },
-    { "id": 8, "word": "PAIENT", "r": 1, "c": 7, "dir": "across", "clue": "Ils + Payer" },
-    { "id": 9, "word": "PRENEZ", "r": 4, "c": 10, "dir": "across", "clue": "Vous + Prendre" },
-    { "id": 10, "word": "VIENS", "r": 9, "c": 3, "dir": "down", "clue": "Je + Venir" }
+    { id: 1, word: "PAIENT", r: 1, c: 3, dir: "across", clue: "ils — payer" },
+    { id: 2, word: "PRENEZ", r: 4, c: 6, dir: "across", clue: "vous — prendre" },
+    { id: 3, word: "TIENNENT", r: 7, c: 0, dir: "across", clue: "ils — tenir" },
+    { id: 4, word: "ACHÈTES", r: 10, c: 0, dir: "across", clue: "tu — acheter" },
+    { id: 5, word: "TIENT", r: 13, c: 1, dir: "across", clue: "il — tenir" },
+    { id: 6, word: "VIENNENT", r: 0, c: 0, dir: "down", clue: "ils — venir" },
+    { id: 7, word: "ACHÈTENT", r: 1, c: 4, dir: "down", clue: "ils — acheter" },
+    { id: 8, word: "APPELONS", r: 1, c: 10, dir: "down", clue: "nous — appeler" },
+    { id: 9, word: "PRENONS", r: 4, c: 6, dir: "down", clue: "nous — prendre" },
+    { id: 10, word: "ACHÈTE", r: 9, c: 1, dir: "down", clue: "je — acheter" }
   ]
 };
 
