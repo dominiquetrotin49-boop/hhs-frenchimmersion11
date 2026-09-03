@@ -115,10 +115,12 @@ export default function UnitDashboard() {
             {/* VOCABULARY TAB */}
             {activeTab === "vocabulary" && (
               <div className="section-content animate-in novel-frame-container">
-                <VocabHangman unitId={unitId} />
-                <div style={{ marginTop: "2rem" }}>
-                  <VocabFillInTheBlank unitId={unitId} />
-                </div>
+                {unitId === "reprise" && <VocabHangman unitId={unitId} />}
+                {unitId !== "reprise" && (
+                  <div style={{ marginTop: "2rem" }}>
+                    <VocabFillInTheBlank unitId={unitId} />
+                  </div>
+                )}
               </div>
             )}
 
