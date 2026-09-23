@@ -1,439 +1,1240 @@
-import React, { useRef } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
+import { 
+  Shield, 
+  Sparkles, 
+  ArrowLeft, 
+  CheckCircle2, 
+  XCircle, 
+  Flame, 
+  Trophy, 
+  Key, 
+  Lock, 
+  ChevronRight, 
+  RotateCcw, 
+  Volume2, 
+  VolumeX, 
+  BookOpen, 
+  Award,
+  HelpCircle
+} from 'lucide-react';
 
-const GAME_HTML = `<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Le Donjon du Passé</title>
-<style>
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:#0a0a0f;font-family:'Georgia',serif;overflow:hidden;user-select:none;}
-  #canvas-container{position:fixed;inset:0;}
-  canvas{display:block;width:100%!important;height:100%!important;}
-  #hud{position:fixed;top:0;left:0;right:0;z-index:10;pointer-events:none;}
-  #hud-top{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:linear-gradient(180deg,rgba(0,0,0,.85) 0%,transparent 100%);}
-  #chamber-label{color:#f5c842;font-size:14px;font-variant:small-caps;letter-spacing:2px;text-shadow:0 0 8px #f5c84299;}
-  #progress-bar{display:flex;gap:6px;}
-  .pip{width:18px;height:18px;border-radius:50%;border:2px solid #f5c842;background:transparent;transition:background .4s;}
-  .pip.done{background:#f5c842;}
-  #hud-bottom{position:fixed;bottom:0;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 16px 16px;background:linear-gradient(0deg,rgba(0,0,0,.9) 0%,transparent 100%);}
-  #context-box{background:rgba(30,10,50,.82);border:1px solid #7a3fa0;border-radius:8px;padding:10px 18px;max-width:780px;width:100%;text-align:center;color:#e0c8ff;font-size:13px;line-height:1.6;pointer-events:none;}
-  #context-box strong{color:#f5c842;}
-  #slots-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:860px;pointer-events:auto;}
-  .slot{min-width:90px;padding:8px 14px;border-radius:6px;border:2px dashed #7a3fa0;background:rgba(30,10,50,.6);color:#ccc;font-size:12px;text-align:center;cursor:pointer;transition:all .25s;position:relative;margin-top:20px;}
-  .slot.filled{border-color:#f5c842;background:rgba(60,40,10,.6);color:#f5c842;}
-  .slot-label{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;color:#9f7fd4;white-space:nowrap;font-variant:small-caps;letter-spacing:1px;}
-  #palette{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:860px;pointer-events:auto;}
-  .rune{padding:7px 14px;border-radius:6px;border:1px solid #7a3fa0;background:rgba(90,20,140,.45);color:#d8a0ff;font-size:12px;cursor:pointer;transition:all .2s;}
-  .rune:hover{background:rgba(130,40,200,.5);border-color:#c07aff;color:#fff;transform:translateY(-2px);}
-  .rune.used{opacity:.3;cursor:default;transform:none;}
-  #action-row{display:flex;gap:10px;pointer-events:auto;}
-  .action-btn{padding:9px 22px;border-radius:7px;border:none;font-size:13px;font-family:'Georgia',serif;cursor:pointer;letter-spacing:1px;font-variant:small-caps;transition:all .2s;}
-  #btn-validate{background:linear-gradient(135deg,#7b2ff7,#4f0e9c);color:#fff;border:1px solid #b06aff;}
-  #btn-validate:hover{background:linear-gradient(135deg,#9b4fff,#6b1fd0);}
-  #btn-reset{background:rgba(40,10,80,.6);color:#c090f0;border:1px solid #5a2f8a;}
-  #btn-reset:hover{background:rgba(60,20,100,.7);}
-  #feedback{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:50;max-width:560px;width:90%;border-radius:12px;padding:22px 28px;text-align:center;display:none;pointer-events:auto;}
-  #feedback.success{background:rgba(20,70,30,.95);border:2px solid #4ade80;color:#bbf7d0;}
-  #feedback.error{background:rgba(70,10,10,.95);border:2px solid #f87171;color:#fecaca;}
-  #feedback h3{font-size:17px;margin-bottom:8px;}
-  #feedback p{font-size:13px;line-height:1.6;margin-bottom:14px;}
-  #feedback button{padding:8px 20px;border-radius:6px;border:none;cursor:pointer;font-size:13px;font-family:'Georgia',serif;}
-  #feedback.success button{background:#16a34a;color:#fff;}
-  #feedback.error button{background:#b91c1c;color:#fff;}
-  #victory{position:fixed;inset:0;z-index:100;background:rgba(5,2,20,.96);display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:30px;}
-  #victory h1{color:#f5c842;font-size:32px;text-shadow:0 0 20px #f5c84299;letter-spacing:3px;}
-  #victory p{color:#d8c090;font-size:15px;max-width:500px;line-height:1.7;}
-  #victory button{padding:12px 30px;border-radius:8px;border:1px solid #f5c842;background:rgba(60,40,0,.8);color:#f5c842;font-size:15px;cursor:pointer;letter-spacing:2px;font-family:'Georgia',serif;}
-  #flicker{position:fixed;inset:0;pointer-events:none;z-index:2;animation:flick 0.08s infinite alternate;}
-  @keyframes flick{from{opacity:0}to{opacity:.025}}
-</style>
-</head>
-<body>
-<div id="canvas-container"><canvas id="c"></canvas></div>
-<div id="flicker"></div>
-<div id="hud">
-  <div id="hud-top">
-    <div id="chamber-label">⚔ Chambre I</div>
-    <div id="progress-bar">
-      <div class="pip" id="pip0"></div>
-      <div class="pip" id="pip1"></div>
-      <div class="pip" id="pip2"></div>
-      <div class="pip" id="pip3"></div>
-    </div>
-  </div>
-  <div id="hud-bottom">
-    <div id="context-box">Chargement…</div>
-    <div id="slots-row"></div>
-    <div id="palette"></div>
-    <div id="action-row">
-      <button class="action-btn" id="btn-reset">↺ Réinitialiser</button>
-      <button class="action-btn" id="btn-validate">⚡ Valider la formule</button>
-    </div>
-  </div>
-</div>
-<div id="feedback">
-  <h3 id="fb-title"></h3>
-  <p id="fb-body"></p>
-  <button id="fb-btn"></button>
-</div>
-<div id="victory">
-  <h1>🏆 Évasion Réussie !</h1>
-  <p>Vous maîtrisez le passé composé, l'imparfait et les pronoms objets !<br>Le donjon ne peut plus vous retenir — vous êtes libre !</p>
-  <p style="font-size:13px;color:#a89060;margin-top:6px;">Vocabulaire : réforme éducative · bourses d'études · scolarisation · pédagogie · infrastructures · égalité des genres</p>
-  <button id="btn-rejouer">↺ Rejouer le Donjon</button>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
+/* ═══════════════════════════════════════════════════════════════════
+   DUNGEON DATA & QUESTIONS (UNITÉ 2 : ÉDUCATION & GRAMMAIRE)
+═══════════════════════════════════════════════════════════════════ */
 const CHAMBERS = [
   {
-    id:1, title:"Chambre I — Passé Composé & Accord COD",
-    theme:"📚 Réforme éducative & Bourses d'études",
-    context:"Les inspecteurs ont examiné les nouvelles <strong>réformes éducatives</strong>. Ils ont demandé les statistiques, et le ministre <strong>les</strong> a analysées toute la nuit.",
-    instruction:"Reconstituez la phrase sur les <strong>bourses d'études</strong> — attention à l'accord du participe passé !",
-    slots:[
-      {label:"sujet",answer:"le comité"},
-      {label:"pronom COD",answer:"les"},
-      {label:"auxiliaire + participe",answer:"a approuvées"},
-      {label:"circonstanciel",answer:"lors de la réunion"}
-    ],
-    runes:["le comité","les","a approuvées","lors de la réunion","a approuvé","leur a approuvé","les approuvait"],
-    feedback_error:"⚠ Accord obligatoire ! Le pronom COD <em>les</em> (= les bourses, féminin pluriel) précède l'auxiliaire <em>avoir</em> → participe accordé : <em>approuvées</em>.",
-    feedback_success:"✔ Parfait ! <em>Les</em> (COD féminin pluriel) avant <em>avoir</em> → accord : <em>approuvées</em>. Les bourses ont bien été approuvées !"
+    id: 1,
+    num: "I",
+    title: "La Crypte des Auxiliaires",
+    subtitle: "Passé Composé : Avoir, Être & Accords Spécifiques",
+    theme: "📚 Bourses scolaires & Inscriptions universitaires",
+    color: "#d97706", // Amber / Bronze
+    bgGlow: "rgba(217, 119, 6, 0.14)",
+    borderColor: "#b45309",
+    icon: "🕯️",
+    lore: "Une brume millénaire enveloppe la crypte. Pour franchir la herse de bronze, vous devez maîtriser les mystères des auxiliaires et l'accord du participe passé !",
+    questions: [
+      {
+        id: "1-1",
+        label: "Déplacement & Maison d'Être",
+        context: "Parcours universitaire d'une étudiante émérite",
+        sentenceBefore: "Après l'obtention de son diplôme, Émilie ",
+        blank: "__________",
+        sentenceAfter: " à l'université de la Sorbonne pour poursuivre ses recherches.",
+        targetRule: "Verbe de mouvement (DR & MRS VANDERTRAMP) avec sujet féminin singulier.",
+        options: [
+          "est allée",
+          "a allé",
+          "a allée",
+          "est allé"
+        ],
+        answer: 0,
+        explanation: "✔ Le verbe « aller » fait partie des verbes de mouvement de la maison d'Être (DR & MRS VANDERTRAMP). Avec l'auxiliaire ÊTRE, le participe passé s'accorde obligatoirement en genre et en nombre avec le sujet : Émilie (fém. sing.) → « est allée »."
+      },
+      {
+        id: "1-2",
+        label: "Accord du COD placé avant Avoir",
+        context: "Financement des bourses académiques",
+        sentenceBefore: "Les bourses d'études que les lauréates ",
+        blank: "__________",
+        sentenceAfter: " ont permis de financer l'ensemble de leur scolarité.",
+        targetRule: "Le pronom relatif « que » remplace le COD « les bourses d'études » (féminin pluriel), placé avant avoir.",
+        options: [
+          "ont reçues",
+          "ont reçu",
+          "sont reçues",
+          "ont recevies"
+        ],
+        answer: 0,
+        explanation: "✔ Avec l'auxiliaire AVOIR, le participe passé s'accorde avec le Complément d'Objet Direct (COD) si celui-ci est placé AVANT le verbe. Le pronom relatif « que » reprend « les bourses d'études » (féminin pluriel) → accord féminin pluriel : « ont reçues »."
+      },
+      {
+        id: "1-3",
+        label: "Verbes Pronominaux au Passé Composé",
+        context: "Mobilisation pour la réforme éducative",
+        sentenceBefore: "Face aux nouvelles réformes scolaires, tous les délégués de classe ",
+        blank: "__________",
+        sentenceAfter: " pour faire entendre la voix des lycéens.",
+        targetRule: "Verbe pronominal (« se mobiliser ») au passé composé avec un sujet masculin pluriel.",
+        options: [
+          "se sont mobilisés",
+          "ont se mobilisé",
+          "se sont mobilisé",
+          "s'ont mobilisés"
+        ],
+        answer: 0,
+        explanation: "✔ Tous les verbes pronominaux (« se mobiliser ») se conjuguent obligatoirement avec l'auxiliaire ÊTRE au passé composé. Le sujet étant « tous les délégués » (masculin pluriel), le participe s'accorde : « se sont mobilisés »."
+      }
+    ]
   },
   {
-    id:2, title:"Chambre II — Imparfait vs. Passé Composé & COI (lui)",
-    theme:"🏫 Infrastructures scolaires & Scolarisation",
-    context:"Quand les <strong>infrastructures scolaires</strong> étaient insuffisantes, les directeurs avaient du mal à tout gérer. Les parents leur signalaient les problèmes régulièrement.",
-    instruction:"Imparfait = description continue. Passé composé = action précise. Le COI <em>lui</em> est-il accordé ?",
-    slots:[
-      {label:"subordonnée imparfait",answer:"Pendant que l'école manquait de ressources"},
-      {label:"pronom COI",answer:"lui"},
-      {label:"passé composé",answer:"ont soumis"},
-      {label:"COD",answer:"un rapport détaillé"}
-    ],
-    runes:["Pendant que l'école manquait de ressources","lui","ont soumis","un rapport détaillé","l'ont soumis","lui ont soumise","avaient soumis"],
-    feedback_error:"⚠ <em>Lui</em> est un COI (complément d'objet indirect) → pas d'accord du participe ! On écrit <em>ont soumis</em>, jamais <em>soumise</em>.",
-    feedback_success:"✔ Exact ! COI <em>lui</em> → participe invariable : <em>ont soumis</em>. Bien joué !"
+    id: 2,
+    num: "II",
+    title: "La Galerie des Souvenirs",
+    subtitle: "Le Duel Temporel : Imparfait vs Passé Composé",
+    theme: "🏫 Vie scolaire & Événements inattendus",
+    color: "#2563eb", // Deep Cobalt
+    bgGlow: "rgba(37, 99, 235, 0.14)",
+    borderColor: "#1d4ed8",
+    icon: "🕰️",
+    lore: "Des échos d'anciennes salles de classe résonnent dans ce couloir. Seuls ceux qui distinguent l'arrière-plan narratif (l'imparfait) de la rupture soudaine (le passé composé) pourront avancer !",
+    questions: [
+      {
+        id: "2-1",
+        label: "Action d'Arrière-Plan vs Événement Soudain",
+        context: "Une séance d'étude interrompue",
+        sentenceBefore: "Pendant que les élèves ",
+        blank: "__________",
+        sentenceAfter: " attentivement la leçon, le signal d'alarme a retenti soudainement.",
+        fullSentenceContext: "Pendant que les élèves [écoutaient] attentivement la leçon, le signal d'alarme [a retenti] soudainement.",
+        targetRule: "Action continue d'arrière-plan (imparfait) interrompue par un événement soudain.",
+        options: [
+          "écoutaient",
+          "ont écouté",
+          "écoutent",
+          "avaient écouté"
+        ],
+        answer: 0,
+        explanation: "✔ « Pendant que » introduit une action continue en cours d'accomplissement servant de décor d'arrière-plan. On utilise donc l'imparfait : « écoutaient », interrompu ensuite par l'alarme (« a retenti », au passé composé)."
+      },
+      {
+        id: "2-2",
+        label: "État Psychologique vs Changement Brutal",
+        context: "La proclamation solennelle des résultats",
+        sentenceBefore: "Avant la proclamation des résultats, les candidates ",
+        blank: "__________",
+        sentenceAfter: " très anxieuses, mais l'annonce officielle leur a apporté un immense soulagement.",
+        targetRule: "Description d'un état d'esprit ou sentiment continu dans le passé.",
+        options: [
+          "étaient",
+          "ont été",
+          "seraient",
+          "fussent"
+        ],
+        answer: 0,
+        explanation: "✔ La description d'un état psychologique, émotionnel ou d'une attitude durable dans le passé s'exprime à l'imparfait : « les candidates étaient très anxieuses ». L'événement ponctuel qui modifie cet état est au passé composé (« a apporté »)."
+      },
+      {
+        id: "2-3",
+        label: "Habitude & Routine Répétée dans le Passé",
+        context: "Règlement et coutumes du collège",
+        sentenceBefore: "À cette époque-là, chaque vendredi matin, le proviseur ",
+        blank: "__________",
+        sentenceAfter: " une assemblée générale pour féliciter les initiatives solidaires.",
+        targetRule: "Action habituelle et répétitive dans le passé (« chaque vendredi matin »).",
+        options: [
+          "organisait",
+          "a organisé",
+          "organise",
+          "avait organisée"
+        ],
+        answer: 0,
+        explanation: "✔ L'expression temporelle « chaque vendredi matin » marque une habitude récurrente et systématique dans le passé. Cette valeur d'itérativité/habitude requiert impérativement l'imparfait : « organisait »."
+      }
+    ]
   },
   {
-    id:3, title:"Chambre III — Pronoms adverbiaux y & en",
-    theme:"🌍 Taux de scolarisation & Égalité des genres",
-    context:"Le taux de <strong>scolarisation</strong> avait longtemps été un défi dans les zones rurales. Le gouvernement <strong>y</strong> travaillait depuis des années, et cette année il <strong>en</strong> a amélioré plusieurs indicateurs.",
-    instruction:"Placez <em>y</em> (lieu / idée) et <em>en</em> (quantité / partie) — attention aux temps !",
-    slots:[
-      {label:"imparfait + y",answer:"y travaillaient sans cesse"},
-      {label:"pronom en",answer:"en"},
-      {label:"passé composé",answer:"ont réduit"},
-      {label:"quantité",answer:"plusieurs"}
-    ],
-    runes:["y travaillaient sans cesse","en","ont réduit","plusieurs","y ont réduit","en travaillaient","ont réduits"],
-    feedback_error:"⚠ <em>Y</em> remplace un lieu ou une idée (ici : les inégalités de <strong>scolarisation</strong>). <em>En</em> indique une quantité. Vérifiez aussi le temps du verbe !",
-    feedback_success:"✔ Bravo ! <em>Y travaillaient</em> (imparfait, continu) + <em>en ont réduit plusieurs</em> (PC, action ponctuelle avec quantité)."
+    id: 3,
+    num: "III",
+    title: "La Salle des Énigmes",
+    subtitle: "Pronoms Compléments : COD, COI, Y et EN",
+    theme: "🌍 Politiques éducatives & Enquêtes pédagogiques",
+    color: "#9333ea", // Purple / Amethyst
+    bgGlow: "rgba(147, 51, 234, 0.15)",
+    borderColor: "#7e22ce",
+    icon: "🗝️",
+    lore: "Des runes anciennes s'illuminent sur les parois. Les pronoms sont les clés de voûte de la langue française : remplacez judicieusement les compléments pour dissiper l'illusion !",
+    questions: [
+      {
+        id: "3-1",
+        label: "Pronom COD direct avec auxiliaire avoir",
+        context: "Recrutement des nouveaux enseignants",
+        sentenceBefore: "— L'inspecteur a-t-il auditionné les nouvelles enseignantes ?\n— Oui, il ",
+        blank: "__________",
+        sentenceAfter: " auditionnées pendant plus de deux heures.",
+        targetRule: "« Auditionner quelqu'un » = COD féminin pluriel (« les ») placé avant avoir.",
+        options: [
+          "les a",
+          "leur a",
+          "lui a",
+          "en a"
+        ],
+        answer: 0,
+        explanation: "✔ Le verbe « auditionner » appelle un Complément d'Objet Direct (auditionner qui ? → les nouvelles enseignantes = féminin pluriel). Le pronom COD est « les ». Placé avant avoir, il commande l'accord du participe : « il les a auditionnées »."
+      },
+      {
+        id: "3-2",
+        label: "Pronom Adverbial Y (à + chose / lieu)",
+        context: "Participation aux ateliers de tutorat",
+        sentenceBefore: "— Vos camarades s'intéressent-ils aux ateliers de soutien scolaire ?\n— Absolument, ils ",
+        blank: "__________",
+        sentenceAfter: " participent deux fois par semaine.",
+        targetRule: "« Participer à quelque chose » (à + nom inanimé / activité) se remplace par Y.",
+        options: [
+          "y",
+          "en",
+          "les",
+          "leur"
+        ],
+        answer: 0,
+        explanation: "✔ On dit « participer À quelque chose » (aux ateliers = préposition « à » + groupe nominal non animé). On remplace donc ce complément indirect par le pronom adverbial « y » : « ils y participent »."
+      },
+      {
+        id: "3-3",
+        label: "Pronom Adverbial EN (quantité / de + nom)",
+        context: "Consultation d'ouvrages spécialisés",
+        sentenceBefore: "— Avez-vous emprunté des manuels pédagogiques à la bibliothèque ?\n— Oui, nous ",
+        blank: "__________",
+        sentenceAfter: " avons emprunté plusieurs pour notre exposé.",
+        targetRule: "Remplacement d'un nom introduit par « des » ou exprimant une quantité (« plusieurs ») par EN.",
+        options: [
+          "en",
+          "y",
+          "les",
+          "leur"
+        ],
+        answer: 0,
+        explanation: "✔ Lorsqu'un complément est introduit par un article partitif/indéfini (« des manuels ») ou quantifié par un mot de quantité (« plusieurs »), on utilise le pronom « en » : « nous en avons emprunté plusieurs »."
+      }
+    ]
   },
   {
-    id:4, title:"Chambre IV — Verbes pronominaux au Passé Composé",
-    theme:"🎓 Égalité des genres & Pédagogie inclusive",
-    context:"La nouvelle <strong>pédagogie inclusive</strong> a changé les mentalités. Quand la cloche sonnait, les élèves se dépêchaient. Mais face à la réforme sur l'<strong>égalité des genres</strong>, les enseignantes ont réagi autrement.",
-    instruction:"Les verbes pronominaux se conjuguent avec <em>être</em> — et le participe s'accorde avec le sujet !",
-    slots:[
-      {label:"subordonnée",answer:"Lorsque la réforme a été annoncée"},
-      {label:"pronom réfléchi",answer:"se"},
-      {label:"être + participe accordé",answer:"sont mobilisées"},
-      {label:"but",answer:"pour la défendre"}
-    ],
-    runes:["Lorsque la réforme a été annoncée","se","sont mobilisées","pour la défendre","ont mobilisé","se sont mobilisé","s'est mobilisées"],
-    feedback_error:"⚠ Verbe pronominal → auxiliaire <em>être</em> au passé composé ! Sujet féminin pluriel (<em>les enseignantes</em>) → accord : <em>mobilisées</em> (avec -es).",
-    feedback_success:"✔ Parfait ! Pronominal + être → accord féminin pluriel : <em>sont mobilisées</em>. La réforme sur l'égalité des genres est bien défendue !"
+    id: 4,
+    num: "IV",
+    title: "Le Sanctuaire Final",
+    subtitle: "Doubles Pronoms & Synthèse Magistrale",
+    theme: "🎓 Égalité des chances & Grands jalons historiques",
+    color: "#dc2626", // Crimson / Ruby
+    bgGlow: "rgba(220, 38, 38, 0.15)",
+    borderColor: "#b91c1c",
+    icon: "🚪",
+    lore: "L'ultime porte du donjon est scellée par les maîtres de la grammaire. Seule une maîtrise parfaite de l'ordre des doubles pronoms et des temps du passé brisera le sceau définitif !",
+    questions: [
+      {
+        id: "4-1",
+        label: "Double Pronom : COD (le/la) + COI (lui/leur)",
+        context: "Transmission du rapport officiel",
+        sentenceBefore: "— Avez-vous transmis la synthèse sur l'égalité des genres à la ministre ?\n— Oui, nous ",
+        blank: "__________",
+        sentenceAfter: " transmise dès la première heure ce matin.",
+        targetRule: "Ordre strict : COD (« la », pour la synthèse) avant COI 3e personne (« lui », pour la ministre).",
+        options: [
+          "la lui avons",
+          "lui l'avons",
+          "l'en avons",
+          "la leur avons"
+        ],
+        answer: 0,
+        explanation: "✔ L'ordre obligatoire en français pour la 3e personne place le pronom COD (« la », féminin singulier pour la synthèse) AVANT le pronom COI (« lui », à la ministre). Le COD « la » étant avant avoir, le participe s'accorde : « nous la lui avons transmise »."
+      },
+      {
+        id: "4-2",
+        label: "Double Pronom : COI (leur) + EN",
+        context: "Communication avec le corps professoral",
+        sentenceBefore: "— Les directeurs ont-ils parlé du nouveau calendrier scolaire aux professeurs ?\n— Oui, ils ",
+        blank: "__________",
+        sentenceAfter: " ont parlé lors du conseil pédagogique d'hier.",
+        targetRule: "« Parler à quelqu'un » (COI pluriel = leur) « de quelque chose » (de + nom = en).",
+        options: [
+          "leur en",
+          "les en",
+          "en leur",
+          "lui en"
+        ],
+        answer: 0,
+        explanation: "✔ On dit « parler À quelqu'un » (COI pluriel → « leur ») « DE quelque chose » (du nouveau calendrier → « en »). Le pronom personnel précède toujours le pronom adverbial « en » : « ils leur en ont parlé »."
+      },
+      {
+        id: "4-3",
+        label: "Synthèse Historique : Événement Ponctuel & Contexte Époque",
+        context: "Histoire de l'accès des femmes à l'enseignement supérieur",
+        sentenceBefore: "Lorsque cette université prestigieuse ",
+        blank: "__________",
+        sentenceAfter: " ses portes en 1895, les femmes n'avaient pas encore accès à toutes les filières.",
+        targetRule: "Événement historique ponctuel et daté (« en 1895 ») au passé composé.",
+        options: [
+          "a ouvert",
+          "ouvrait",
+          "a ouverte",
+          "eut ouvri"
+        ],
+        answer: 0,
+        explanation: "✔ « En 1895 » constitue un repère temporel historique précis et ponctuel, marquant un événement achevé qui fait progresser la chronologie : passé composé « a ouvert ». Pas d'accord car le COD « ses portes » est placé après le verbe !"
+      }
+    ]
   }
 ];
 
-const W=()=>window.innerWidth, H=()=>window.innerHeight;
-const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-renderer.setSize(W(),H());
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.outputEncoding=THREE.sRGBEncoding;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=0.85;
+/* ── Web Audio API Helper (Clean synthetic retro dungeon sounds) ───── */
+function playSound(type, soundEnabled) {
+  if (!soundEnabled) return;
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
 
-const scene=new THREE.Scene();
-scene.fog=new THREE.FogExp2(0x070310,0.055);
-scene.background=new THREE.Color(0x050208);
+    if (type === 'correct') {
+      // Pleasant mystical chime (two rising harmonics)
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
 
-const camera=new THREE.PerspectiveCamera(65,W()/H(),0.1,80);
-camera.position.set(0,2.4,7);
-camera.lookAt(0,1.2,0);
+      osc1.type = 'triangle';
+      osc2.type = 'sine';
 
-scene.add(new THREE.AmbientLight(0x1a0a2e,0.6));
+      const now = ctx.currentTime;
+      osc1.frequency.setValueAtTime(523.25, now); // C5
+      osc1.frequency.exponentialRampToValueAtTime(659.25, now + 0.15); // E5
+      osc2.frequency.setValueAtTime(659.25, now);
+      osc2.frequency.exponentialRampToValueAtTime(783.99, now + 0.15); // G5
 
-function makeTorch(x,y,z){
-  const l=new THREE.PointLight(0xff8800,2.2,9);
-  l.position.set(x,y,z);
-  l.castShadow=true;
-  l.shadow.mapSize.width=256;
-  l.shadow.mapSize.height=256;
-  scene.add(l);
-  const f=new THREE.Mesh(new THREE.ConeGeometry(0.05,0.18,6),new THREE.MeshBasicMaterial({color:0xff6600}));
-  f.position.set(x,y+0.09,z);
-  scene.add(f);
-  const s=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.06,0.2,8),new THREE.MeshStandardMaterial({color:0x3a2010,roughness:0.9}));
-  s.position.set(x,y-0.1,z);
-  scene.add(s);
-  return l;
-}
-const torchLights=[makeTorch(-3.5,2.6,0),makeTorch(3.5,2.6,0),makeTorch(0,2.6,-4)];
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
 
-function stoneTex(w,h,dark){
-  const c=document.createElement('canvas');
-  c.width=w;c.height=h;
-  const ctx=c.getContext('2d');
-  ctx.fillStyle=dark?'#1a1225':'#2a1e3a';
-  ctx.fillRect(0,0,w,h);
-  for(let i=0;i<400;i++){
-    const px=Math.random()*w,py=Math.random()*h,r=Math.random()*4+1,v=Math.floor(Math.random()*30)+(dark?8:15);
-    ctx.beginPath();ctx.arc(px,py,r,0,Math.PI*2);
-    ctx.fillStyle='rgb('+v+','+(v*.7|0)+','+(v*1.1|0)+')';ctx.fill();
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + 0.4);
+      osc2.stop(now + 0.4);
+    } else if (type === 'error') {
+      // Low dungeon ward buzz
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const now = ctx.currentTime;
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(180, now);
+      osc.frequency.exponentialRampToValueAtTime(110, now + 0.25);
+
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.3);
+    } else if (type === 'victory') {
+      // Triumph fanfare
+      const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const start = ctx.currentTime + idx * 0.12;
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, start);
+
+        gain.gain.setValueAtTime(0.2, start);
+        gain.gain.exponentialRampToValueAtTime(0.01, start + 0.35);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(start);
+        osc.stop(start + 0.35);
+      });
+    }
+  } catch {
+    // Ignore audio failures if browser blocks autoplay or Web Audio is restricted
   }
-  ctx.strokeStyle=dark?'#0d0818':'#150f22';ctx.lineWidth=2;
-  for(let row=0;row<h;row+=40){
-    const off=(row/40%2)*60;
-    for(let col=off;col<w+80;col+=120){ctx.beginPath();ctx.rect(col,row,110,36);ctx.stroke();}
-  }
-  return new THREE.CanvasTexture(c);
 }
 
-function makeWall(w,h,x,y,z,ry){
-  const mat=new THREE.MeshStandardMaterial({map:stoneTex(512,256,false),roughness:0.95,metalness:0});
-  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(w,h),mat);
-  mesh.position.set(x,y,z);mesh.rotation.y=ry;mesh.receiveShadow=true;scene.add(mesh);
-}
-
-const floorMat=new THREE.MeshStandardMaterial({map:stoneTex(512,512,true),roughness:1,metalness:0});
-floorMat.map.wrapS=floorMat.map.wrapT=THREE.RepeatWrapping;
-floorMat.map.repeat.set(3,3);
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(18,18),floorMat);
-floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
-
-const ceilMat=new THREE.MeshStandardMaterial({map:stoneTex(256,256,true),roughness:1,metalness:0});
-const ceil=new THREE.Mesh(new THREE.PlaneGeometry(18,18),ceilMat);
-ceil.rotation.x=Math.PI/2;ceil.position.y=5.5;scene.add(ceil);
-
-makeWall(18,6,0,2.75,-5.5,0);
-makeWall(18,6,0,2.75,9,Math.PI);
-makeWall(11,6,-9,2.75,0,Math.PI/2);
-makeWall(11,6,9,2.75,0,-Math.PI/2);
-
-function buildDoor(){
-  const g=new THREE.Group();
-  const door=new THREE.Mesh(new THREE.BoxGeometry(1.8,3.2,0.15),new THREE.MeshStandardMaterial({color:0x2a1508,roughness:0.8,metalness:0.3}));
-  g.add(door);
-  const bm=new THREE.MeshStandardMaterial({color:0x1a1a1a,metalness:0.9,roughness:0.2});
-  [-0.9,0,0.9].forEach(dy=>{const b=new THREE.Mesh(new THREE.BoxGeometry(1.85,0.12,0.2),bm);b.position.y=dy;g.add(b);});
-  const rune=new THREE.Mesh(new THREE.CircleGeometry(0.18,16),new THREE.MeshBasicMaterial({color:0x8b00ff}));
-  rune.position.set(0,0.4,0.1);g.add(rune);
-  g.position.set(0,1.6,-5.3);scene.add(g);return g;
-}
-const vaultDoor=buildDoor();
-
-const pedestals=[];
-function makePedestal(x,z){
-  const pm=new THREE.MeshStandardMaterial({color:0x1e0a30,roughness:0.7,metalness:0.2});
-  const base=new THREE.Mesh(new THREE.BoxGeometry(0.7,0.3,0.7),pm);
-  base.position.set(x,0.15,z);base.castShadow=true;base.receiveShadow=true;scene.add(base);
-  const top=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.05,0.6),pm);
-  top.position.set(x,0.32,z);scene.add(top);
-  const cm=new THREE.MeshStandardMaterial({color:0x6600cc,emissive:0x3300aa,emissiveIntensity:0.8,roughness:0.1,metalness:0.3});
-  const crystal=new THREE.Mesh(new THREE.OctahedronGeometry(0.14,0),cm);
-  crystal.position.set(x,0.52,z);scene.add(crystal);
-  pedestals.push({base,top,crystal});
-}
-[-4.5,-1.5,1.5,4.5].forEach(x=>makePedestal(x,1.5));
-
-// Pillars
-function makePillar(x,z){
-  const mat=new THREE.MeshStandardMaterial({map:stoneTex(128,256,false),roughness:0.9,metalness:0});
-  const shaft=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.35,4.5,8),mat);
-  shaft.position.set(x,2.25,z);shaft.castShadow=true;scene.add(shaft);
-  const cap=new THREE.Mesh(new THREE.BoxGeometry(0.9,0.3,0.9),mat);
-  cap.position.set(x,4.65,z);scene.add(cap);
-}
-[[-3.5,-1],[-3.5,3],[3.5,-1],[3.5,3]].forEach(([x,z])=>makePillar(x,z));
-
-const pCount=120;
-const pGeo=new THREE.BufferGeometry();
-const pPos=new Float32Array(pCount*3);
-for(let i=0;i<pCount;i++){pPos[i*3]=(Math.random()-.5)*16;pPos[i*3+1]=Math.random()*5;pPos[i*3+2]=(Math.random()-.5)*10;}
-pGeo.setAttribute('position',new THREE.BufferAttribute(pPos,3));
-const particles=new THREE.Points(pGeo,new THREE.PointsMaterial({color:0xaa66ff,size:0.04,transparent:true,opacity:0.45}));
-scene.add(particles);
-
-let runeBlocks=[];
-let chamberIndex=0;
-let slotValues=[];
-
-function makeRuneBlock(label,i,total){
-  const angle=(i/total)*Math.PI*1.8-Math.PI*0.9;
-  const radius=2.8+(i%2)*0.4;
-  const x=Math.sin(angle)*radius;
-  const z=-0.5+Math.cos(angle)*radius*0.35;
-  const y=0.6+Math.sin(i*1.3)*0.3;
-  const mat=new THREE.MeshStandardMaterial({color:0x3a1060,emissive:0x1a0040,emissiveIntensity:0.5,roughness:0.4,metalness:0.4});
-  const mesh=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.35,0.15),mat);
-  mesh.position.set(x,y,z);mesh.castShadow=true;scene.add(mesh);
-  return{mesh,label,x,y,z,baseY:y};
-}
-
-function animateRuneToSlot(rb,tx,ty,tz){
-  const sx=rb.mesh.position.x,sy=rb.mesh.position.y,sz=rb.mesh.position.z;
-  const dur=0.5,t0=performance.now();
-  function step(t){
-    const p=Math.min((t-t0)/(dur*1000),1),e=1-Math.pow(1-p,3);
-    rb.mesh.position.set(sx+(tx-sx)*e,sy+(ty-sy)*e,sz+(tz-sz)*e);
-    if(p<1)requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-
-function loadChamber(idx){
-  chamberIndex=idx;
-  const ch=CHAMBERS[idx];
-  document.getElementById('chamber-label').textContent='⚔ '+ch.title.split('—')[0].trim();
-  for(let i=0;i<4;i++)document.getElementById('pip'+i).classList.toggle('done',i<idx);
-  document.getElementById('context-box').innerHTML=
-    '<strong style="color:#f5c842;font-size:11px;letter-spacing:1px;font-variant:small-caps;">'+ch.theme+'</strong><br>'+
-    '<em>'+ch.instruction+'</em><br><br>'+ch.context;
-  slotValues=ch.slots.map(()=>null);
-  renderSlots();
-  renderPalette(ch);
-  runeBlocks.forEach(rb=>scene.remove(rb.mesh));
-  runeBlocks=ch.runes.map((label,i)=>makeRuneBlock(label,i,ch.runes.length));
-  pedestals.forEach(p=>{p.crystal.material.color.setHex(0x6600cc);p.crystal.material.emissive.setHex(0x3300aa);});
-  vaultDoor.position.x=0;vaultDoor.rotation.y=0;
-}
-
-function renderSlots(){
-  const ch=CHAMBERS[chamberIndex];
-  const row=document.getElementById('slots-row');
-  row.innerHTML='';
-  ch.slots.forEach((s,i)=>{
-    const div=document.createElement('div');
-    div.className='slot'+(slotValues[i]?' filled':'');
-    div.innerHTML='<span class="slot-label">'+s.label+'</span>'+(slotValues[i]||'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
-    div.addEventListener('click',()=>{
-      if(slotValues[i]){slotValues[i]=null;renderSlots();renderPalette(CHAMBERS[chamberIndex]);}
-    });
-    row.appendChild(div);
-  });
-}
-
-function renderPalette(ch){
-  const pal=document.getElementById('palette');
-  pal.innerHTML='';
-  ch.runes.forEach((label,ri)=>{
-    const used=slotValues.includes(label);
-    const btn=document.createElement('button');
-    btn.className='rune'+(used?' used':'');
-    btn.textContent=label;btn.disabled=used;
-    btn.addEventListener('click',()=>{
-      if(used)return;
-      const emptyIdx=slotValues.indexOf(null);
-      if(emptyIdx===-1)return;
-      slotValues[emptyIdx]=label;
-      renderSlots();renderPalette(ch);
-      const rb=runeBlocks[ri];
-      if(rb)animateRuneToSlot(rb,(emptyIdx-1.5)*1.0,0.5,-2);
-      if(pedestals[emptyIdx]){pedestals[emptyIdx].crystal.material.color.setHex(0xffcc00);pedestals[emptyIdx].crystal.material.emissive.setHex(0x886600);}
-    });
-    pal.appendChild(btn);
-  });
-}
-
-function openDoor(){
-  const sx=vaultDoor.position.x,t0=performance.now();
-  function step(t){const p=Math.min((t-t0)/700,1);vaultDoor.position.x=sx-2.2*(1-Math.pow(1-p,2));if(p<1)requestAnimationFrame(step);}
-  requestAnimationFrame(step);
-}
-
-function showFeedback(type,title,body,btnLabel){
-  const fb=document.getElementById('feedback');
-  fb.className=type;
-  document.getElementById('fb-title').textContent=title;
-  document.getElementById('fb-body').innerHTML=body;
-  document.getElementById('fb-btn').textContent=btnLabel;
-  fb.style.display='block';
-  document.getElementById('fb-btn').onclick=()=>{
-    fb.style.display='none';
-    if(type==='success'){chamberIndex<3?loadChamber(chamberIndex+1):showVictory();}
-  };
-}
-
-function showVictory(){document.getElementById('victory').style.display='flex';}
-
-document.getElementById('btn-validate').addEventListener('click',()=>{
-  const ch=CHAMBERS[chamberIndex];
-  if(slotValues.includes(null)){showFeedback('error','🪄 Formule incomplète !','Placez toutes les runes dans les emplacements avant de valider.','Continuer');return;}
-  const correct=ch.slots.every((s,i)=>slotValues[i]===s.answer);
-  if(correct){
-    pedestals.forEach(p=>{p.crystal.material.color.setHex(0x00ff88);p.crystal.material.emissive.setHex(0x00aa44);});
-    openDoor();
-    showFeedback('success','✨ Formule acceptée !',ch.feedback_success,chamberIndex<3?'Chambre suivante →':'🏆 Terminer !');
-  } else {
-    pedestals.forEach(p=>{p.crystal.material.color.setHex(0xff2200);p.crystal.material.emissive.setHex(0xaa1100);});
-    setTimeout(()=>pedestals.forEach(p=>{p.crystal.material.color.setHex(0x6600cc);p.crystal.material.emissive.setHex(0x3300aa);}),800);
-    showFeedback('error','❌ Mauvaise formule !',ch.feedback_error,'Réessayer');
-  }
-});
-
-document.getElementById('btn-reset').addEventListener('click',()=>loadChamber(chamberIndex));
-document.getElementById('btn-rejouer').addEventListener('click',()=>{document.getElementById('victory').style.display='none';loadChamber(0);});
-
-let t=0;
-function animate(){
-  requestAnimationFrame(animate);t+=0.016;
-  torchLights.forEach((l,i)=>{l.intensity=2.0+Math.sin(t*7+i*2.3)*0.4+Math.sin(t*13+i)*0.15;});
-  pedestals.forEach((p,i)=>{p.crystal.position.y=0.52+Math.sin(t*1.8+i)*0.04;p.crystal.rotation.y+=0.012;});
-  runeBlocks.forEach((rb,i)=>{rb.mesh.position.y=rb.baseY+Math.sin(t*1.2+i*0.9)*0.06;rb.mesh.rotation.y=Math.sin(t*0.5+i)*0.15;});
-  const dr=vaultDoor.children[vaultDoor.children.length-1];
-  if(dr&&dr.material)dr.material.color.setHSL(0.75,1,0.45+Math.sin(t*3)*0.15);
-  const pa=pGeo.attributes.position.array;
-  for(let i=0;i<pCount;i++){pa[i*3+1]+=0.004;if(pa[i*3+1]>5.2)pa[i*3+1]=0;}
-  pGeo.attributes.position.needsUpdate=true;
-  camera.position.x=Math.sin(t*0.15)*0.12;
-  camera.position.y=2.4+Math.sin(t*0.22)*0.06;
-  renderer.render(scene,camera);
-}
-
-window.addEventListener('resize',()=>{camera.aspect=W()/H();camera.updateProjectionMatrix();renderer.setSize(W(),H());});
-loadChamber(0);
-animate();
-</script>
-</body>
-</html>`;
-
+/* ═══════════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+═══════════════════════════════════════════════════════════════════ */
 export default function DonjonDuPasse({ onBack }) {
+  const [currentChamberIdx, setCurrentChamberIdx] = useState(0);
+  const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [isAnswered, setIsAnswered] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [completedChambers, setCompletedChambers] = useState([]);
+  const [showChamberClearModal, setShowChamberClearModal] = useState(false);
+  const [isGameFinished, setIsGameFinished] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [torchHealth, setTorchHealth] = useState(3); // 3 torches per chamber
+  const [chamberScore, setChamberScore] = useState(0);
+  const [totalCorrectCount, setTotalCorrectCount] = useState(0);
+
+  const currentChamber = CHAMBERS[currentChamberIdx];
+  const currentQuestion = currentChamber.questions[currentQuestionIdx];
+
+  // Handle selecting an option
+  const handleSelectOption = (idx) => {
+    if (isAnswered) return;
+
+    setSelectedOption(idx);
+    setIsAnswered(true);
+
+    const correct = idx === currentQuestion.answer;
+    setIsCorrect(correct);
+
+    if (correct) {
+      playSound('correct', soundEnabled);
+      setChamberScore((prev) => prev + 1);
+      setTotalCorrectCount((prev) => prev + 1);
+    } else {
+      playSound('error', soundEnabled);
+      setTorchHealth((prev) => Math.max(0, prev - 1));
+    }
+  };
+
+  // Move to next question or end of chamber
+  const handleNextStep = () => {
+    // If answer was wrong and torches depleted, allow retry of current question
+    setSelectedOption(null);
+    setIsAnswered(false);
+    setIsCorrect(false);
+
+    if (isCorrect) {
+      const nextQ = currentQuestionIdx + 1;
+      if (nextQ < currentChamber.questions.length) {
+        setCurrentQuestionIdx(nextQ);
+      } else {
+        // Chamber cleared!
+        const newCompleted = [...new Set([...completedChambers, currentChamber.id])];
+        setCompletedChambers(newCompleted);
+
+        if (currentChamberIdx + 1 < CHAMBERS.length) {
+          setShowChamberClearModal(true);
+        } else {
+          // Final Victory!
+          setIsGameFinished(true);
+          playSound('victory', soundEnabled);
+        }
+      }
+    } else {
+      // If student got it wrong, let them re-attempt with 1 torch restored
+      if (torchHealth <= 1) {
+        setTorchHealth(3);
+      }
+    }
+  };
+
+  // Advance to next chamber from modal
+  const handleProceedToNextChamber = () => {
+    setShowChamberClearModal(false);
+    setCurrentChamberIdx((prev) => prev + 1);
+    setCurrentQuestionIdx(0);
+    setSelectedOption(null);
+    setIsAnswered(false);
+    setIsCorrect(false);
+    setTorchHealth(3);
+    setChamberScore(0);
+  };
+
+  // Replay complete game
+  const handleRestartGame = () => {
+    setCurrentChamberIdx(0);
+    setCurrentQuestionIdx(0);
+    setSelectedOption(null);
+    setIsAnswered(false);
+    setIsCorrect(false);
+    setCompletedChambers([]);
+    setShowChamberClearModal(false);
+    setIsGameFinished(false);
+    setTorchHealth(3);
+    setChamberScore(0);
+    setTotalCorrectCount(0);
+  };
+
+  // Jump to unlocked chamber if clicked in map
+  const handleSelectChamber = (idx) => {
+    if (idx === currentChamberIdx) return;
+    // Allow jumping to any chamber that has already been unlocked or cleared
+    const isUnlocked = idx === 0 || completedChambers.includes(CHAMBERS[idx - 1].id);
+    if (isUnlocked) {
+      setCurrentChamberIdx(idx);
+      setCurrentQuestionIdx(0);
+      setSelectedOption(null);
+      setIsAnswered(false);
+      setIsCorrect(false);
+      setTorchHealth(3);
+      setChamberScore(0);
+    }
+  };
+
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: '#050208' }}>
-      <button
-        onClick={onBack}
-        style={{
-          position: 'fixed', top: 12, right: 16, zIndex: 2000,
-          background: 'rgba(30,10,60,0.85)', border: '1px solid #7a3fa0',
-          color: '#d8a0ff', padding: '6px 14px', borderRadius: 6,
-          cursor: 'pointer', fontFamily: 'Georgia, serif', fontSize: 13,
-          fontVariant: 'small-caps', letterSpacing: 1
-        }}
-      >
-        ✕ Quitter le Donjon
-      </button>
-      <iframe
-        srcDoc={GAME_HTML}
-        style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
-        title="Le Donjon du Passé"
-        sandbox="allow-scripts allow-same-origin"
-      />
+    <div style={{
+      minHeight: '100vh',
+      background: 'radial-gradient(circle at 50% 20%, #170d2b 0%, #0a0814 60%, #05040a 100%)',
+      color: '#f3e8ff',
+      fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif",
+      padding: '20px 16px 60px',
+      position: 'relative',
+      boxSizing: 'border-box'
+    }}>
+      {/* ── Top Navigation Bar ─────────────────────────────────────────── */}
+      <div style={{
+        maxWidth: 960,
+        margin: '0 auto 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: 12
+      }}>
+        {/* Back Button */}
+        <button
+          onClick={onBack}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '8px 16px',
+            borderRadius: 10,
+            background: 'rgba(255, 255, 255, 0.08)',
+            border: '1px solid rgba(255, 255, 255, 0.16)',
+            color: '#e9d5ff',
+            fontSize: 14,
+            fontWeight: 600,
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.14)'}
+          onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'}
+        >
+          <ArrowLeft size={18} />
+          Retour aux Ateliers
+        </button>
+
+        {/* Title Badge */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{
+            fontSize: 22,
+            filter: 'drop-shadow(0 0 8px #a855f7)'
+          }}>🏰</span>
+          <div>
+            <h1 style={{
+              margin: 0,
+              fontSize: '1.25rem',
+              fontWeight: 800,
+              letterSpacing: 0.5,
+              background: 'linear-gradient(135deg, #fef08a, #c084fc)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>
+              Le Donjon du Passé
+            </h1>
+            <span style={{ fontSize: 11, color: '#a855f7', letterSpacing: 1.5, textTransform: 'uppercase', fontWeight: 600 }}>
+              Quête Grammaticale • Unité 2
+            </span>
+          </div>
+        </div>
+
+        {/* Sound & Torches Counter */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          {/* Torch HP */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            background: 'rgba(245, 158, 11, 0.12)',
+            border: '1px solid rgba(245, 158, 11, 0.3)',
+            borderRadius: 20,
+            padding: '4px 12px',
+          }}>
+            {[1, 2, 3].map((t) => (
+              <Flame
+                key={t}
+                size={16}
+                style={{
+                  color: t <= torchHealth ? '#fbbf24' : '#4b5563',
+                  filter: t <= torchHealth ? 'drop-shadow(0 0 4px #f59e0b)' : 'none',
+                  transition: 'color 0.3s'
+                }}
+              />
+            ))}
+            <span style={{ fontSize: 12, fontWeight: 700, color: '#fef08a', marginLeft: 4 }}>
+              Flammes
+            </span>
+          </div>
+
+          {/* Sound Toggle */}
+          <button
+            onClick={() => setSoundEnabled(!soundEnabled)}
+            style={{
+              padding: 8,
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.16)',
+              color: soundEnabled ? '#c084fc' : '#9ca3af',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            title={soundEnabled ? "Couper le son" : "Activer le son"}
+          >
+            {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+          </button>
+        </div>
+      </div>
+
+      {/* ── Chamber Navigation Steps ──────────────────────────────────── */}
+      <div style={{
+        maxWidth: 960,
+        margin: '0 auto 24px',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
+        gap: 10
+      }}>
+        {CHAMBERS.map((ch, idx) => {
+          const isCurrent = idx === currentChamberIdx;
+          const isDone = completedChambers.includes(ch.id);
+          const isUnlocked = idx === 0 || completedChambers.includes(CHAMBERS[idx - 1].id);
+
+          return (
+            <div
+              key={ch.id}
+              onClick={() => handleSelectChamber(idx)}
+              style={{
+                background: isCurrent 
+                  ? `linear-gradient(135deg, ${ch.color}28, rgba(30, 20, 60, 0.75))` 
+                  : 'rgba(25, 20, 45, 0.55)',
+                border: isCurrent 
+                  ? `2px solid ${ch.color}` 
+                  : isDone 
+                  ? '1px solid #10b98188' 
+                  : '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: 14,
+                padding: '12px 14px',
+                cursor: isUnlocked ? 'pointer' : 'not-allowed',
+                opacity: isUnlocked ? 1 : 0.45,
+                transition: 'all 0.25s',
+                boxShadow: isCurrent ? `0 0 20px ${ch.color}44` : 'none',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{
+                  fontSize: 11,
+                  fontWeight: 800,
+                  color: isCurrent ? ch.color : isDone ? '#34d399' : '#a78bfa',
+                  textTransform: 'uppercase',
+                  letterSpacing: 1
+                }}>
+                  Chambre {ch.num}
+                </span>
+                <span>
+                  {isDone ? (
+                    <CheckCircle2 size={16} color="#34d399" />
+                  ) : isUnlocked ? (
+                    <Key size={15} color={ch.color} />
+                  ) : (
+                    <Lock size={15} color="#6b7280" />
+                  )}
+                </span>
+              </div>
+              <div style={{ fontWeight: 700, fontSize: 13, color: '#f3e8ff', marginBottom: 2 }}>
+                {ch.title}
+              </div>
+              <div style={{ fontSize: 11, color: '#c4b5fd', opacity: 0.8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {ch.subtitle}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── Main Dungeon Arena ───────────────────────────────────────── */}
+      {!isGameFinished ? (
+        <div style={{
+          maxWidth: 820,
+          margin: '0 auto',
+          background: 'rgba(23, 16, 46, 0.85)',
+          border: `2px solid ${currentChamber.borderColor}`,
+          borderRadius: 20,
+          padding: '28px 24px',
+          boxShadow: `0 10px 40px ${currentChamber.bgGlow}, 0 0 1px 1px ${currentChamber.borderColor}44`,
+          backdropFilter: 'blur(12px)',
+          position: 'relative'
+        }}>
+          {/* Chamber Header & Lore */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            paddingBottom: 16,
+            marginBottom: 20,
+            flexWrap: 'wrap',
+            gap: 12
+          }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                <span style={{ fontSize: 20 }}>{currentChamber.icon}</span>
+                <h2 style={{
+                  margin: 0,
+                  fontSize: '1.25rem',
+                  fontWeight: 800,
+                  color: currentChamber.color,
+                  letterSpacing: 0.5
+                }}>
+                  Chambre {currentChamber.num} : {currentChamber.title}
+                </h2>
+              </div>
+              <p style={{
+                margin: 0,
+                fontSize: 13,
+                color: '#d8b4fe',
+                fontStyle: 'italic',
+                maxWidth: 600,
+                lineHeight: 1.4
+              }}>
+                {currentChamber.lore}
+              </p>
+            </div>
+
+            {/* Question Progress Dots */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: 1 }}>
+                Épreuve {currentQuestionIdx + 1} / {currentChamber.questions.length}
+              </span>
+              <div style={{ display: 'flex', gap: 6 }}>
+                {currentChamber.questions.map((_, qIndex) => {
+                  const isQActive = qIndex === currentQuestionIdx;
+                  const isQPassed = qIndex < currentQuestionIdx;
+                  return (
+                    <div
+                      key={qIndex}
+                      style={{
+                        width: 14,
+                        height: 14,
+                        borderRadius: '50%',
+                        background: isQPassed 
+                          ? '#10b981' 
+                          : isQActive 
+                          ? currentChamber.color 
+                          : 'rgba(255, 255, 255, 0.15)',
+                        border: isQActive ? `2px solid #fef08a` : '2px solid transparent',
+                        boxShadow: isQActive ? `0 0 8px ${currentChamber.color}` : 'none',
+                        transition: 'all 0.3s'
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Theme & Topic Tag */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            background: 'rgba(168, 85, 247, 0.15)',
+            border: '1px solid rgba(168, 85, 247, 0.3)',
+            borderRadius: 8,
+            padding: '4px 10px',
+            fontSize: 12,
+            color: '#f5d0fe',
+            fontWeight: 600,
+            marginBottom: 16
+          }}>
+            <BookOpen size={14} color="#d946ef" />
+            <span>Thématique : {currentChamber.theme}</span>
+          </div>
+
+          {/* Challenge Sentence Box */}
+          <div style={{
+            background: 'rgba(10, 6, 25, 0.7)',
+            border: '1px solid rgba(192, 132, 252, 0.25)',
+            borderRadius: 14,
+            padding: '20px 22px',
+            marginBottom: 24,
+            position: 'relative',
+          }}>
+            <div style={{
+              fontSize: 12,
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              color: '#c084fc',
+              letterSpacing: 1,
+              marginBottom: 10,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6
+            }}>
+              <Sparkles size={14} />
+              <span>Complétez la formule sacrée :</span>
+            </div>
+
+            <div style={{
+              fontSize: '1.15rem',
+              lineHeight: 1.7,
+              color: '#faf5ff',
+              fontWeight: 500,
+              whiteSpace: 'pre-line'
+            }}>
+              {currentQuestion.sentenceBefore}
+              <span style={{
+                display: 'inline-block',
+                minWidth: 120,
+                padding: '2px 10px',
+                margin: '0 6px',
+                borderRadius: 6,
+                background: isAnswered 
+                  ? isCorrect 
+                    ? 'rgba(16, 185, 129, 0.25)' 
+                    : 'rgba(239, 68, 68, 0.25)' 
+                  : 'rgba(217, 119, 6, 0.2)',
+                border: isAnswered 
+                  ? isCorrect 
+                    ? '2px solid #10b981' 
+                    : '2px solid #ef4444' 
+                  : '2px dashed #f59e0b',
+                color: isAnswered 
+                  ? isCorrect 
+                    ? '#34d399' 
+                    : '#f87171' 
+                  : '#fef08a',
+                fontWeight: 700,
+                textAlign: 'center',
+                textShadow: isAnswered ? '0 0 10px currentColor' : 'none',
+                transition: 'all 0.25s'
+              }}>
+                {isAnswered ? currentQuestion.options[selectedOption] : "_____ ? _____"}
+              </span>
+              {currentQuestion.sentenceAfter}
+            </div>
+
+            {/* Target rule hint preview */}
+            <div style={{
+              marginTop: 12,
+              fontSize: 12,
+              color: '#a78bfa',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6
+            }}>
+              <HelpCircle size={13} />
+              <span>Indice : {currentQuestion.targetRule}</span>
+            </div>
+          </div>
+
+          {/* Options Grid */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: 12,
+            marginBottom: 24
+          }}>
+            {currentQuestion.options.map((option, optIdx) => {
+              const isSelected = selectedOption === optIdx;
+              const isThisTheCorrectAnswer = optIdx === currentQuestion.answer;
+
+              let btnBg = 'rgba(30, 20, 55, 0.65)';
+              let btnBorder = '1px solid rgba(192, 132, 252, 0.25)';
+              let textColor = '#f3e8ff';
+
+              if (isAnswered) {
+                if (isThisTheCorrectAnswer) {
+                  btnBg = 'rgba(16, 185, 129, 0.25)';
+                  btnBorder = '2px solid #10b981';
+                  textColor = '#6ee7b7';
+                } else if (isSelected && !isCorrect) {
+                  btnBg = 'rgba(239, 68, 68, 0.25)';
+                  btnBorder = '2px solid #ef4444';
+                  textColor = '#fca5a5';
+                } else {
+                  btnBg = 'rgba(20, 15, 40, 0.4)';
+                  btnBorder = '1px solid rgba(255, 255, 255, 0.08)';
+                  textColor = '#9ca3af';
+                }
+              }
+
+              return (
+                <button
+                  key={optIdx}
+                  onClick={() => handleSelectOption(optIdx)}
+                  disabled={isAnswered}
+                  style={{
+                    padding: '16px 18px',
+                    borderRadius: 12,
+                    background: btnBg,
+                    border: btnBorder,
+                    color: textColor,
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    cursor: isAnswered ? 'default' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 10,
+                    textAlign: 'left',
+                    transition: 'all 0.2s',
+                    boxShadow: isSelected ? '0 4px 16px rgba(0, 0, 0, 0.4)' : 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isAnswered) {
+                      e.currentTarget.style.background = 'rgba(147, 51, 234, 0.25)';
+                      e.currentTarget.style.borderColor = currentChamber.color;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isAnswered) {
+                      e.currentTarget.style.background = btnBg;
+                      e.currentTarget.style.borderColor = 'rgba(192, 132, 252, 0.25)';
+                    }
+                  }}
+                >
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 26,
+                      height: 26,
+                      borderRadius: 6,
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: '#e9d5ff'
+                    }}>
+                      {String.fromCharCode(65 + optIdx)}
+                    </span>
+                    <span>{option}</span>
+                  </span>
+
+                  {isAnswered && (
+                    <span>
+                      {isThisTheCorrectAnswer ? (
+                        <CheckCircle2 size={18} color="#34d399" />
+                      ) : isSelected ? (
+                        <XCircle size={18} color="#f87171" />
+                      ) : null}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Detailed Pedagogical Feedback Panel */}
+          {isAnswered && (
+            <div style={{
+              background: isCorrect ? 'rgba(6, 78, 59, 0.4)' : 'rgba(127, 29, 29, 0.4)',
+              border: isCorrect ? '1px solid #059669' : '1px solid #dc2626',
+              borderRadius: 14,
+              padding: '16px 20px',
+              marginBottom: 20,
+              animation: 'fadeIn 0.3s ease'
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                fontSize: 14,
+                fontWeight: 700,
+                color: isCorrect ? '#6ee7b7' : '#fca5a5',
+                marginBottom: 6
+              }}>
+                {isCorrect ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
+                <span>{isCorrect ? "Incantation Correcte !" : "Le Sortilège a Échoué !"}</span>
+              </div>
+              <p style={{
+                margin: '0 0 14px',
+                fontSize: 13.5,
+                lineHeight: 1.55,
+                color: isCorrect ? '#d1fae5' : '#fee2e2'
+              }}>
+                {currentQuestion.explanation}
+              </p>
+
+              {/* Action Button */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                  onClick={handleNextStep}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    padding: '10px 22px',
+                    borderRadius: 10,
+                    background: isCorrect 
+                      ? 'linear-gradient(135deg, #059669, #10b981)' 
+                      : 'linear-gradient(135deg, #b91c1c, #ef4444)',
+                    border: 'none',
+                    color: 'white',
+                    fontSize: 14,
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.35)',
+                    transition: 'transform 0.15s'
+                  }}
+                  onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
+                  onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  {isCorrect ? (
+                    currentQuestionIdx + 1 < currentChamber.questions.length ? (
+                      <>
+                        <span>Épreuve Suivante</span>
+                        <ChevronRight size={16} />
+                      </>
+                    ) : (
+                      <>
+                        <span>Déverrouiller la Chambre</span>
+                        <Key size={16} />
+                      </>
+                    )
+                  ) : (
+                    <>
+                      <span>Recommencer cette épreuve</span>
+                      <RotateCcw size={16} />
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        /* ── Victory Screen ─────────────────────────────────────────── */
+        <div style={{
+          maxWidth: 680,
+          margin: '30px auto',
+          background: 'linear-gradient(145deg, rgba(35, 15, 65, 0.95), rgba(15, 8, 30, 0.95))',
+          border: '2px solid #fbbf24',
+          borderRadius: 24,
+          padding: '40px 32px',
+          textAlign: 'center',
+          boxShadow: '0 0 60px rgba(251, 191, 36, 0.25)',
+          animation: 'fadeIn 0.5s ease'
+        }}>
+          <div style={{
+            fontSize: 54,
+            marginBottom: 10,
+            filter: 'drop-shadow(0 0 16px #fbbf24)'
+          }}>
+            🏆
+          </div>
+          <h2 style={{
+            margin: '0 0 10px',
+            fontSize: '2rem',
+            fontWeight: 900,
+            background: 'linear-gradient(135deg, #fef08a, #f59e0b)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            letterSpacing: 1
+          }}>
+            Le Donjon du Passé est Vaincu !
+          </h2>
+          <p style={{
+            fontSize: '1.05rem',
+            color: '#e9d5ff',
+            lineHeight: 1.6,
+            maxWidth: 520,
+            margin: '0 auto 28px'
+          }}>
+            Félicitations ! Vous avez brisé tous les sorts grammaticaux. Le passé composé, l'imparfait et les pronoms n'ont plus aucun secret pour vous !
+          </p>
+
+          {/* Badges Earned */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: 12,
+            marginBottom: 32
+          }}>
+            <div style={{
+              background: 'rgba(217, 119, 6, 0.15)',
+              border: '1px solid rgba(217, 119, 6, 0.4)',
+              borderRadius: 14,
+              padding: '14px',
+            }}>
+              <Award size={24} color="#fbbf24" style={{ marginBottom: 6 }} />
+              <div style={{ fontWeight: 700, fontSize: 13, color: '#fef08a' }}>
+                Maître du Passé Composé
+              </div>
+              <div style={{ fontSize: 11, color: '#fde68a', opacity: 0.8 }}>
+                Auxiliaires & Accords COD
+              </div>
+            </div>
+
+            <div style={{
+              background: 'rgba(37, 99, 235, 0.15)',
+              border: '1px solid rgba(37, 99, 235, 0.4)',
+              borderRadius: 14,
+              padding: '14px',
+            }}>
+              <ClockIcon size={24} color="#60a5fa" style={{ marginBottom: 6 }} />
+              <div style={{ fontWeight: 700, fontSize: 13, color: '#93c5fd' }}>
+                Gardien de l'Imparfait
+              </div>
+              <div style={{ fontSize: 11, color: '#bfdbfe', opacity: 0.8 }}>
+                Habitudes & Ruptures
+              </div>
+            </div>
+
+            <div style={{
+              background: 'rgba(147, 51, 234, 0.15)',
+              border: '1px solid rgba(147, 51, 234, 0.4)',
+              borderRadius: 14,
+              padding: '14px',
+            }}>
+              <Sparkles size={24} color="#c084fc" style={{ marginBottom: 6 }} />
+              <div style={{ fontWeight: 700, fontSize: 13, color: '#e9d5ff' }}>
+                Souverain des Pronoms
+              </div>
+              <div style={{ fontSize: 11, color: '#ddd6fe', opacity: 0.8 }}>
+                COD, COI, Y & EN
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
+            <button
+              onClick={handleRestartGame}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '12px 24px',
+                borderRadius: 12,
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: '#f3e8ff',
+                fontSize: 14,
+                fontWeight: 700,
+                cursor: 'pointer',
+              }}
+            >
+              <RotateCcw size={16} />
+              Rejouer le Donjon
+            </button>
+
+            <button
+              onClick={onBack}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '12px 28px',
+                borderRadius: 12,
+                background: 'linear-gradient(135deg, #7c3aed, #9333ea)',
+                border: 'none',
+                color: 'white',
+                fontSize: 14,
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: '0 4px 18px rgba(124, 58, 237, 0.4)'
+              }}
+            >
+              <Trophy size={16} />
+              Retourner aux Ateliers
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Modal: Chamber Cleared ──────────────────────────────────── */}
+      {showChamberClearModal && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(10, 5, 20, 0.85)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 100,
+          padding: 16
+        }}>
+          <div style={{
+            maxWidth: 480,
+            width: '100%',
+            background: 'linear-gradient(145deg, #231238, #130a24)',
+            border: `2px solid ${currentChamber.color}`,
+            borderRadius: 20,
+            padding: '30px 24px',
+            textAlign: 'center',
+            boxShadow: `0 0 40px ${currentChamber.bgGlow}`
+          }}>
+            <div style={{ fontSize: 44, marginBottom: 10 }}>🗝️</div>
+            <h3 style={{
+              margin: '0 0 8px',
+              fontSize: '1.4rem',
+              fontWeight: 800,
+              color: currentChamber.color
+            }}>
+              Chambre {currentChamber.num} Débloquée !
+            </h3>
+            <p style={{
+              fontSize: 14,
+              color: '#e9d5ff',
+              lineHeight: 1.5,
+              margin: '0 0 24px'
+            }}>
+              Vous avez triomphé des énigmes de <strong>{currentChamber.title}</strong>. La porte vers la chambre suivante vient de s'ouvrir !
+            </p>
+            <button
+              onClick={handleProceedToNextChamber}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '12px 28px',
+                borderRadius: 12,
+                background: `linear-gradient(135deg, ${currentChamber.color}, #7c3aed)`,
+                border: 'none',
+                color: 'white',
+                fontSize: 14,
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)'
+              }}
+            >
+              <span>Pénétrer dans la Chambre {CHAMBERS[currentChamberIdx + 1]?.num}</span>
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
+  );
+}
+
+function ClockIcon({ size = 20, color = 'currentColor', style = {} }) {
+  return (
+    <svg 
+      width={size} 
+      height={size} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke={color} 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round" 
+      style={style}
+    >
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
   );
 }

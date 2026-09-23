@@ -73,7 +73,7 @@ export default function AtelierSectionUnit2() {
     {
       id: 'jeux',
       title: "Salle d'Arcade & Quêtes",
-      subtitle: "Escape Game Campus, Donjon du Passé 3D, Défi Chrono...",
+      subtitle: "Escape Game Campus, Le Donjon du Passé, Défi Chrono...",
       icon: "🎮",
       color: "#7c3aed",
       badgeBg: "rgba(124, 58, 237, 0.15)"
@@ -373,9 +373,9 @@ export default function AtelierSectionUnit2() {
                 }}
               >
                 <Sparkles className="game-icon" style={{ color: '#c084fc' }} size={48} />
-                <h4 style={{ fontWeight: 'bold' }}>🏰 Le Donjon du Passé (Jeu 3D)</h4>
+                <h4 style={{ fontWeight: 'bold' }}>🏰 Le Donjon du Passé</h4>
                 <p style={{ opacity: 0.85 }}>
-                  Brisez les sorts en maîtrisant le passé composé, l'imparfait et les pronoms objets dans ce donjon 3D !
+                  Brisez les sorts en maîtrisant le passé composé, l'imparfait et les pronoms objets dans ce donjon mystérieux !
                 </p>
                 <button className="play-btn" style={{ background: 'linear-gradient(135deg, #7b2ff7, #4f0e9c)', color: 'white' }}>
                   Entrer dans le Donjon
