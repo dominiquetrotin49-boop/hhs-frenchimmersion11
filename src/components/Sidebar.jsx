@@ -16,6 +16,11 @@ const units = [
 ];
 
 export default function Sidebar() {
+  const isVercel = (typeof window !== "undefined" && (
+    window.location.hostname.includes("vercel") || 
+    window.location.hostname.includes("vercel.app")
+  )) || (typeof process !== "undefined" && process.env && (process.env.IS_VERCEL === "1" || process.env.VERCEL_URL));
+
   return (
     <aside className="sidebar glass-panel">
       <div className="sidebar-header">
@@ -47,6 +52,7 @@ export default function Sidebar() {
         <ul className="nav-list">
           {units.map((unit) => {
             const Icon = unit.icon;
+            const isLocked = isVercel && ['2', '3', '4', '5', '6', 'film1', 'film2'].includes(unit.id);
             return (
               <li key={unit.id}>
                 <NavLink 
@@ -56,7 +62,11 @@ export default function Sidebar() {
                   <Icon className="nav-icon" size={20} />
                   <div className="nav-text">
                     {unit.name && <span className="unit-name">{unit.name}</span>}
-                    {unit.title && <span className="unit-title">{unit.title}</span>}
+                    {unit.title && (
+                      <span className="unit-title">
+                        {unit.title} {isLocked ? ' 🔒' : ''}
+                      </span>
+                    )}
                   </div>
                 </NavLink>
               </li>

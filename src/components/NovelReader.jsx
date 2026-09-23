@@ -158,7 +158,10 @@ export default function NovelReader({ onBack }) {
     setQuizSubmitted(true);
   };
 
-  const isVercel = (typeof process !== 'undefined' && process.env && process.env.VERCEL_URL) || window.location.hostname.includes('vercel');
+  const isVercel = (typeof window !== "undefined" && (
+    window.location.hostname.includes("vercel") || 
+    window.location.hostname.includes("vercel.app")
+  )) || (typeof process !== "undefined" && process.env && (process.env.IS_VERCEL === "1" || process.env.VERCEL_URL));
 
   if (isVercel && activeChapterIdx !== 0) {
     return (
@@ -166,6 +169,8 @@ export default function NovelReader({ onBack }) {
         <div className="novel-header">
           <div className="novel-header-info">
             <span className="novel-badge">📖 Roman Interactif — Le Secret du Manuscrit</span>
+            <h1 className="novel-main-title">{chapter.number} : {chapter.title}</h1>
+            <p className="novel-subtitle">Une aventure en 6 chapitres racontée à tour de rôle par Léa et Hugo</p>
           </div>
           {onBack && (
             <button className="novel-back-btn" onClick={onBack}>
@@ -181,14 +186,20 @@ export default function NovelReader({ onBack }) {
               className={`chapter-tab-btn ${activeChapterIdx === idx ? 'active' : ''}`}
               onClick={() => setActiveChapterIdx(idx)}
             >
-              <span className="chapter-num">{ch.number}</span>
+              <span className="chapter-num">{ch.number} {idx !== 0 && isVercel ? '🔒' : ''}</span>
               <span className="chapter-tab-title">{ch.title}</span>
             </button>
           ))}
         </div>
 
-        <div className="section-content animate-in empty-state glass-panel" style={{ textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem' }}>
-          <h3>Nous n'y sommes pas encore.</h3>
+        <div className="section-content animate-in empty-state glass-panel" style={{ textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem', borderRadius: '1.25rem' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔒</div>
+          <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#f8fafc', marginBottom: '0.5rem' }}>
+            Nous n'y sommes pas encore.
+          </h3>
+          <p style={{ color: '#94a3b8', fontSize: '1rem', margin: 0 }}>
+            Ce chapitre sera disponible prochainement au fil de notre lecture en classe.
+          </p>
         </div>
       </div>
     );

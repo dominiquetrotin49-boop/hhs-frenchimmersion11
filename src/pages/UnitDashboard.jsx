@@ -29,14 +29,34 @@ const STANDARD_TABS = [
 
 export default function UnitDashboard() {
   const { unitId, section } = useParams();
-  const allowedUnits = ["reprise", "1", "2", "3", "4", "5", "6"];
-  const isVercel = (typeof process !== "undefined" && process.env && process.env.VERCEL_URL) || window.location.hostname.includes("vercel");
+  const allowedUnits = ["reprise", "1"];
+  const isVercel = (typeof window !== "undefined" && (
+    window.location.hostname.includes("vercel") || 
+    window.location.hostname.includes("vercel.app")
+  )) || (typeof process !== "undefined" && process.env && (process.env.IS_VERCEL === "1" || process.env.VERCEL_URL));
   
+  const currentConfig = UNIT_DOSSIER_CONFIG[unitId] || UNIT_DOSSIER_CONFIG['1'];
+
   if (isVercel && !allowedUnits.includes(unitId)) {
     return (
       <div className="dashboard-container">
-        <div className="section-content animate-in empty-state glass-panel" style={{ textAlign: "center", padding: "3rem 2rem", marginTop: "2rem" }}>
-          <h3>Nous n'y sommes pas encore.</h3>
+        <header className="dashboard-header glass-panel">
+          <div>
+            <p className="unit-subtitle">{currentConfig?.subtitle || `Unité ${unitId}`}</p>
+            <h2 className="unit-title text-gradient">{currentConfig?.title || `Unité ${unitId}`}</h2>
+          </div>
+        </header>
+
+        <div className="dashboard-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '50vh', textAlign: 'center' }}>
+          <div className="section-content animate-in empty-state glass-panel" style={{ textAlign: "center", padding: "3.5rem 2rem", maxWidth: "600px", borderRadius: "1.25rem", margin: "2rem auto" }}>
+            <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🔒</div>
+            <h3 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#f8fafc", marginBottom: "0.5rem" }}>
+              Nous n'y sommes pas encore.
+            </h3>
+            <p style={{ color: "#94a3b8", fontSize: "0.95rem", margin: 0 }}>
+              Ce contenu sera disponible prochainement au fil de l'année scolaire.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -60,7 +80,6 @@ export default function UnitDashboard() {
 
   const isReprise = unitId === "reprise";
   const isDossierUnit = ["1", "2", "3", "4", "5", "6"].includes(unitId);
-  const currentConfig = UNIT_DOSSIER_CONFIG[unitId] || UNIT_DOSSIER_CONFIG['1'];
   
   const unitTitle = isReprise 
     ? "Unité : Reprise" 
