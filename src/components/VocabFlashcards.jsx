@@ -56,7 +56,7 @@ export default function VocabFlashcards({ unitId = '1', onBack }) {
 
   const playAudio = (id, fallbackText, e) => {
     if (e) e.stopPropagation();
-    const url = `/audio/vocab/word_${id}.mp3`;
+    const url = unitId === '2' ? `/audio/vocab/u2_word_${id}.mp3` : `/audio/vocab/word_${id}.mp3`;
     const audio = new Audio(url);
     audio.play().catch(err => {
       console.warn(`Local audio not found or blocked for word ${id}. Falling back to TTS.`, err);

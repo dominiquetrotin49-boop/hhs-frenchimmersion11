@@ -82,7 +82,9 @@ export default function PronunciationPractice({ unitId, onBack }) {
               <button 
                 className="speak-btn"
                 onClick={() => {
-                  if (unitId === '1') {
+                  if (unitId === '2') {
+                    playAudio(`/audio/vocab/u2_word_${item.id}.mp3`, item.word);
+                  } else if (unitId === '1') {
                     playAudio(`/audio/vocab/word_${item.id}.mp3`, item.word);
                   } else {
                     speak(item.word);

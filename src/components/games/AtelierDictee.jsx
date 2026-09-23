@@ -116,7 +116,7 @@ export default function AtelierDictee({ unitId = '1', onBack }) {
                   <span className="word-index-tag">Mot {index + 1}</span>
                   <button
                     type="button"
-                    onClick={() => playRecordedAudio(`/audio/vocab/word_${item.id}.mp3`, item.word)}
+                    onClick={() => playRecordedAudio(unitId === '2' ? `/audio/vocab/u2_word_${item.id}.mp3` : `/audio/vocab/word_${item.id}.mp3`, item.word)}
                     className="audio-listen-btn"
                     title="Écouter la dictée du mot"
                   >
