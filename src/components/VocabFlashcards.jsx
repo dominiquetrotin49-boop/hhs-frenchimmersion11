@@ -111,7 +111,7 @@ export default function VocabFlashcards({ onBack }) {
             </button>
           )}
           <div>
-            <h3 className="text-xl font-bold text-slate-800" style={{ margin: 0 }}>Cartes-Éclairs 3D</h3>
+            <h3 className="text-xl font-bold text-slate-800" style={{ margin: 0 }}>Cartes</h3>
             <p className="text-sm text-slate-500" style={{ margin: '0.2rem 0 0 0' }}>
               Pratiquez le lexique de l'unité avec la prononciation francophone officielle.
             </p>
@@ -124,7 +124,7 @@ export default function VocabFlashcards({ onBack }) {
             className={`toggle-mode-btn ${viewMode === 'cards' ? 'active' : ''}`}
           >
             <Layers size={14} />
-            Deck 3D
+            Mode Cartes
           </button>
           <button
             onClick={() => setViewMode('grid')}

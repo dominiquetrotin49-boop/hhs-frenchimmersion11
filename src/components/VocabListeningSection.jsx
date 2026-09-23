@@ -62,24 +62,24 @@ export default function VocabListeningSection({ unitId }) {
         <div className="mb-4">
           <h3 className="section-title">Vocabulaire & Écoute : La liberté de la presse</h3>
           <p style={{ opacity: 0.85 }}>
-            Maîtrisez le lexique journalistique par l'écoute, la mémorisation visuelle en 3D et la dictée sonore.
+            Maîtrisez le lexique journalistique par l'écoute, la mémorisation visuelle avec les cartes et la dictée sonore.
           </p>
         </div>
 
         <div className="game-cards-container">
-          {/* Card 1: Cartes-Éclairs 3D */}
+          {/* Card 1: Cartes */}
           <div 
             className="game-card glass-panel animate-in" 
             onClick={() => setActiveActivity('flashcards')}
             style={{ cursor: 'pointer' }}
           >
             <Layers className="game-icon animate-pulse" style={{ color: '#3b82f6' }} size={48} />
-            <h4 style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>Cartes-Éclairs 3D</h4>
+            <h4 style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>Cartes</h4>
             <p style={{ opacity: 0.85, fontSize: '0.92rem' }}>
-              Révisez le vocabulaire de la presse avec des cartes mémoires interactives en trois dimensions.
+              Révisez le vocabulaire de la presse avec des cartes mémoires interactives.
             </p>
             <button className="play-btn btn-accent" style={{ background: 'rgba(59, 130, 246, 0.25)', color: '#60a5fa' }}>
-              Lancer les Cartes 3D
+              Lancer les Cartes
             </button>
           </div>
 

@@ -9,7 +9,7 @@ export const UNIT_DOSSIER_CONFIG = {
     dossier1: {
       tag: 'Dossier 01',
       title: 'Le Lexique de la Presse',
-      subtitle: 'Écoute • Dictée • Cartes 3D'
+      subtitle: 'Écoute • Dictée • Cartes'
     },
     dossier2: {
       tag: 'Dossier 02',
