@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Volume2, CheckCircle2, AlertTriangle, XCircle, Sparkles, Award } from 'lucide-react';
-import { UNIT_1_VOCAB } from '../../data/vocabulary';
+import { UNIT_1_VOCAB, UNIT_2_VOCAB, UNIT_3_VOCAB, UNIT_4_VOCAB } from '../../data/vocabulary';
 import './AtelierDictee.css';
 
 const FRENCH_ACCENTS = ['é', 'è', 'ê', 'ë', 'à', 'â', 'ç', 'î', 'ï', 'ô', 'ù', 'û', 'œ'];
 
-export default function AtelierDictee({ onBack }) {
+export default function AtelierDictee({ unitId = '1', onBack }) {
+  const vocabData = unitId === '4' ? UNIT_4_VOCAB : unitId === '3' ? UNIT_3_VOCAB : unitId === '2' ? UNIT_2_VOCAB : UNIT_1_VOCAB;
+  const unitLabel = unitId === '2' ? "Unité 2 : L'éducation" : unitId === '4' ? "Unité 4 : L'art & la culture" : unitId === '3' ? "Unité 3 : Les voyages" : "Unité 1 : La liberté de la presse";
   const [userSpellings, setUserSpellings] = useState({});
   const [spellingStatus, setSpellingStatus] = useState({});
   const [currentAudio, setCurrentAudio] = useState(null);
@@ -59,7 +61,7 @@ export default function AtelierDictee({ onBack }) {
   const handleInsertAccent = (index, accent) => {
     const current = userSpellings[index] || '';
     const updated = current + accent;
-    handleInputChange(index, updated, UNIT_1_VOCAB[index].word);
+    handleInputChange(index, updated, vocabData[index].word);
   };
 
   const correctCount = Object.values(spellingStatus).filter(s => s === 'correct').length;
@@ -93,18 +95,18 @@ export default function AtelierDictee({ onBack }) {
             L'Atelier d'Orthographe & Dictée Enchantée
           </h3>
           <p className="dictee-subtitle">
-            Écoutez l'audio authentique de chaque mot et écrivez son orthographe exacte en français (Unité 1 : La liberté de la presse).
+            Écoutez l'audio authentique de chaque mot et écrivez son orthographe exacte en français ({unitLabel}).
           </p>
         </div>
 
         <div className="dictee-badge">
           <Award size={18} className="text-amber-400" />
-          <span>Mots maîtrisés : {correctCount} / {UNIT_1_VOCAB.length}</span>
+          <span>Mots maîtrisés : {correctCount} / {vocabData.length}</span>
         </div>
       </div>
 
       <div className="dictee-grid">
-        {UNIT_1_VOCAB.map((item, index) => {
+        {vocabData.map((item, index) => {
           const status = spellingStatus[index];
 
           return (

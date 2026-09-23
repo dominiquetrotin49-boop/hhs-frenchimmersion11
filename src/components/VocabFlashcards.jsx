@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { UNIT_1_VOCAB } from '../data/vocabulary';
+import { UNIT_1_VOCAB, UNIT_2_VOCAB, UNIT_3_VOCAB, UNIT_4_VOCAB } from '../data/vocabulary';
 import { Volume2, CheckCircle, RotateCw, Search, Grid, Layers, ChevronLeft, ChevronRight } from 'lucide-react';
 import './VocabFlashcards.css';
 
-export default function VocabFlashcards({ onBack }) {
+export default function VocabFlashcards({ unitId = '1', onBack }) {
+  const vocabData = unitId === '4' ? UNIT_4_VOCAB : unitId === '3' ? UNIT_3_VOCAB : unitId === '2' ? UNIT_2_VOCAB : UNIT_1_VOCAB;
+  const storageKey = `masteredVocab_u${unitId}`;
+
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('cards'); // 'cards' or 'grid'
   const [cardIndex, setCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [masteredVocab, setMasteredVocab] = useState(() => {
     try {
-      const saved = localStorage.getItem('masteredVocab_u1');
+      const saved = localStorage.getItem(storageKey);
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -19,11 +22,11 @@ export default function VocabFlashcards({ onBack }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem('masteredVocab_u1', JSON.stringify(masteredVocab));
+      localStorage.setItem(storageKey, JSON.stringify(masteredVocab));
     } catch (e) {
       console.warn("Failed to save mastered vocab to localStorage", e);
     }
-  }, [masteredVocab]);
+  }, [masteredVocab, storageKey]);
 
   useEffect(() => {
     // Warm up speech voice loader
@@ -62,7 +65,7 @@ export default function VocabFlashcards({ onBack }) {
   };
 
   // Filtered Vocab list
-  const filteredVocab = UNIT_1_VOCAB.filter(item => {
+  const filteredVocab = vocabData.filter(item => {
     const matchesSearch = item.word.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           item.definition.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch;

@@ -32,7 +32,7 @@ export const UNIT_DOSSIER_CONFIG = {
     dossier1: {
       tag: 'Dossier 01',
       title: 'Le Lexique de l\'Éducation',
-      subtitle: 'Écoute • Vocabulaire • Prononciation'
+      subtitle: 'Cartes • Dictée • Prononciation'
     },
     dossier2: {
       tag: 'Dossier 02',
