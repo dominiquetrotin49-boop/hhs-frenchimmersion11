@@ -61,9 +61,11 @@ export default function PronunciationPractice({ unitId, onBack }) {
 
   return (
     <div className="pronunciation-practice">
-      <button className="back-btn" onClick={onBack}>
-        ← Retour au menu
-      </button>
+      {onBack && (
+        <button className="back-btn" onClick={onBack}>
+          ← Retour au menu
+        </button>
+      )}
 
       <div className="pronunciation-header glass-panel">
         <h2 className="text-gradient">Atelier de Prononciation</h2>
