@@ -8,18 +8,19 @@ import UnitAvatarSpeaker from './UnitAvatarSpeaker';
 import './sections/AtelierSectionUnit1.css';
 
 export default function VocabListeningSection({ unitId }) {
-  const [activeActivity, setActiveActivity] = useState(null);
-  const [unit2Tab, setUnit2Tab] = useState('cartes');
+  const [activeVocabTab, setActiveVocabTab] = useState('cartes');
 
   // Unit 4 audio intro fallback text
   const hugoUnit4Script = "Bienvenue dans l'Unité 4 ! Aujourd'hui, nous plongeons au cœur de l'art, du cinéma et de la culture francophone.";
 
-  // Unit 2 Tabs Configuration
-  const UNIT_2_TABS = [
+  // Activity Tabs configuration per unit
+  const getTabsConfig = (uid) => [
     {
       id: 'cartes',
       title: "Cartes",
-      subtitle: "Cartes mémoires interactives du lexique de l'éducation",
+      subtitle: uid === '2' 
+        ? "Cartes mémoires interactives du lexique de l'éducation" 
+        : "Cartes mémoires interactives du lexique de la presse",
       icon: "🃏",
       color: "#3b82f6",
       badgeBg: "rgba(59, 130, 246, 0.15)"
@@ -51,53 +52,21 @@ export default function VocabListeningSection({ unitId }) {
     );
   }
 
-  // Active sub-activity view (used in Unit 1 or standalone modals)
-  if (activeActivity === 'flashcards') {
-    return (
-      <div className="vocab-activity-view">
-        <button className="back-btn mb-4" onClick={() => setActiveActivity(null)}>
-          ← Retour aux activités de vocabulaire
-        </button>
-        <VocabFlashcards unitId={unitId} onBack={() => setActiveActivity(null)} />
-      </div>
-    );
-  }
+  // ── Units 1 and 2: Identical 3 Activity Tabs Layout ──────────────────────────
+  if (unitId === '1' || unitId === '2') {
+    const tabs = getTabsConfig(unitId);
 
-  if (activeActivity === 'dictee') {
-    return (
-      <div className="vocab-activity-view">
-        <button className="back-btn mb-4" onClick={() => setActiveActivity(null)}>
-          ← Retour aux activités de vocabulaire
-        </button>
-        <AtelierDictee unitId={unitId} onBack={() => setActiveActivity(null)} />
-      </div>
-    );
-  }
-
-  if (activeActivity === 'pronunciation') {
-    return (
-      <div className="vocab-activity-view">
-        <button className="back-btn mb-4" onClick={() => setActiveActivity(null)}>
-          ← Retour aux activités de vocabulaire
-        </button>
-        <PronunciationPractice unitId={unitId} onBack={() => setActiveActivity(null)} />
-      </div>
-    );
-  }
-
-  // ── Unit 2: 3 Activity Tabs ────────────────────────────────────────────────
-  if (unitId === '2') {
     return (
       <div className="vocab-listening-menu fade-in">
         {/* 3 Tabs Bar */}
         <div className="atelier-nav-bar" style={{ marginBottom: '1.75rem' }}>
-          {UNIT_2_TABS.map(tab => {
-            const isActive = unit2Tab === tab.id;
+          {tabs.map(tab => {
+            const isActive = activeVocabTab === tab.id;
             return (
               <button
                 key={tab.id}
                 type="button"
-                onClick={() => setUnit2Tab(tab.id)}
+                onClick={() => setActiveVocabTab(tab.id)}
                 className={`atelier-nav-btn ${isActive ? 'active' : ''}`}
                 style={{
                   borderColor: isActive ? tab.color : 'rgba(255, 255, 255, 0.12)'
@@ -129,95 +98,35 @@ export default function VocabListeningSection({ unitId }) {
         {/* Tab Panel Content */}
         <div className="atelier-subpanel-card animate-fade-in">
           {/* Tab 1: Cartes */}
-          {unit2Tab === 'cartes' && (
+          {activeVocabTab === 'cartes' && (
             <div className="cartes-tab-panel">
-              <VocabFlashcards unitId="2" />
+              <VocabFlashcards unitId={unitId} />
             </div>
           )}
 
           {/* Tab 2: Atelier d'Orthographe & Dictee */}
-          {unit2Tab === 'dictee' && (
+          {activeVocabTab === 'dictee' && (
             <div className="dictee-tab-panel">
-              <AtelierDictee unitId="2" />
+              <AtelierDictee unitId={unitId} />
             </div>
           )}
 
           {/* Tab 3: Atelier de prononciation */}
-          {unit2Tab === 'prononciation' && (
+          {activeVocabTab === 'prononciation' && (
             <div className="prononciation-tab-panel">
               <div className="mb-4">
-                <h3 className="section-title">Vocabulaire & Écoute</h3>
+                <h3 className="section-title">
+                  {unitId === '1' 
+                    ? "Vocabulaire & Écoute : La liberté de la presse" 
+                    : "Vocabulaire & Écoute"}
+                </h3>
                 <p style={{ opacity: 0.85 }}>
                   Écoutez la prononciation authentique de chaque mot et travaillez votre intonation et compréhension orale.
                 </p>
               </div>
-              <PronunciationPractice unitId="2" />
+              <PronunciationPractice unitId={unitId} />
             </div>
           )}
-        </div>
-      </div>
-    );
-  }
-
-  // Unit 1: Card selector for Flashcards, Dictée, Pronunciation
-  if (unitId === '1') {
-    return (
-      <div className="vocab-listening-menu">
-        <div className="mb-4">
-          <h3 className="section-title">Vocabulaire & Écoute : La liberté de la presse</h3>
-          <p style={{ opacity: 0.85 }}>
-            Maîtrisez le lexique journalistique par l'écoute, la mémorisation visuelle avec les cartes et la dictée sonore.
-          </p>
-        </div>
-
-        <div className="game-cards-container">
-          {/* Card 1: Cartes */}
-          <div 
-            className="game-card glass-panel animate-in" 
-            onClick={() => setActiveActivity('flashcards')}
-            style={{ cursor: 'pointer' }}
-          >
-            <Layers className="game-icon animate-pulse" style={{ color: '#3b82f6' }} size={48} />
-            <h4 style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>Cartes</h4>
-            <p style={{ opacity: 0.85, fontSize: '0.92rem' }}>
-              Révisez le vocabulaire de la presse avec des cartes mémoires interactives.
-            </p>
-            <button className="play-btn btn-accent" style={{ background: 'rgba(59, 130, 246, 0.25)', color: '#60a5fa' }}>
-              Lancer les Cartes
-            </button>
-          </div>
-
-          {/* Card 2: Atelier d'Orthographe & Dictée */}
-          <div 
-            className="game-card glass-panel animate-in" 
-            onClick={() => setActiveActivity('dictee')}
-            style={{ cursor: 'pointer' }}
-          >
-            <SpellCheck className="game-icon" style={{ color: '#f59e0b' }} size={48} />
-            <h4 style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>Atelier d'Orthographe & Dictée</h4>
-            <p style={{ opacity: 0.85, fontSize: '0.92rem' }}>
-              Écoutez chaque mot de vocabulaire de la presse et tapez son orthographe exacte avec la barre d'accents.
-            </p>
-            <button className="play-btn" style={{ background: 'rgba(245, 158, 11, 0.25)', color: '#fbbf24' }}>
-              S'entraîner à la Dictée
-            </button>
-          </div>
-
-          {/* Card 3: Atelier de Prononciation */}
-          <div 
-            className="game-card glass-panel animate-in" 
-            onClick={() => setActiveActivity('pronunciation')}
-            style={{ cursor: 'pointer' }}
-          >
-            <Volume2 className="game-icon" style={{ color: '#10b981' }} size={48} />
-            <h4 style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>Atelier de Prononciation</h4>
-            <p style={{ opacity: 0.85, fontSize: '0.92rem' }}>
-              Écoutez et répétez chaque terme de l'unité avec la voix native pour perfectionner votre intonation.
-            </p>
-            <button className="play-btn" style={{ background: 'rgba(16, 185, 129, 0.25)', color: '#34d399' }}>
-              Pratiquer l'Écoute
-            </button>
-          </div>
         </div>
       </div>
     );
@@ -246,7 +155,7 @@ export default function VocabListeningSection({ unitId }) {
     );
   }
 
-  // Other Units: PronunciationPractice
+  // Other Units: Default PronunciationPractice view
   return (
     <div className="vocab-listening-menu">
       <div className="mb-4">
