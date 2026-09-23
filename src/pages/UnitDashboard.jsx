@@ -1,35 +1,37 @@
-import DetecteurDeFailles from "../components/games/DetecteurDeFailles";
-import CourseContreLaMontre from "../components/games/CourseContreLaMontre";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { BookOpen, Languages, PenTool, Gamepad2, Layers } from "lucide-react";
-import EscapeGame from "../components/EscapeGame";
-import Unit2EscapeGame from "../components/Unit2EscapeGame";
-import Unit3EscapeGame from "../components/Unit3EscapeGame";
-import ArtDetectiveGame from "../components/games/ArtDetectiveGame";
-import FilmDirectorGame from "../components/games/FilmDirectorGame";
-import ArtAuctionGame from "../components/games/ArtAuctionGame";
-import PracticeMenu from "../components/games/PracticeMenu";
-import Fishtopia from "../components/games/Fishtopia";
-import DontLookDown from "../components/games/DontLookDown";
-import VocabFillInTheBlank from "../components/VocabFillInTheBlank";
+import { 
+  Volume2, 
+  BookOpen, 
+  PenTool, 
+  Gamepad2, 
+  Languages, 
+  BookOpenCheck 
+} from "lucide-react";
+import VocabListeningSection from "../components/VocabListeningSection";
 import GrammarSection from "../components/GrammarSection";
-import VocabHangman from "../components/games/VocabHangman";
 import RepriseGrammar from "../components/RepriseGrammar";
+import PracticeMenu from "../components/games/PracticeMenu";
+import GamesSection from "../components/GamesSection";
 import UnitAvatarSpeaker from "../components/UnitAvatarSpeaker";
+import AtelierSectionUnit1 from "../components/sections/AtelierSectionUnit1";
+import AtelierSectionUnit2 from "../components/sections/AtelierSectionUnit2";
+import AtelierSectionGeneral from "../components/sections/AtelierSectionGeneral";
+import { UNIT_DOSSIER_CONFIG } from "../data/unitMetadata";
 import "./UnitDashboard.css";
 
-const TABS = [
-  { id: "grammar", label: "Grammaire", icon: BookOpen },
-  { id: "vocabulary", label: "Vocabulaire", icon: Languages },
-  { id: "practice", label: "Pratique", icon: PenTool },
-  { id: "game", label: "Jeux", icon: Gamepad2 },
+const STANDARD_TABS = [
+  { id: "vocab", label: "Vocabulaire & Écoute", icon: Volume2 },
+  { id: "grammar", label: "Grammaire & Règles", icon: BookOpen },
+  { id: "practice", label: "Entraînement & Exercices", icon: PenTool },
+  { id: "games", label: "Jeux & Défis", icon: Gamepad2 },
 ];
 
 export default function UnitDashboard() {
-  const { unitId } = useParams();
-  const allowedUnits = ["reprise", "1"];
+  const { unitId, section } = useParams();
+  const allowedUnits = ["reprise", "1", "2", "3", "4", "5", "6"];
   const isVercel = (typeof process !== "undefined" && process.env && process.env.VERCEL_URL) || window.location.hostname.includes("vercel");
+  
   if (isVercel && !allowedUnits.includes(unitId)) {
     return (
       <div className="dashboard-container">
@@ -40,255 +42,217 @@ export default function UnitDashboard() {
     );
   }
 
-  const [activeTab, setActiveTab] = useState("grammar");
-  const [selectedGame1, setSelectedGame1] = useState(null);
-  const [selectedGame2, setSelectedGame2] = useState(null);
-  const [selectedGame4, setSelectedGame4] = useState(null);
-  const [selectedRepriseGame, setSelectedRepriseGame] = useState(null);
+  // Section mapping for 3-Dossier Hub Model
+  const getInitialDossier = () => {
+    if (section === 'grammaire' || section === 'grammar' || section === 'studio') return 'grammar';
+    if (section === 'atelier' || section === 'practice' || section === 'exercices' || section === 'jeux') return 'atelier';
+    if (section === 'vocabulaire' || section === 'vocab' || section === 'lexique') return 'vocab';
+    return null; // When clicking a unit, only show the 3 Dossiers
+  };
+
+  const [activeTab, setActiveTab] = useState("vocab");
+  const [activeDossier, setActiveDossier] = useState(getInitialDossier());
 
   useEffect(() => {
-    setActiveTab("grammar");
-    setSelectedGame1(null);
-    setSelectedGame2(null);
-    setSelectedGame4(null);
-    setSelectedRepriseGame(null);
-  }, [unitId]);
+    setActiveTab("vocab");
+    setActiveDossier(getInitialDossier());
+  }, [unitId, section]);
 
   const isReprise = unitId === "reprise";
-  const unitTitle = isReprise ? "Unité : Reprise" : `Unité ${unitId}`;
+  const isDossierUnit = ["1", "2", "3", "4", "5", "6"].includes(unitId);
+  const currentConfig = UNIT_DOSSIER_CONFIG[unitId] || UNIT_DOSSIER_CONFIG['1'];
+  
+  const unitTitle = isReprise 
+    ? "Unité : Reprise" 
+    : currentConfig?.title || `Unité ${unitId}`;
+    
   const unitSubtitle = isReprise 
     ? "Révision globale de la syntaxe et des structures fondamentales" 
-    : "Explorez les leçons et pratiquez vos compétences";
-
-  const hugoUnit4Script = "Bienvenue dans l'Unité 4 ! Aujourd'hui, nous plongeons au cœur de l'art et du cinéma.";
+    : currentConfig?.subtitle || "Explorez les leçons et pratiquez vos compétences";
 
   return (
     <div className="dashboard-container">
-      <header className="dashboard-header novel-header">
+      {/* Unit Header with Speaker Avatar */}
+      <header className="dashboard-header novel-header" style={{ alignItems: 'center' }}>
         <div className="header-text">
           <h2 className="title-novel">{unitTitle}</h2>
           <p className="subtitle-novel">{unitSubtitle}</p>
         </div>
-        <div className="header-avatar-zone">
-          {unitId === "4" && (
+        {isDossierUnit && currentConfig?.avatar && (
+          <div className="unit-header-right">
             <UnitAvatarSpeaker 
-              avatar="hugo" 
-              audioSrc="/audio/unit4_intro_hugo.mp3" 
-              name="Hugo" 
-              speechFallbackText={hugoUnit4Script}
+              avatar={currentConfig.avatar} 
+              name={currentConfig.avatarName} 
+              audioSrc={currentConfig.audioSrc} 
+              speechFallbackText={currentConfig.speechFallbackText}
             />
-          )}
-        </div>
+          </div>
+        )}
       </header>
 
-      {/* Tabs Header */}
-      <div className="tabs-container novel-tabs-bar">
-        {TABS.map((tab) => {
-          const Icon = tab.icon;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`tab-btn ${activeTab === tab.id ? "active" : ""} novel-style`}
+      {/* ── UNITÉS 1 À 6 : HUB MODULAIRE EN 3 GRANDS DOSSIERS ── */}
+      {isDossierUnit ? (
+        <>
+          <div className="section-navigation">
+            {/* Dossier 01: Vocabulaire & Écoute */}
+            <div 
+              className={`section-card ${activeDossier === 'vocab' ? 'active' : ''}`}
+              onClick={() => setActiveDossier(activeDossier === 'vocab' ? null : 'vocab')}
             >
-              <Icon size={18} />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
-      </div>
+              <div className="tab-icon-badge vocab-badge">
+                <Languages size={28} />
+              </div>
+              <div>
+                <span style={{ 
+                  fontSize: '10px', 
+                  fontWeight: 900, 
+                  textTransform: 'uppercase', 
+                  letterSpacing: '0.08em', 
+                  color: activeDossier === 'vocab' ? '#ffffff' : '#06b6d4', 
+                  display: 'block', 
+                  marginBottom: '2px' 
+                }}>
+                  {currentConfig?.dossier1.tag || 'Dossier 01'}
+                </span>
+                <h3>{currentConfig?.dossier1.title || 'Le Lexique'}</h3>
+                <p>{currentConfig?.dossier1.subtitle || 'Écoute • Vocabulaire • Prononciation'}</p>
+              </div>
+            </div>
 
-      <div className="dashboard-content">
-        {["1", "2", "3", "4", "reprise"].includes(unitId) ? (
-          <>
-            {/* GRAMMAR TAB */}
+            {/* Dossier 02: Grammaire & Règles */}
+            <div 
+              className={`section-card ${activeDossier === 'grammar' ? 'active' : ''}`}
+              onClick={() => setActiveDossier(activeDossier === 'grammar' ? null : 'grammar')}
+            >
+              <div className="tab-icon-badge grammar-badge">
+                <BookOpenCheck size={28} />
+              </div>
+              <div>
+                <span style={{ 
+                  fontSize: '10px', 
+                  fontWeight: 900, 
+                  textTransform: 'uppercase', 
+                  letterSpacing: '0.08em', 
+                  color: activeDossier === 'grammar' ? '#ffffff' : '#f59e0b', 
+                  display: 'block', 
+                  marginBottom: '2px' 
+                }}>
+                  {currentConfig?.dossier2.tag || 'Dossier 02'}
+                </span>
+                <h3>{currentConfig?.dossier2.title || 'Le Studio & Règles'}</h3>
+                <p>{currentConfig?.dossier2.subtitle || 'Règles • Conjugaison • Structures'}</p>
+              </div>
+            </div>
+
+            {/* Dossier 03: L'Atelier Créatif & Jeux */}
+            <div 
+              className={`section-card ${activeDossier === 'atelier' ? 'active' : ''}`}
+              onClick={() => setActiveDossier(activeDossier === 'atelier' ? null : 'atelier')}
+            >
+              <div className="tab-icon-badge practice-badge">
+                <PenTool size={28} />
+              </div>
+              <div>
+                <span style={{ 
+                  fontSize: '10px', 
+                  fontWeight: 900, 
+                  textTransform: 'uppercase', 
+                  letterSpacing: '0.08em', 
+                  color: activeDossier === 'atelier' ? '#ffffff' : '#c084fc', 
+                  display: 'block', 
+                  marginBottom: '2px' 
+                }}>
+                  {currentConfig?.dossier3.tag || 'Dossier 03'}
+                </span>
+                <h3>{currentConfig?.dossier3.title || 'L\'Atelier Créatif & Jeux'}</h3>
+                <p>{currentConfig?.dossier3.subtitle || 'Exercices • Mots Croisés • Jeux & Défis'}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="dashboard-content">
+            {!activeDossier && (
+              <div className="hub-welcome-prompt animate-in">
+                <p style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0, color: '#f8fafc' }}>
+                  👆 Cliquez sur l'un des 3 dossiers ci-dessus pour afficher son contenu.
+                </p>
+                <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.35rem', marginBottom: 0 }}>
+                  {currentConfig?.dossier1.tag} ({currentConfig?.dossier1.title}) • {currentConfig?.dossier2.tag} ({currentConfig?.dossier2.title}) • {currentConfig?.dossier3.tag} ({currentConfig?.dossier3.title})
+                </p>
+              </div>
+            )}
+
+            {/* Dossier 1 Content */}
+            {activeDossier === 'vocab' && (
+              <div className="section-content animate-in novel-frame-container">
+                <VocabListeningSection unitId={unitId} />
+              </div>
+            )}
+
+            {/* Dossier 2 Content */}
+            {activeDossier === 'grammar' && (
+              <div className="section-content animate-in novel-frame-container">
+                <GrammarSection unitId={unitId} />
+              </div>
+            )}
+
+            {/* Dossier 3 Content */}
+            {activeDossier === 'atelier' && (
+              <div className="section-content animate-in novel-frame-container">
+                {unitId === '1' ? (
+                  <AtelierSectionUnit1 />
+                ) : unitId === '2' ? (
+                  <AtelierSectionUnit2 />
+                ) : (
+                  <AtelierSectionGeneral unitId={unitId} />
+                )}
+              </div>
+            )}
+          </div>
+        </>
+      ) : (
+        /* ── UNITÉ REPRISE : ONGLETS STANDARDS DE RENTRÉE CONSERVÉS ── */
+        <>
+          <div className="tabs-container novel-tabs-bar">
+            {STANDARD_TABS.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`tab-btn ${activeTab === tab.id ? "active" : ""} novel-style`}
+                >
+                  <Icon size={18} />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="dashboard-content">
+            {activeTab === "vocab" && (
+              <div className="section-content animate-in novel-frame-container">
+                <VocabListeningSection unitId={unitId} />
+              </div>
+            )}
             {activeTab === "grammar" && (
               <div className="section-content animate-in novel-frame-container">
-                {unitId === "reprise" ? (
-                  <RepriseGrammar />
-                ) : (
-                  <GrammarSection unitId={unitId} />
-                )}
+                <RepriseGrammar />
               </div>
             )}
-
-            {/* VOCABULARY TAB */}
-            {activeTab === "vocabulary" && (
-              <div className="section-content animate-in novel-frame-container">
-                {unitId === "reprise" && <VocabHangman unitId={unitId} />}
-                {unitId !== "reprise" && (
-                  <div style={{ marginTop: "2rem" }}>
-                    <VocabFillInTheBlank unitId={unitId} />
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* PRACTICE TAB */}
             {activeTab === "practice" && (
               <div className="section-content animate-in novel-frame-container">
                 <PracticeMenu unitId={unitId} />
               </div>
             )}
-
-            {/* GAMES TAB */}
-            {activeTab === "game" && (
+            {activeTab === "games" && (
               <div className="section-content animate-in novel-frame-container">
-                {unitId === "reprise" ? (
-                  selectedRepriseGame === "detecteur-failles" ? (
-                    <div>
-                      <DetecteurDeFailles onBack={() => setSelectedRepriseGame(null)} />
-                    </div>
-                  ) : selectedRepriseGame === "chrono" ? (
-                    <div>
-                      <CourseContreLaMontre onBack={() => setSelectedRepriseGame(null)} />
-                    </div>
-                  ) : (
-                    <div>
-                      <h3 className="mb-4 text-center">Choisissez votre Jeu !</h3>
-                      <div className="game-cards-container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.5rem" }}>
-                        
-                        {/* Game 1: Le Détecteur de Failles */}
-                        <div 
-                          className="game-card glass-panel" 
-                          onClick={() => setSelectedRepriseGame("detecteur-failles")} 
-                          style={{ cursor: "pointer", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "1.5rem", borderRadius: "1rem" }}
-                        >
-                          <div>
-                            <Gamepad2 className="game-icon" style={{ color: "#6366f1", marginBottom: "1rem" }} size={48} />
-                            <h4 style={{ fontWeight: "bold", fontSize: "1.15rem", marginBottom: "0.5rem" }}>🔍 LE DÉTECTEUR DE FAILLES</h4>
-                            <h5 style={{ color: "#818cf8", margin: "0.2rem 0 0.75rem", fontWeight: "600" }}>Révisez la Syntaxe & la Négation</h5>
-                            <p style={{ opacity: 0.85, fontSize: "0.9rem" }}>Examinez les dossiers d'enquête, débusquez les erreurs d'inversion, de traits d'union et la règle du « de » !</p>
-                          </div>
-                          <button className="play-btn mt-4" style={{ background: "#6366f1", color: "white", padding: "0.6rem 1.2rem", borderRadius: "0.5rem", border: "none", cursor: "pointer", fontWeight: "bold" }}>
-                            Jouer
-                          </button>
-                        </div>
-
-                        {/* Game 2: Course contre la Montre */}
-                        <div 
-                          className="game-card glass-panel" 
-                          onClick={() => setSelectedRepriseGame("chrono")}
-                          style={{ cursor: "pointer", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "1.5rem", borderRadius: "1rem" }}
-                        >
-                          <div>
-                            <Gamepad2 className="game-icon" style={{ color: "#e76f51", marginBottom: "1rem" }} size={48} />
-                            <h4 style={{ fontWeight: "bold", fontSize: "1.15rem", marginBottom: "0.5rem" }}>⚡ LA COURSE CONTRE LA MONTRE</h4>
-                            <h5 style={{ color: "#f4a261", margin: "0.2rem 0 0.75rem", fontWeight: "600" }}>Défi Chrono (20s)</h5>
-                            <p style={{ opacity: 0.85, fontSize: "0.9rem" }}>Transformez les phrases au chronomètre et développez des automatismes rapides en syntaxe.</p>
-                          </div>
-                          <button className="play-btn mt-4" style={{ background: "#e76f51", color: "white", padding: "0.6rem 1.2rem", borderRadius: "0.5rem", border: "none", cursor: "pointer", fontWeight: "bold" }}>
-                            Lancer le Défi
-                          </button>
-                        </div>
-
-                      </div>
-                    </div>
-                  )
-                ) : unitId === "4" ? (
-                  selectedGame4 === "detective" ? (
-                    <ArtDetectiveGame onBack={() => setSelectedGame4(null)} />
-                  ) : selectedGame4 === "director" ? (
-                    <FilmDirectorGame onBack={() => setSelectedGame4(null)} />
-                  ) : selectedGame4 === "auction" ? (
-                    <ArtAuctionGame onBack={() => setSelectedGame4(null)} />
-                  ) : (
-                    <div>
-                      <h3 className="mb-4 text-center">Choisissez votre Jeu Interactif !</h3>
-                      <div className="game-cards-container">
-                        <div className="game-card glass-panel" onClick={() => setSelectedGame4("detective")}>
-                          <Gamepad2 className="game-icon" style={{ color: "#60a5fa" }} size={48} />
-                          <h4>🕵️‍♂️ Le Détective d'Art (Vol au Louvre)</h4>
-                          <p>Parcourez Paris, Montréal, Dakar et Bruxelles pour résoudre le mystère et retrouver le chef-d'œuvre !</p>
-                          <button className="play-btn" style={{ background: "#3b82f6", color: "white" }}>Mener l'Enquête</button>
-                        </div>
-
-                        <div className="game-card glass-panel" onClick={() => setSelectedGame4("director")}>
-                          <Gamepad2 className="game-icon" style={{ color: "#c084fc" }} size={48} />
-                          <h4>🎬 Festival de Cannes : Réalisateur</h4>
-                          <p>Réalisez votre film, choisissez le cadrage, la bande originale et remportez la Palme d'Or !</p>
-                          <button className="play-btn" style={{ background: "#8b5cf6", color: "white" }}>Tourner le Film</button>
-                        </div>
-
-                        <div className="game-card glass-panel" onClick={() => setSelectedGame4("auction")}>
-                          <Gamepad2 className="game-icon" style={{ color: "#10b981" }} size={48} />
-                          <h4>🏛️ L'Enchère des Arts & Galerie Virtuelle</h4>
-                          <p>Achetez des œuvres d'art lors d'enchères linguistiques et organisez votre propre vernissage !</p>
-                          <button className="play-btn" style={{ background: "#10b981", color: "white" }}>Accéder aux Enchères</button>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                ) : unitId === "3" ? (
-                  <Unit3EscapeGame />
-                ) : unitId === "2" ? (
-                  selectedGame2 === "escape" ? (
-                    <div>
-                      <button className="back-btn mb-4" onClick={() => setSelectedGame2(null)}>← Retour aux jeux</button>
-                      <Unit2EscapeGame />
-                    </div>
-                  ) : selectedGame2 === "dld" ? (
-                    <DontLookDown onBack={() => setSelectedGame2(null)} />
-                  ) : (
-                    <div>
-                      <h3 className="mb-4 text-center">Choisissez votre Jeu !</h3>
-                      <div className="game-cards-container">
-                        <div className="game-card glass-panel" onClick={() => setSelectedGame2("escape")}>
-                          <Gamepad2 className="game-icon text-accent" size={48} />
-                          <h4>Escape Game</h4>
-                          <p>Testez vos connaissances en résolvant des énigmes !</p>
-                          <button className="play-btn btn-accent">Jouer à l'Escape Game</button>
-                        </div>
-                        
-                        <div className="game-card glass-panel" onClick={() => setSelectedGame2("dld")} style={{background: "linear-gradient(to top, #38bdf8, #bae6fd)"}}>
-                          <Gamepad2 className="game-icon text-white" size={48} />
-                          <h4 className="text-white">Ne Regarde Pas En Bas !</h4>
-                          <p className="text-white opacity-90">Grimpez tout en haut de la ville, mais ne tombez pas !</p>
-                          <button className="play-btn" style={{background: "white", color: "#1e293b"}}>Lancer le Jeu</button>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                ) : (
-                  selectedGame1 === "escape" ? (
-                    <div>
-                      <button className="back-btn mb-4" onClick={() => setSelectedGame1(null)}>← Retour aux jeux</button>
-                      <EscapeGame unitId={unitId} />
-                    </div>
-                  ) : selectedGame1 === "fishtopia" ? (
-                    <Fishtopia onBack={() => setSelectedGame1(null)} />
-                  ) : (
-                    <div>
-                      <h3 className="mb-4 text-center">Choisissez votre Jeu !</h3>
-                      <div className="game-cards-container">
-                        <div className="game-card glass-panel" onClick={() => setSelectedGame1("escape")}>
-                          <Gamepad2 className="game-icon text-accent" size={48} />
-                          <h4>Escape Game</h4>
-                          <p>Testez vos connaissances en résolvant des énigmes !</p>
-                          <button className="play-btn btn-accent">Jouer à l'Escape Game</button>
-                        </div>
-                        
-                        <div className="game-card glass-panel" onClick={() => setSelectedGame1("fishtopia")} style={{background: "linear-gradient(135deg, #4ade80, #3b82f6)"}}>
-                          <Gamepad2 className="game-icon text-white" size={48} />
-                          <h4 className="text-white">Francotopia (Jeu RPG)</h4>
-                          <p className="text-white opacity-90">Baladez-vous, incarnez un hamster, gagnez des appâts et pêchez !</p>
-                          <button className="play-btn" style={{background: "white", color: "#1e293b"}}>Lancer Francotopia</button>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                )}
+                <GamesSection unitId={unitId} />
               </div>
             )}
-          </>
-        ) : (
-          <div className="section-content animate-in empty-state glass-panel" style={{textAlign: "center", padding: "4rem 2rem", marginTop: "2rem"}}>
-            <BookOpen size={48} style={{margin: "0 auto", opacity: 0.5, marginBottom: "1rem"}} />
-            <h3 style={{fontSize: "1.5rem", marginBottom: "1rem"}}>Module en cours de développement</h3>
-            <p style={{opacity: 0.8}}>Le contenu pour {unitTitle} sera bientôt disponible. Merci de votre patience !</p>
           </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 }

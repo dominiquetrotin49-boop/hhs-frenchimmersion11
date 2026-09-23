@@ -51,7 +51,7 @@ const SCENARIOS = [
 
 const TIMER_DURATION = 45 * 60; // 45 minutes
 
-export default function Unit4RoleplayGame() {
+export default function Unit4RoleplayGame({ onBack }) {
   const [selectedScenario, setSelectedScenario] = useState(null);
   const [timeLeft, setTimeLeft] = useState(TIMER_DURATION);
   const [timerRunning, setTimerRunning] = useState(false);
@@ -190,6 +190,11 @@ export default function Unit4RoleplayGame() {
   return (
     <div className="game-container game-bg" style={{ minHeight: '100vh', padding: '2rem' }}>
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        {onBack && (
+          <button className="back-btn mb-4" onClick={onBack} style={{ marginBottom: '1.5rem' }}>
+            ← Retour aux jeux
+          </button>
+        )}
         <div className="glass-panel" style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <h1 className="text-gradient">Jeu de Rôle : La Commission d'Aide Sociale</h1>
           <p style={{ fontSize: '1.2rem', maxWidth: '700px', margin: '1rem auto' }}>

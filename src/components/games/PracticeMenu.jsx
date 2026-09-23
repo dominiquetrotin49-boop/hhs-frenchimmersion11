@@ -1,27 +1,18 @@
-import AtelierDictee from "./AtelierDictee";
 import React, { useState } from 'react';
-import { Clock, TrendingUp, Flag, BookOpen } from 'lucide-react';
-import EditorChallenge from './EditorChallenge';
-import JournalistLadder from './JournalistLadder';
-import ScoopRace from './ScoopRace';
+import { Grid3X3, PenTool, Edit3, Repeat, MoveHorizontal, Gamepad2, BookOpen, Shield, HelpCircle, FileText } from 'lucide-react';
 import Crossword from './Crossword';
-import WritingPractice from './WritingPractice';
-import PronunciationPractice from './PronunciationPractice';
 import PronounReplacement from './PronounReplacement';
 import PronounOrder from './PronounOrder';
 import PronounFill from './PronounFill';
 import GrammarFill from './GrammarFill';
-import Fishtopia from './Fishtopia';
-import { Grid3X3, PenTool, Volume2, Repeat, MoveHorizontal, Edit3, Gamepad2, Shield, Layers } from 'lucide-react';
 import { IMPARFAIT_FILL_DATA, PC_FILL_DATA, MIXED_FILL_DATA } from '../../data/unit4GrammarGames';
-import ArtDetectiveGame from './ArtDetectiveGame';
-import FilmDirectorGame from './FilmDirectorGame';
-import ArtAuctionGame from './ArtAuctionGame';
 import ColdCaseDossier from './ColdCaseDossier';
 import WritingPrompt from './WritingPrompt';
-import VocabFlashcards from '../VocabFlashcards';
 import ReprisePractice from './ReprisePractice';
 import QuestionsPractice from './QuestionsPractice';
+import VocabFillInTheBlank from '../VocabFillInTheBlank';
+import Unit1VerbFillInTheBlank from './Unit1VerbFillInTheBlank';
+import Unit1NewsroomFillInTheBlank from './Unit1NewsroomFillInTheBlank';
 import './Games.css';
 
 const ER_PUZZLE = {
@@ -36,10 +27,10 @@ const ER_PUZZLE = {
     { id: 4, word: "AIME", r: 3, c: 8, dir: "across", clue: "Elle + Aimer" },
     { id: 5, word: "PARLONS", r: 8, c: 2, dir: "across", clue: "Nous + Parler" },
     { id: 6, word: "JOUE", r: 12, c: 0, dir: "across", clue: "Je + Jouer" },
-    { id: 7, word: "ECOUTONS", r: 12, c: 5, dir: "down", clue: "Nous + Écouter" },
+    { id: 7, word: "ÉCOUTONS", r: 12, c: 5, dir: "down", clue: "Nous + Écouter" },
     { id: 8, word: "MANGES", r: 12, c: 9, dir: "down", clue: "Tu + Manger" },
     { id: 9, word: "TROUVENT", r: 14, c: 3, dir: "across", clue: "Ils + Trouver" },
-    { id: 10, word: "ETUDIES", r: 16, c: 4, dir: "across", clue: "Tu + Étudier" }
+    { id: 10, word: "ÉTUDIES", r: 16, c: 4, dir: "across", clue: "Tu + Étudier" }
   ]
 };
 
@@ -59,8 +50,7 @@ const IR_PUZZLE = {
     { id: 8, word: "OBÉIS", r: 9, c: 1, dir: "down", clue: "Tu + Obéir" },
     { id: 9, word: "PUNIS", r: 2, c: 12, dir: "across", clue: "Tu + Punir" },
     { id: 10, word: "AGIT", r: 15, c: 1, dir: "across", clue: "Il + Agir" }
-  ]
-,
+  ],
   cellSize: 24
 };
 
@@ -86,17 +76,19 @@ const RE_PUZZLE = {
 const AUX_PUZZLE = {
   title: "Mots Croisés: Être & Avoir",
   description: "Remplissez la grille avec les conjugaisons correctes de Être et Avoir.",
-  numRows: 11,
+  numRows: 8,
   numCols: 9,
   puzzleData: [
-    { id: 1, word: "AVONS", r: 3, c: 4, dir: "across", clue: "nous — avoir" },
-    { id: 2, word: "SOMMES", r: 5, c: 0, dir: "across", clue: "nous — être" },
-    { id: 3, word: "SONT", r: 8, c: 0, dir: "across", clue: "ils — être" },
-    { id: 4, word: "ES", r: 10, c: 2, dir: "across", clue: "tu — être" },
-    { id: 5, word: "AS", r: 2, c: 8, dir: "down", clue: "tu — avoir" },
-    { id: 6, word: "AVEZ", r: 3, c: 4, dir: "down", clue: "vous — avoir" },
-    { id: 7, word: "SUIS", r: 5, c: 0, dir: "down", clue: "je — être" },
-    { id: 8, word: "ÊTES", r: 7, c: 3, dir: "down", clue: "vous — être" }
+    { id: 1, word: "AS", r: 0, c: 3, dir: "down", clue: "tu — avoir" },
+    { id: 2, word: "SOMMES", r: 1, c: 3, dir: "across", clue: "nous — être" },
+    { id: 3, word: "ONT", r: 1, c: 4, dir: "down", clue: "ils — avoir" },
+    { id: 4, word: "SUIS", r: 1, c: 8, dir: "down", clue: "je — être" },
+    { id: 5, word: "EST", r: 3, c: 2, dir: "across", clue: "il / elle / on — être" },
+    { id: 6, word: "SONT", r: 3, c: 3, dir: "down", clue: "ils — être" },
+    { id: 7, word: "AVEZ", r: 4, c: 1, dir: "down", clue: "vous — avoir" },
+    { id: 8, word: "ÊTES", r: 4, c: 5, dir: "across", clue: "vous — être" },
+    { id: 9, word: "ES", r: 4, c: 7, dir: "down", clue: "tu — être" },
+    { id: 10, word: "AVONS", r: 5, c: 0, dir: "across", clue: "nous — avoir" }
   ]
 };
 
@@ -121,7 +113,7 @@ const IRR_PUZZLE_1 = {
 };
 
 const IRR_PUZZLE_2 = {
-  title: "Mots Croisés: Les verbes \x27Botte\x27",
+  title: "Mots Croisés: Les verbes 'Botte'",
   description: "Conjuguez Venir, Tenir, Prendre, Acheter, Appeler, Payer.",
   numRows: 15,
   numCols: 13,
@@ -142,21 +134,21 @@ const IRR_PUZZLE_2 = {
 const IRR_PUZZLE_3 = {
   title: "Mots Croisés: Autres Irréguliers",
   description: "Conjuguez boire, mettre, envoyer, partir, croire, sortir, écrire, dormir.",
-  numRows: 12,
+  numRows: 13,
   numCols: 14,
   puzzleData: [
-    { id: 1, word: "MET", r: 1, c: 8, dir: "across", clue: "il — mettre" },
-    { id: 2, word: "ENVOYONS", r: 4, c: 6, dir: "across", clue: "nous — envoyer" },
-    { id: 3, word: "BOIVENT", r: 6, c: 0, dir: "across", clue: "ils — boire" },
-    { id: 4, word: "PARTONS", r: 8, c: 6, dir: "across", clue: "nous — partir" },
-    { id: 5, word: "BOIS", r: 10, c: 6, dir: "across", clue: "tu — boire" },
-    { id: 6, word: "CROIENT", r: 0, c: 6, dir: "down", clue: "ils — croire" },
-    { id: 7, word: "METTONS", r: 0, c: 9, dir: "down", clue: "nous — mettre" },
-    { id: 8, word: "SORTEZ", r: 2, c: 4, dir: "down", clue: "vous — sortir" },
-    { id: 9, word: "ÉCRIVENT", r: 3, c: 2, dir: "down", clue: "ils — écrire" },
-    { id: 10, word: "DORMENT", r: 3, c: 11, dir: "down", clue: "ils — dormir" },
-    { id: 11, word: "BUVONS", r: 6, c: 0, dir: "down", clue: "nous — boire" },
-    { id: 12, word: "CROIS", r: 7, c: 8, dir: "down", clue: "je — croire" }
+    { id: 1, word: "MET", r: 2, c: 8, dir: "across", clue: "il — mettre" },
+    { id: 2, word: "ENVOYONS", r: 5, c: 6, dir: "across", clue: "nous — envoyer" },
+    { id: 3, word: "BOIVENT", r: 7, c: 0, dir: "across", clue: "ils — boire" },
+    { id: 4, word: "PARTONS", r: 9, c: 6, dir: "across", clue: "nous — partir" },
+    { id: 5, word: "BOIS", r: 11, c: 6, dir: "across", clue: "tu — boire" },
+    { id: 6, word: "CROIENT", r: 1, c: 6, dir: "down", clue: "ils — croire" },
+    { id: 7, word: "METTONS", r: 1, c: 9, dir: "down", clue: "nous — mettre" },
+    { id: 8, word: "SORTEZ", r: 3, c: 4, dir: "down", clue: "vous — sortir" },
+    { id: 9, word: "ÉCRIVENT", r: 4, c: 2, dir: "down", clue: "ils — écrire" },
+    { id: 10, word: "DORMENT", r: 4, c: 11, dir: "down", clue: "ils — dormir" },
+    { id: 11, word: "BUVONS", r: 0, c: 13, dir: "down", clue: "nous — boire" },
+    { id: 12, word: "CROIS", r: 8, c: 8, dir: "down", clue: "je — croire" }
   ]
 };
 
@@ -177,406 +169,283 @@ const UNIT_4_PUZZLE = {
 };
 
 export default function PracticeMenu({ unitId }) {
-  if (unitId === 'reprise') {
-    return <QuestionsPractice />;
-  }
-
   const [activeGame, setActiveGame] = useState(null);
-  const [activeCategory, setActiveCategory] = useState(unitId === 'reprise' ? 'grammar' : 'vocab');
-  const isVercel = (typeof process !== 'undefined' && process.env && process.env.VERCEL_URL) || window.location.hostname.includes('vercel');
+  const defaultCategory = (unitId === '1' || unitId === '4') ? 'crosswords' : (unitId === '2') ? 'grammar' : 'trous';
+  const [activeCategory, setActiveCategory] = useState(defaultCategory);
 
-  const getGameTitles = () => {
-    switch(unitId) {
-      case '2':
-        return {
-          editor: "Le Défi du Professeur",
-          editorDesc: "Trouve le bon mot avant que le temps ne s'écoule.",
-          editorBtn: "Jouer (Contre la montre)",
-          ladder: "L'Ascension Universitaire",
-          ladderDesc: "Deviens un excellent professeur en répondant à des questions de plus en plus difficiles.",
-          ladderBtn: "Jouer (Progression)",
-          race: "Le Marathon des Examens",
-          raceDesc: "Bâts ton rival pour être le premier à réussir les examens !",
-          raceBtn: "Jouer (Course)",
-          writingTitle: "Souvenirs d'école & Éducation",
-          writingDesc: "Décrivez vos souvenirs scolaires et votre parcours en utilisant l'imparfait, le passé composé et les pronoms objets !"
-        };
-      case '3':
-        return {
-          editor: "Le Défi du Hacker",
-          editorDesc: "Trouve le bon mot de passe avant que le temps ne s'écoule.",
-          editorBtn: "Jouer (Contre la montre)",
-          ladder: "L'Échelle du Développeur",
-          ladderDesc: "Deviens un expert en tech en répondant à des questions complexes.",
-          ladderBtn: "Jouer (Progression)",
-          race: "La Course à l'Innovation",
-          raceDesc: "Bâts l'entreprise rivale pour être le premier à publier ta technologie !",
-          raceBtn: "Jouer (Course)",
-          writingTitle: "Se protéger en ligne",
-          writingDesc: "Rédigez un paragraphe sur la cybersécurité en utilisant le présent !"
-        };
-      case '4':
-        return {
-          editor: "Le Défi des Mots d'Art",
-          editorDesc: "Trouvez le bon mot du vocabulaire artistique avant la fin du temps !",
-          editorBtn: "Jouer (Contre la montre)",
-          ladder: "Le Parcours Culturel",
-          ladderDesc: "Devenez un expert en cinéma, musique et architecture en répondant aux questions !",
-          ladderBtn: "Jouer (Progression)",
-          race: "La Course du Festival de Cannes",
-          raceDesc: "Gagnez la course au cinéma en répondant correctement à toutes les questions !",
-          raceBtn: "Jouer (Course)",
-          writingTitle: "Critique de Film & Récit d'Art",
-          writingDesc: "Rédigez la critique d'un film ou le récit d'un souvenir culturel au passé !"
-        };
-      default: // Unit 1
-        return {
-          editor: "Le Défi du Rédacteur en Chef",
-          editorDesc: "Un jeu de vitesse ! Trouve le bon mot avant que le temps ne s'écoule.",
-          editorBtn: "Jouer (Contre la montre)",
-          ladder: "L'Échelle du Journaliste",
-          ladderDesc: "Deviens Rédacteur en Chef en répondant à des questions de plus en plus difficiles.",
-          ladderBtn: "Jouer (Progression)",
-          race: "La Course au Scoop",
-          raceDesc: "Bâts le journal rival pour être le premier à publier le scoop !",
-          raceBtn: "Jouer (Course)",
-          writingTitle: "Journaliste en Action",
-          writingDesc: "Rédigez un paragraphe sur votre rôle de journaliste en utilisant le présent !"
-        };
-    }
-  };
+  // Active Game Views
+  if (activeGame === 'questions-practice') return (
+    <div>
+      <button className="back-btn mb-4" onClick={() => setActiveGame(null)}>← Retour aux exercices</button>
+      <QuestionsPractice />
+    </div>
+  );
+  if (activeGame === 'coldcase-present') return <ColdCaseDossier tense="present" onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'coldcase-past') return <ColdCaseDossier tense="past" onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'coldcase-negation') return <ColdCaseDossier tense="negation" onBack={() => setActiveGame(null)} />;
 
-  const titles = getGameTitles();
-
-  if (activeGame === 'editor') return <EditorChallenge unitId={unitId} onBack={() => setActiveGame(null)} />;
-  if (activeGame === 'ladder') return <JournalistLadder unitId={unitId} onBack={() => setActiveGame(null)} />;
-  if (activeGame === 'race') return <ScoopRace unitId={unitId} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'crossword-er') return <Crossword {...ER_PUZZLE} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'crossword-ir') return <Crossword {...IR_PUZZLE} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'crossword-re') return <Crossword {...RE_PUZZLE} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'crossword-aux') return <Crossword {...AUX_PUZZLE} onBack={() => setActiveGame(null)} />;
-  if (activeGame === 'grammar-fill-imparfait') return <GrammarFill data={IMPARFAIT_FILL_DATA} title="L'Imparfait" description="Complétez avec le verbe conjugué à l'imparfait." onBack={() => setActiveGame(null)} />;
-  if (activeGame === 'grammar-fill-pc') return <GrammarFill data={PC_FILL_DATA} title="Le Passé Composé" description="Choisissez le bon auxiliaire et participe passé." onBack={() => setActiveGame(null)} />;
-  if (activeGame === 'grammar-fill-mixed') return <GrammarFill data={MIXED_FILL_DATA} title="Imparfait vs Passé Composé" description="Choisissez le temps approprié pour chaque situation." onBack={() => setActiveGame(null)} />;
-  if (activeGame === 'writing') return <WritingPrompt unitId={unitId} onBack={() => setActiveGame(null)} />;
-  // Unit 2 puzzles
   if (activeGame === 'crossword-irr1') return <Crossword {...IRR_PUZZLE_1} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'crossword-irr2') return <Crossword {...IRR_PUZZLE_2} onBack={() => setActiveGame(null)} />;
   if (activeGame === 'crossword-irr3') return <Crossword {...IRR_PUZZLE_3} onBack={() => setActiveGame(null)} />;
-  
-  // Unit 4 Special Games
-  if (activeGame === 'art-detective') return <ArtDetectiveGame onBack={() => setActiveGame(null)} />;
-  if (activeGame === 'film-director') return <FilmDirectorGame onBack={() => setActiveGame(null)} />;
-  if (activeGame === 'art-auction') return <ArtAuctionGame onBack={() => setActiveGame(null)} />;
-
   if (activeGame === 'crossword-u4') return <Crossword {...UNIT_4_PUZZLE} onBack={() => setActiveGame(null)} />;
-  
+
   if (activeGame === 'pronoun-replace') return <PronounReplacement onBack={() => setActiveGame(null)} />;
   if (activeGame === 'pronoun-order') return <PronounOrder onBack={() => setActiveGame(null)} />;
   if (activeGame === 'pronoun-fill') return <PronounFill onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'grammar-fill-imparfait') return <GrammarFill data={IMPARFAIT_FILL_DATA} title="L'Imparfait" description="Complétez avec le verbe conjugué à l'imparfait." onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'grammar-fill-pc') return <GrammarFill data={PC_FILL_DATA} title="Le Passé Composé" description="Choisissez le bon auxiliaire et participe passé." onBack={() => setActiveGame(null)} />;
+  if (activeGame === 'grammar-fill-mixed') return <GrammarFill data={MIXED_FILL_DATA} title="Imparfait vs Passé Composé" description="Choisissez le temps approprié pour chaque situation." onBack={() => setActiveGame(null)} />;
   if (activeGame === 'reprise-practice') return <ReprisePractice onBack={() => setActiveGame(null)} />;
-  
-  if (activeGame === 'fishtopia') return <Fishtopia onBack={() => setActiveGame(null)} />;
-  
-  if (activeGame === 'coldcase-present') {
-    if (isVercel) {
-      return (
-        <div className="practice-menu">
-          <button className="back-btn mb-4" onClick={() => setActiveGame(null)}>← Retour aux exercices</button>
-          <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
-            <h3>Nous n'y sommes pas encore.</h3>
-          </div>
-        </div>
-      );
-    }
-    return <ColdCaseDossier tense="present" onBack={() => setActiveGame(null)} />;
-  }
-  if (activeGame === 'coldcase-past') {
-    if (isVercel) {
-      return (
-        <div className="practice-menu">
-          <button className="back-btn mb-4" onClick={() => setActiveGame(null)}>← Retour aux exercices</button>
-          <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
-            <h3>Nous n'y sommes pas encore.</h3>
-          </div>
-        </div>
-      );
-    }
-    return <ColdCaseDossier tense="past" onBack={() => setActiveGame(null)} />;
-  }
-  if (activeGame === 'coldcase-negation') {
-    if (isVercel) {
-      return (
-        <div className="practice-menu">
-          <button className="back-btn mb-4" onClick={() => setActiveGame(null)}>← Retour aux exercices</button>
-          <div className="empty-state glass-panel" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
-            <h3>Nous n'y sommes pas encore.</h3>
-          </div>
-        </div>
-      );
-    }
-    return <ColdCaseDossier tense="negation" onBack={() => setActiveGame(null)} />;
-  }
-  if (activeGame === 'writing-prompt' || activeGame === 'writing') return <WritingPrompt unitId={unitId} onBack={() => setActiveGame(null)} />;
-  if (activeGame === 'flashcards') {
-    return <VocabFlashcards onBack={() => setActiveGame(null)} />;
-  }
-  if (activeGame === 'writing') return <WritingPrompt unitId={unitId} onBack={() => setActiveGame(null)} />;
-  if (activeGame === 'pronunciation') return <PronunciationPractice unitId={unitId} onBack={() => setActiveGame(null)} />;
 
+  // REPRISE MINI-UNIT VIEW
+  if (unitId === 'reprise') {
+    return (
+      <div className="practice-menu">
+        <div className="mb-4">
+          <h3 className="section-title">Entraînement & Exercices de Rentrée</h3>
+          <p style={{ opacity: 0.85 }}>
+            Renforcez vos bases de syntaxe, d'interrogation et de négation avec des ateliers ciblés.
+          </p>
+        </div>
+
+        <div className="game-cards-container">
+          {/* Card 1: Questions & Négations Practice */}
+          <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('questions-practice')}>
+            <FileText className="game-icon" style={{ color: '#38bdf8' }} size={48} />
+            <h4 style={{ fontWeight: 'bold' }}>Questions & Négations (5 Activités)</h4>
+            <p style={{ opacity: 0.85 }}>
+              Pratiquez « Est-ce que », l'inversion formelle, les mots interrogatifs, la production de dialogue et la double négation.
+            </p>
+            <button className="play-btn" style={{ background: '#38bdf8', color: '#0f172a' }}>Ouvrir les 5 Activités</button>
+          </div>
+
+          {/* Card 2: Cold Case Présent */}
+          <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('coldcase-present')}>
+            <Shield className="game-icon" style={{ color: '#60a5fa' }} size={48} />
+            <h4 style={{ fontWeight: 'bold' }}>Dossier d'Interrogatoire : Présent</h4>
+            <p style={{ opacity: 0.85 }}>
+              Déterminez la culpabilité des suspects en plaçant les doubles pronoms corrects au présent.
+            </p>
+            <button className="play-btn" style={{ background: 'rgba(59, 130, 246, 0.25)', color: '#60a5fa' }}>Lancer l'Interrogatoire</button>
+          </div>
+
+          {/* Card 3: Cold Case Passé */}
+          <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('coldcase-past')}>
+            <Shield className="game-icon" style={{ color: '#fbbf24' }} size={48} />
+            <h4 style={{ fontWeight: 'bold' }}>Dossier d'Interrogatoire : Passé Composé</h4>
+            <p style={{ opacity: 0.85 }}>
+              Déterminez la culpabilité en plaçant les pronoms et l'accord du participe passé.
+            </p>
+            <button className="play-btn" style={{ background: 'rgba(245, 158, 11, 0.25)', color: '#fbbf24' }}>Lancer l'Interrogatoire</button>
+          </div>
+
+          {/* Card 4: Cold Case Négation */}
+          <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('coldcase-negation')}>
+            <Shield className="game-icon" style={{ color: '#a78bfa' }} size={48} />
+            <h4 style={{ fontWeight: 'bold' }}>Dossier d'Interrogatoire : La Négation</h4>
+            <p style={{ opacity: 0.85 }}>
+              Pratiquez la négation complexe (ne... jamais, rien, personne, plus, aucun, pas de).
+            </p>
+            <button className="play-btn" style={{ background: 'rgba(167, 139, 250, 0.25)', color: '#a78bfa' }}>Lancer l'Interrogatoire</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // UNITS 1 TO 4 VIEW
   return (
     <div className="practice-menu">
-      <div className="flex-between mb-4" style={{ alignItems: 'flex-end' }}>
-        <h3>Jeux Pratiques: Choisis ton défi !</h3>
-        
-        {unitId !== 'reprise' && (
-          <div className="tabs-container novel-style" style={{ alignSelf: 'auto' }}>
-            <button 
-              className={`tab-btn ${activeCategory === 'vocab' ? 'active' : ''} novel-style`}
-              onClick={() => setActiveCategory('vocab')}
+      <div className="flex-between mb-4" style={{ alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h3 className="section-title">Entraînement & Exercices</h3>
+          <p style={{ opacity: 0.85, margin: 0 }}>Choisissez votre modalité de travail pour consolider vos acquis.</p>
+        </div>
+
+        <div className="tabs-container novel-style" style={{ alignSelf: 'auto' }}>
+          {(unitId === '1' || unitId === '4') && (
+            <button
+              className={`tab-btn ${activeCategory === 'crosswords' ? 'active' : ''} novel-style`}
+              onClick={() => setActiveCategory('crosswords')}
             >
-              Vocabulaire
+              <Grid3X3 size={16} />
+              <span>Mots Croisés</span>
             </button>
-            <button 
+          )}
+
+          {unitId === '2' && (
+            <button
               className={`tab-btn ${activeCategory === 'grammar' ? 'active' : ''} novel-style`}
               onClick={() => setActiveCategory('grammar')}
             >
-              Grammaire
+              <Repeat size={16} />
+              <span>Exercices & Pronoms</span>
             </button>
-            <button 
-              className={`tab-btn ${activeCategory === 'ecriture' ? 'active' : ''} novel-style`}
-              onClick={() => setActiveCategory('ecriture')}
-            >
-              Production Écrite
-            </button>
-          </div>
-        )}
+          )}
+
+          <button
+            className={`tab-btn ${activeCategory === 'trous' ? 'active' : ''} novel-style`}
+            onClick={() => setActiveCategory('trous')}
+          >
+            <Edit3 size={16} />
+            <span>Texte à Trous</span>
+          </button>
+
+          <button
+            className={`tab-btn ${activeCategory === 'ecriture' ? 'active' : ''} novel-style`}
+            onClick={() => setActiveCategory('ecriture')}
+          >
+            <PenTool size={16} />
+            <span>Production Écrite</span>
+          </button>
+        </div>
       </div>
-      
-      <div className="game-cards-container">
-        {unitId === 'reprise' ? (
-          isVercel ? (
-            <div className="empty-state glass-panel w-full shadow-sm" style={{textAlign: 'center', padding: '4rem 2rem', marginTop: '2rem'}}>
-              <h3>Nous n'y sommes pas encore.</h3>
-            </div>
-          ) : (
-            <>
-              <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('coldcase-present')}>
-                <Shield className="game-icon animate-pulse" style={{ color: '#60a5fa' }} size={48} />
-                <h4>Dossier d'Interrogatoire : Présent</h4>
-                <p>Déterminez la culpabilité des suspects en plaçant les doubles pronoms corrects au présent de l'indicatif.</p>
-                <button className="play-btn btn-accent" style={{ background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa' }}>Lancer l'Interrogatoire (Présent)</button>
-              </div>
 
-              <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('coldcase-past')}>
-                <Shield className="game-icon animate-pulse" style={{ color: '#fbbf24' }} size={48} />
-                <h4>Dossier d'Interrogatoire : Passé Composé</h4>
-                <p>Déterminez la culpabilité des suspects en plaçant les pronoms et l'accord du participe passé au passé composé.</p>
-                <button className="play-btn btn-accent" style={{ background: 'rgba(217, 119, 6, 0.2)', color: '#d97706' }}>Lancer l'Interrogatoire (Passé)</button>
-              </div>
-
-              <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('coldcase-negation')}>
-                <Shield className="game-icon animate-pulse" style={{ color: '#a78bfa' }} size={48} />
-                <h4>Dossier d'Interrogatoire : La Négation</h4>
-                <p>Pratiquez la négation complexe au présent (ne... jamais, ne... rien, ne... personne, ne... plus, ne... aucun, ne... pas de).</p>
-                <button className="play-btn btn-accent" style={{ background: 'rgba(167, 139, 250, 0.2)', color: '#a78bfa' }}>Lancer l'Interrogatoire (Négation)</button>
-              </div>
-
-              <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('writing-prompt')}>
-                <PenTool className="game-icon animate-pulse" style={{ color: '#f43f5e' }} size={48} />
-                <h4>Atelier d'Écriture : Le Présent</h4>
-                <p>Rédigez un court paragraphe de 150 caractères maximum et recevez des corrections de grammaire et d'accords immédiates !</p>
-                <button className="play-btn btn-accent" style={{ background: 'rgba(244, 63, 94, 0.2)', color: '#f43f5e' }}>Lancer l'Atelier</button>
-              </div>
-            </>
-          )
-        ) : (
-          <>
-            {activeCategory === 'vocab' && (
-          <>
-            <div className="game-card glass-panel" onClick={() => setActiveGame('pronunciation')}>
-              <Volume2 className="game-icon" style={{ color: '#f1c40f' }} size={48} />
-              <h4>Atelier de Prononciation</h4>
-              <p>Écoutez et répétez les mots de vocabulaire avec un accent natif !</p>
-              <button className="play-btn" style={{ background: 'rgba(241, 196, 15, 0.2)' }}>S'entraîner</button>
+      {/* Crosswords Category (Unit 1 & Unit 4) */}
+      {activeCategory === 'crosswords' && unitId === '1' && (
+        <div>
+          <h4 className="mb-4 text-center" style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+            7 Grilles de Mots Croisés : Le Présent de l'Indicatif
+          </h4>
+          <div className="game-cards-container">
+            <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('crossword-er')}>
+              <Grid3X3 className="game-icon" style={{ color: '#38bdf8' }} size={48} />
+              <h4 style={{ fontWeight: 'bold' }}>Mots Croisés: Verbes en -ER</h4>
+              <p style={{ opacity: 0.85 }}>Remplissez la grille en conjuguant 10 verbes courants en -ER !</p>
+              <button className="play-btn" style={{ background: '#38bdf8', color: '#0f172a' }}>Jouer (Grille -ER)</button>
             </div>
 
-            <div className="game-card glass-panel" onClick={() => setActiveGame('editor')}>
-              <Clock className="game-icon text-danger" size={48} />
-              <h4>{titles.editor}</h4>
-              <p>{titles.editorDesc}</p>
-              <button className="play-btn btn-danger">{titles.editorBtn}</button>
-            </div>
-
-            <div className="game-card glass-panel" onClick={() => setActiveGame('ladder')}>
-              <TrendingUp className="game-icon text-success" size={48} />
-              <h4>{titles.ladder}</h4>
-              <p>{titles.ladderDesc}</p>
-              <button className="play-btn btn-success">{titles.ladderBtn}</button>
-            </div>
-
-            <div className="game-card glass-panel" onClick={() => setActiveGame('race')}>
-              <Flag className="game-icon text-accent" size={48} />
-              <h4>{titles.race}</h4>
-              <p>{titles.raceDesc}</p>
-              <button className="play-btn btn-accent">{titles.raceBtn}</button>
-            </div>
-            
-            {unitId === '1' && (
-              <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('flashcards')}>
-                <Layers className="game-icon animate-pulse" style={{ color: '#3b82f6' }} size={48} />
-                <h4>Cartes-Éclairs 3D</h4>
-                <p>Révisez le vocabulaire de la liberté de la presse avec des cartes mémoires interactives en trois dimensions.</p>
-                <button className="play-btn btn-accent" style={{ background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa' }}>Lancer l'activité</button>
-              </div>
-            )}
-            
-            {unitId === '4' && (
-              <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-u4')}>
-                <Grid3X3 className="game-icon text-success" size={48} />
-                <h4>Mots Croisés: Les Arts & la Culture</h4>
-                <p>Complétez la grille avec le vocabulaire et les notions culturelles de l'Unité 4 !</p>
-                <button className="play-btn btn-success">Jouer (Mots Croisés)</button>
-              </div>
-            )}
-          </>
-        )}
-
-        {activeCategory === 'grammar' && unitId !== '2' && unitId !== '3' && unitId !== '4' && (
-          <>
-            <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-er')}>
-              <Grid3X3 className="game-icon" style={{ color: '#fdf6e3' }} size={48} />
-              <h4>Mots Croisés: Verbes -ER</h4>
-              <p>Remplissez la grille en conjuguant 10 verbes courants en -ER !</p>
-              <button className="play-btn" style={{ background: 'rgba(255, 255, 255, 0.2)' }}>Jouer (Grille -ER)</button>
-            </div>
-
-            <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-ir')}>
+            <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('crossword-ir')}>
               <Grid3X3 className="game-icon text-accent" size={48} />
-              <h4>Mots Croisés: Verbes -IR</h4>
-              <p>Testez vos connaissances des verbes réguliers du 2ème groupe (-IR) !</p>
+              <h4 style={{ fontWeight: 'bold' }}>Mots Croisés: Verbes en -IR</h4>
+              <p style={{ opacity: 0.85 }}>Testez vos connaissances des verbes réguliers du 2ème groupe (-IR) !</p>
               <button className="play-btn btn-accent">Jouer (Grille -IR)</button>
             </div>
 
-            <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-re')}>
+            <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('crossword-re')}>
               <Grid3X3 className="game-icon text-success" size={48} />
-              <h4>Mots Croisés: Verbes -RE</h4>
-              <p>Conjuguez les verbes du 3ème groupe en -RE comme attendre ou vendre !</p>
+              <h4 style={{ fontWeight: 'bold' }}>Mots Croisés: Verbes en -RE</h4>
+              <p style={{ opacity: 0.85 }}>Conjuguez les verbes du 3ème groupe en -RE comme attendre ou vendre !</p>
               <button className="play-btn btn-success">Jouer (Grille -RE)</button>
             </div>
 
-            <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-aux')}>
+            <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('crossword-aux')}>
               <Grid3X3 className="game-icon text-danger" size={48} />
-              <h4>Mots Croisés: Être & Avoir</h4>
-              <p>Révisez les deux auxiliaires les plus importants de la langue française !</p>
+              <h4 style={{ fontWeight: 'bold' }}>Mots Croisés: Être & Avoir</h4>
+              <p style={{ opacity: 0.85 }}>Révisez les deux auxiliaires fondamentaux de la langue française !</p>
               <button className="play-btn btn-danger">Jouer (Grille Auxiliaires)</button>
             </div>
 
-            <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-irr1')}>
-              <Grid3X3 className="game-icon" style={{ color: '#fdf6e3' }} size={48} />
-              <h4>Grille 1: Super Irréguliers & -OIR</h4>
-              <p>Conjuguez Être, Avoir, Aller, Faire, Pouvoir, Vouloir, Devoir, Savoir, Voir.</p>
-              <button className="play-btn" style={{ background: 'rgba(255, 255, 255, 0.2)' }}>Jouer (Grille 1)</button>
+            <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('crossword-irr1')}>
+              <Grid3X3 className="game-icon" style={{ color: '#fbbf24' }} size={48} />
+              <h4 style={{ fontWeight: 'bold' }}>Grille 1: Super Irréguliers & -OIR</h4>
+              <p style={{ opacity: 0.85 }}>Conjuguez Être, Avoir, Aller, Faire, Pouvoir, Vouloir, Devoir, Savoir.</p>
+              <button className="play-btn" style={{ background: '#fbbf24', color: '#0f172a' }}>Jouer (Grille 1)</button>
             </div>
 
-            <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-irr2')}>
+            <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('crossword-irr2')}>
               <Grid3X3 className="game-icon text-accent" size={48} />
-              <h4>Grille 2: Les verbes "Botte"</h4>
-              <p>Conjuguez Venir, Tenir, Prendre, Acheter, Préférer, Appeler, Payer.</p>
+              <h4 style={{ fontWeight: 'bold' }}>Grille 2: Verbes "Botte"</h4>
+              <p style={{ opacity: 0.85 }}>Conjuguez Venir, Tenir, Prendre, Acheter, Préférer, Appeler, Payer.</p>
               <button className="play-btn btn-accent">Jouer (Grille 2)</button>
             </div>
 
-            <div className="game-card glass-panel" onClick={() => setActiveGame('crossword-irr3')}>
+            <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('crossword-irr3')}>
               <Grid3X3 className="game-icon text-success" size={48} />
-              <h4>Grille 3: Autres Irréguliers</h4>
-              <p>Conjuguez Mettre, Dire, Lire, Écrire, Boire, Croire, Sortir, Partir, Dormir.</p>
+              <h4 style={{ fontWeight: 'bold' }}>Grille 3: Autres Irréguliers</h4>
+              <p style={{ opacity: 0.85 }}>Conjuguez Mettre, Dire, Lire, Écrire, Boire, Croire, Sortir, Partir, Dormir.</p>
               <button className="play-btn btn-success">Jouer (Grille 3)</button>
             </div>
-          </>
-        )}
+          </div>
+        </div>
+      )}
 
-        {activeCategory === 'grammar' && unitId === '2' && (
-          <>
-            <div className="game-card glass-panel" onClick={() => setActiveGame('pronoun-replace')}>
-              <Repeat className="game-icon" style={{ color: '#fdf6e3' }} size={48} />
-              <h4>Jeu 1: Remplacement (QCM)</h4>
-              <p>Choisissez le bon pronom objet pour remplacer le nom lié à l'éducation.</p>
-              <button className="play-btn" style={{ background: 'rgba(255, 255, 255, 0.2)' }}>Jouer</button>
-            </div>
+      {activeCategory === 'crosswords' && unitId === '4' && (
+        <div className="game-cards-container">
+          <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('crossword-u4')}>
+            <Grid3X3 className="game-icon text-success" size={48} />
+            <h4 style={{ fontWeight: 'bold' }}>Mots Croisés: Les Arts & la Culture</h4>
+            <p style={{ opacity: 0.85 }}>Complétez la grille avec le vocabulaire et les notions culturelles de l'Unité 4 !</p>
+            <button className="play-btn btn-success">Jouer (Mots Croisés)</button>
+          </div>
+        </div>
+      )}
 
-            <div className="game-card glass-panel" onClick={() => setActiveGame('pronoun-order')}>
-              <MoveHorizontal className="game-icon text-accent" size={48} />
-              <h4>Jeu 2: L'Ordre des Doubles Pronoms</h4>
-              <p>Remettez les mots de la phrase dans le bon ordre (ex: Je le lui donne).</p>
-              <button className="play-btn btn-accent">Jouer</button>
-            </div>
+      {/* Unit 2 Grammar & Pronouns Drills */}
+      {activeCategory === 'grammar' && unitId === '2' && (
+        <div className="game-cards-container">
+          <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('pronoun-replace')}>
+            <Repeat className="game-icon" style={{ color: '#38bdf8' }} size={48} />
+            <h4 style={{ fontWeight: 'bold' }}>Jeu 1: Remplacement (QCM)</h4>
+            <p style={{ opacity: 0.85 }}>Choisissez le bon pronom objet pour remplacer le nom lié à l'éducation.</p>
+            <button className="play-btn" style={{ background: '#38bdf8', color: '#0f172a' }}>Jouer</button>
+          </div>
 
-            <div className="game-card glass-panel" onClick={() => setActiveGame('pronoun-fill')}>
-              <Edit3 className="game-icon text-success" size={48} />
-              <h4>Jeu 3: Texte à Trous (Pronoms)</h4>
-              <p>Lisez le dialogue sur l'éducation et complétez les blancs avec le bon pronom objet court.</p>
-              <button className="play-btn btn-success">Jouer</button>
-            </div>
+          <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('pronoun-order')}>
+            <MoveHorizontal className="game-icon text-accent" size={48} />
+            <h4 style={{ fontWeight: 'bold' }}>Jeu 2: L'Ordre des Doubles Pronoms</h4>
+            <p style={{ opacity: 0.85 }}>Remettez les mots de la phrase dans le bon ordre (ex: Je le lui donne).</p>
+            <button className="play-btn btn-accent">Jouer</button>
+          </div>
 
-            <div className="game-card glass-panel" onClick={() => setActiveGame('grammar-fill-imparfait')}>
-              <Edit3 className="game-icon text-success" size={48} />
-              <h4>Jeu 4: L'Imparfait</h4>
-              <p>Pratiquez les terminaisons et les irréguliers (être/avoir) à l'imparfait.</p>
-              <button className="play-btn btn-success">Jouer</button>
-            </div>
+          <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('pronoun-fill')}>
+            <Edit3 className="game-icon text-success" size={48} />
+            <h4 style={{ fontWeight: 'bold' }}>Jeu 3: Texte à Trous (Pronoms)</h4>
+            <p style={{ opacity: 0.85 }}>Lisez le dialogue et complétez les blancs avec le bon pronom objet court.</p>
+            <button className="play-btn btn-success">Jouer</button>
+          </div>
 
-            <div className="game-card glass-panel" onClick={() => setActiveGame('grammar-fill-pc')}>
-              <Edit3 className="game-icon text-accent" size={48} />
-              <h4>Jeu 5: Le Passé Composé</h4>
-              <p>Pratiquez le choix de l'auxiliaire (Avoir/Être) et l'accord du participe.</p>
-              <button className="play-btn btn-accent">Jouer</button>
-            </div>
+          <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('grammar-fill-imparfait')}>
+            <Edit3 className="game-icon text-success" size={48} />
+            <h4 style={{ fontWeight: 'bold' }}>Jeu 4: L'Imparfait</h4>
+            <p style={{ opacity: 0.85 }}>Pratiquez les terminaisons et les irréguliers (être/avoir) à l'imparfait.</p>
+            <button className="play-btn btn-success">Jouer</button>
+          </div>
 
-            <div className="game-card glass-panel" onClick={() => setActiveGame('grammar-fill-mixed')}>
-              <Gamepad2 className="game-icon" style={{ color: '#8b5cf6' }} size={48} />
-              <h4>Jeu 6: Imparfait vs Passé Composé</h4>
-              <p>Entraînez-vous à combiner le décor (imparfait) et l'action soudaine (PC).</p>
-              <button className="play-btn" style={{ background: '#8b5cf6', color: 'white' }}>Jouer</button>
-            </div>
+          <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('grammar-fill-pc')}>
+            <Edit3 className="game-icon text-accent" size={48} />
+            <h4 style={{ fontWeight: 'bold' }}>Jeu 5: Le Passé Composé</h4>
+            <p style={{ opacity: 0.85 }}>Pratiquez le choix de l'auxiliaire (Avoir/Être) et l'accord du participe.</p>
+            <button className="play-btn btn-accent">Jouer</button>
+          </div>
 
-            <div className="game-card glass-panel" onClick={() => setActiveGame('reprise-practice')}>
-              <BookOpen className="game-icon" style={{ color: '#38bdf8' }} size={48} />
-              <h4>Exercices de Révision</h4>
-              <p>Pratiquez les pronoms et la conjugaison de révision avant de commencer les unités.</p>
-              <button className="play-btn" style={{ background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8' }}>S'entraîner</button>
-            </div>
-          </>
-        )}
+          <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('grammar-fill-mixed')}>
+            <Gamepad2 className="game-icon" style={{ color: '#8b5cf6' }} size={48} />
+            <h4 style={{ fontWeight: 'bold' }}>Jeu 6: Imparfait vs Passé Composé</h4>
+            <p style={{ opacity: 0.85 }}>Entraînez-vous à combiner le décor (imparfait) et l'action soudaine (PC).</p>
+            <button className="play-btn" style={{ background: '#8b5cf6', color: 'white' }}>Jouer</button>
+          </div>
 
-        {activeCategory === 'grammar' && unitId === '3' && (
-          <>
-            <div className="empty-state glass-panel w-full" style={{ textAlign: 'center', padding: '2rem' }}>
-              <p>Aucune activité de grammaire pour le moment.</p>
-            </div>
-          </>
-        )}
+          <div className="game-card glass-panel animate-in" onClick={() => setActiveGame('reprise-practice')}>
+            <BookOpen className="game-icon" style={{ color: '#38bdf8' }} size={48} />
+            <h4 style={{ fontWeight: 'bold' }}>Exercices de Révision</h4>
+            <p style={{ opacity: 0.85 }}>Pratiquez les pronoms et la conjugaison de révision avant de commencer.</p>
+            <button className="play-btn" style={{ background: 'rgba(56, 189, 248, 0.25)', color: '#38bdf8' }}>S'entraîner</button>
+          </div>
+        </div>
+      )}
 
-        {activeCategory === 'grammar' && unitId === '4' && (
-          <>
-            <div className="empty-state glass-panel w-full" style={{ textAlign: 'center', padding: '2rem' }}>
-              <p>Aucune activité de grammaire pour le moment.</p>
-            </div>
-          </>
-        )}
+      {/* Texte à Trous Category */}
+      {activeCategory === 'trous' && (
+        <div className="animate-in">
+          {String(unitId) === '1' ? (
+            <Unit1VerbFillInTheBlank />
+          ) : (
+            <VocabFillInTheBlank unitId={unitId} />
+          )}
+        </div>
+      )}
 
-        {activeCategory === 'ecriture' && (
-          <>
-            <div className="game-card glass-panel" onClick={() => setActiveGame('writing')}>
-              <PenTool className="game-icon text-accent" size={48} />
-              <h4>{titles.writingTitle}</h4>
-              <p>{titles.writingDesc}</p>
-              <button className="play-btn btn-accent">Commencer à écrire</button>
-            </div>
-          </>
-        )}
-          </>
-        )}
-      </div>
+      {/* Writing Prompt Category */}
+      {activeCategory === 'ecriture' && (
+        <div className="animate-in">
+          <WritingPrompt unitId={unitId} />
+        </div>
+      )}
     </div>
   );
 }

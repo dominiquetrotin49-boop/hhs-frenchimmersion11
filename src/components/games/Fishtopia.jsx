@@ -75,23 +75,23 @@ const MAP_LEVEL_3 = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
 
-// Level 4 Map (Tahiti Lagoon): STRICT whitelist matching user's black painted path!
+// Level 4 Map (Tahiti Lagoon): Accurate tile matrix for Level 4
 const MAP_LEVEL_4 = [
-  [2,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,2,2],
-  [2,2,2,2,2,2,2,2,0,0,3,3,3,3,2,1,1,1,1,2],
-  [2,2,2,2,2,2,2,0,0,2,3,3,3,3,2,1,1,1,1,2],
-  [2,1,4,4,4,4,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,1,4,4,4,4,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
-  [2,1,4,4,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,2],
-  [2,1,2,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,2],
-  [2,2,2,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,2],
-  [2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2],
-  [2,2,2,2,2,0,0,0,0,0,5,5,5,5,5,5,5,5,1,2],
-  [2,2,2,2,2,2,2,2,2,2,5,5,5,5,5,5,5,5,1,2],
-  [2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,2],
-  [2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,2],
-  [2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,2],
-  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1],
+  [2,2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1],
+  [2,2,2,0,0,0,0,0,2,2,2,2,3,3,3,0,0,1,1,1],
+  [2,2,2,0,4,4,4,0,0,0,0,0,3,3,3,0,0,1,1,1],
+  [2,2,2,0,4,4,4,0,0,0,0,0,3,3,3,0,0,1,1,1],
+  [2,2,2,0,4,4,4,0,0,0,0,0,0,0,0,0,0,1,1,1],
+  [2,2,2,0,4,4,4,0,0,0,0,2,2,2,0,0,0,1,1,1],
+  [2,2,2,2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1],
+  [2,2,2,2,0,0,0,0,0,0,0,5,0,0,1,1,1,1,1,1],
+  [2,2,2,2,2,0,0,0,0,0,0,5,5,5,1,1,1,1,1,1],
+  [2,2,2,2,2,0,0,0,0,0,0,1,1,5,5,5,5,5,1,1],
+  [0,0,0,0,0,0,0,0,0,0,1,1,1,1,5,5,5,5,1,1],
+  [0,0,0,0,0,0,0,0,0,1,1,1,1,1,5,5,5,5,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ];
 
 const MAP_LEVEL_1 = MAP_GRID;
@@ -162,47 +162,47 @@ const QUESTIONS = {
     { "q": "Tu ___ (voir) ce magnifique paysage ?", "opts": ["vois", "voit", "voyons"], "ans": 0 }
   ],
   "3": [
-    { "q": "Tu ___ (devoir) réviser les verbes.", "opts": ["dois", "doit", "devons"], "ans": 0 },
-    { "q": "Elles ___ (prendre) le bus de huit heures.", "opts": ["prennent", "prends", "prenez"], "ans": 0 },
+    { "q": "Tu ___ (devoir) réviser les verbes.", "opts": ["doit", "dois", "devons"], "ans": 1 },
+    { "q": "Elles ___ (prendre) le bus de huit heures.", "opts": ["prends", "prenez", "prennent"], "ans": 2 },
     { "q": "Nous ___ (vouloir) réussir notre projet.", "opts": ["voulons", "voulez", "veulent"], "ans": 0 },
-    { "q": "Je ___ (savoir) la réponse à la question.", "opts": ["sais", "sait", "savent"], "ans": 0 },
-    { "q": "Vous ___ (venir) à la réunion du club ?", "opts": ["venez", "venons", "viennent"], "ans": 0 },
+    { "q": "Je ___ (savoir) la réponse à la question.", "opts": ["sait", "sais", "savent"], "ans": 1 },
+    { "q": "Vous ___ (venir) à la réunion du club ?", "opts": ["venons", "viennent", "venez"], "ans": 2 },
     { "q": "Il faut que tu ___ (faire) attention.", "opts": ["fasses", "fais", "faites"], "ans": 0 },
-    { "q": "Je souhaiterais qu'elle ___ (être) présente.", "opts": ["soit", "est", "sera"], "ans": 0 },
-    { "q": "Si j'avais le temps, je ___ (partir) en vacances.", "opts": ["partirais", "partir", "partirai"], "ans": 0 },
+    { "q": "Je souhaiterais qu'elle ___ (être) présente.", "opts": ["est", "soit", "sera"], "ans": 1 },
+    { "q": "Si j'avais le temps, je ___ (partir) en vacances.", "opts": ["partir", "partirai", "partirais"], "ans": 2 },
     { "q": "Il faut que nous ___ (avoir) nos billets.", "opts": ["ayons", "avons", "aurez"], "ans": 0 },
-    { "q": "Si vous étudiiez, vous ___ (réussir) l'examen.", "opts": ["réussiriez", "réussissez", "réussir"], "ans": 0 },
-    { "q": "Il est important qu'ils ___ (comprendre) la leçon.", "opts": ["comprennent", "comprennent pas", "comprendra"], "ans": 0 },
+    { "q": "Si vous étudiiez, vous ___ (réussir) l'examen.", "opts": ["réussissez", "réussiriez", "réussir"], "ans": 1 },
+    { "q": "Il est important qu'ils ___ (comprendre) la leçon.", "opts": ["comprennent pas", "comprendra", "comprennent"], "ans": 2 },
     { "q": "Tu ___ (pouvoir) m'aider si tu voulais.", "opts": ["pourrais", "peux", "pouvez"], "ans": 0 },
-    { "q": "Bien qu'il ___ (faire) froid, nous sortons.", "opts": ["fasse", "fait", "fera"], "ans": 0 },
-    { "q": "Nous ___ (aimer) visiter la Bretagne cet été.", "opts": ["aimerions", "aimons", "aimerez"], "ans": 0 },
+    { "q": "Bien qu'il ___ (faire) froid, nous sortons.", "opts": ["fait", "fasse", "fera"], "ans": 1 },
+    { "q": "Nous ___ (aimer) visiter la Bretagne cet été.", "opts": ["aimons", "aimerez", "aimerions"], "ans": 2 },
     { "q": "Il faut que vous ___ (savoir) la vérité.", "opts": ["sachiez", "savez", "saurez"], "ans": 0 },
-    { "q": "Si elle travaillait, elle ___ (avoir) de meilleures notes.", "opts": ["aurait", "a", "aura"], "ans": 0 },
-    { "q": "Avant que tu ne ___ (partir), écoute-moi.", "opts": ["partes", "pars", "partira"], "ans": 0 },
+    { "q": "Si elle travaillait, elle ___ (avoir) de meilleures notes.", "opts": ["a", "aurait", "aura"], "ans": 1 },
+    { "q": "Avant que tu ne ___ (partir), écoute-moi.", "opts": ["pars", "partira", "partes"], "ans": 2 },
     { "q": "Je préférerais que nous ___ (choisir) ensemble.", "opts": ["choisissions", "choisissons", "choisirez"], "ans": 0 },
-    { "q": "Tu ___ (devoir) m'avertir plus tôt.", "opts": ["devrais", "dois", "devras"], "ans": 0 },
-    { "q": "Il faut qu'ils ___ (aller) au laboratoire.", "opts": ["aillent", "vont", "iront"], "ans": 0 }
+    { "q": "Tu ___ (devoir) m'avertir plus tôt.", "opts": ["dois", "devrais", "devras"], "ans": 1 },
+    { "q": "Il faut qu'ils ___ (aller) au laboratoire.", "opts": ["vont", "iront", "aillent"], "ans": 2 }
   ],
   "4": [
-    { "q": "J'ai vu cette vidéo, je l'ai ___ aimée.", "opts": ["beaucoup", "très", "trop"], "ans": 0 },
+    { "q": "J'ai vu cette vidéo, je l'ai ___ aimée.", "opts": ["trop", "beaucoup", "très"], "ans": 1 },
     { "q": "Combien de livres as-tu ? J'___ ai trois.", "opts": ["y", "les", "en"], "ans": 2 },
     { "q": "Je te conseille ___ lire cet article.", "opts": ["à", "de", "pour"], "ans": 1 },
     { "q": "Il ___ offre des fleurs. (à sa mère)", "opts": ["l'", "la", "lui"], "ans": 2 },
     { "q": "Vous ___ avez parlé hier. (à vos amis)", "opts": ["les", "leur", "y"], "ans": 1 },
-    { "q": "Le livre ___ je te parle est passionnant.", "opts": ["dont", "que", "qui"], "ans": 0 },
-    { "q": "La ville ___ j'habite est magnifique.", "opts": ["où", "que", "dont"], "ans": 0 },
+    { "q": "Le livre ___ je te parle est passionnant.", "opts": ["que", "dont", "qui"], "ans": 1 },
+    { "q": "La ville ___ j'habite est magnifique.", "opts": ["que", "dont", "où"], "ans": 2 },
     { "q": "Ce film est fantastique, je ___ recommande.", "opts": ["le", "lui", "en"], "ans": 0 },
-    { "q": "As-tu répondu à la lettre ? Oui, j'___ ai répondu.", "opts": ["y", "en", "la"], "ans": 0 },
-    { "q": "Les conseils ___ le professeur m'a donnés sont utiles.", "opts": ["que", "qui", "dont"], "ans": 0 },
+    { "q": "As-tu répondu à la lettre ? Oui, j'___ ai répondu.", "opts": ["en", "y", "la"], "ans": 1 },
+    { "q": "Les conseils ___ le professeur m'a donnés sont utiles.", "opts": ["qui", "dont", "que"], "ans": 2 },
     { "q": "Elle se souvient ___ son premier voyage en France.", "opts": ["de", "à", "en"], "ans": 0 },
-    { "q": "Il s'intéresse beaucoup ___ arts et à la culture.", "opts": ["aux", "des", "les"], "ans": 0 },
-    { "q": "C'est l'étudiant ___ a gagné le concours.", "opts": ["qui", "que", "dont"], "ans": 0 },
+    { "q": "Il s'intéresse beaucoup ___ arts et à la culture.", "opts": ["des", "aux", "les"], "ans": 1 },
+    { "q": "C'est l'étudiant ___ a gagné le concours.", "opts": ["que", "dont", "qui"], "ans": 2 },
     { "q": "Avez-vous besoin de ce dictionnaire ? Oui, j'___ ai besoin.", "opts": ["en", "y", "le"], "ans": 0 },
-    { "q": "Ma sœur ___ a envoyé une belle carte postale. (à nous)", "opts": ["nous", "leur", "les"], "ans": 0 },
-    { "q": "Ce sont les affaires ___ j'ai achetées au marché.", "opts": ["que", "qui", "dont"], "ans": 0 },
+    { "q": "Ma sœur ___ a envoyé une belle carte postale. (à nous)", "opts": ["leur", "nous", "les"], "ans": 1 },
+    { "q": "Ce sont les affaires ___ j'ai achetées au marché.", "opts": ["qui", "dont", "que"], "ans": 2 },
     { "q": "Penses-tu à tes examens ? Oui, j'___ pense souvent.", "opts": ["y", "en", "les"], "ans": 0 },
-    { "q": "Il m'a demandé ___ je voulais venir avec lui.", "opts": ["si", "que", "dont"], "ans": 0 },
-    { "q": "C'est la raison pour ___ il est en retard.", "opts": ["laquelle", "quel", "qui"], "ans": 0 },
+    { "q": "Il m'a demandé ___ je voulais venir avec lui.", "opts": ["que", "si", "dont"], "ans": 1 },
+    { "q": "C'est la raison pour ___ il est en retard.", "opts": ["quel", "qui", "laquelle"], "ans": 2 },
     { "q": "Elle ___ a dit la vérité sans hésiter. (à moi)", "opts": ["m'", "moi", "me les"], "ans": 0 }
   ]
 };
@@ -369,14 +369,97 @@ export default function Fishtopia({ onBack }) {
     return activeMap[row][col];
   };
 
+  // --- LEVEL 4 DEDICATED NAVMESH & WALKABILITY ---
+  // Hard Rule: Level 4 ONLY. Does not alter collision or logic for Levels 1, 2, or 3.
+  const isLevel4Walkable = (x, y) => {
+    // Screen boundary margins
+    if (x < 15 || x > 785 || y < 15 || y > 585) return false;
+
+    // 1. SOLID STRUCTURES (IMPASSABLE OBSTACLES)
+    // Question Booth cabin (hamster can walk up to the front counter at y >= 280, but not into the walls)
+    if (x >= 165 && x <= 285 && y >= 115 && y <= 280) return false;
+
+    // Fish Market stall (hamster can walk up to front counter at y >= 180, but not into the walls)
+    if (x >= 465 && x <= 585 && y >= 65 && y <= 180) return false;
+
+    // Central decorative bush cluster in the sand
+    if (x >= 435 && x <= 545 && y >= 225 && y <= 270) return false;
+
+    // 2. WOODEN PIER / PONTON (WALKABLE)
+    // Pier Platform: x: 560..715, y: 390..515
+    if (x >= 560 && x <= 715 && y >= 390 && y <= 515) return true;
+
+    // Pier Walkway (sloping ramp connecting beach to platform):
+    if (x >= 430 && x < 560) {
+      const progress = (x - 430) / (560 - 430);
+      const topY = 315 + progress * 75;
+      const botY = 375 + progress * 80;
+      if (y >= topY && y <= botY) return true;
+    }
+
+    // 3. WATER BOUNDARIES (IMPASSABLE)
+    // Southwest shoreline
+    if (x <= 340 && y > 525) return false;
+    if (x > 340 && x <= 430) {
+      const waterCurveY = 525 - ((x - 340) / 90) * 75;
+      if (y > waterCurveY) return false;
+    }
+    // Ocean bay south of walkway
+    if (x > 430 && x <= 560) {
+      const walkwayBotY = 375 + ((x - 430) / 130) * 80;
+      if (y > walkwayBotY) return false;
+    }
+    // Ocean north of pier platform
+    if (x > 560 && y >= 300 && y < 390) return false;
+    // Ocean south of platform
+    if (x > 560 && y > 515) return false;
+    // Ocean east of platform
+    if (x > 715 && y >= 380) return false;
+    // East beach water line (north of pier)
+    if (y < 300 && x > 685) return false;
+
+    // 4. JUNGLE / CLIFF BOUNDARIES (IMPASSABLE)
+    if (y < 20) return false;
+    const isNorthPath = (x >= 120 && x <= 180 && y >= 20 && y <= 115) || (x >= 150 && x <= 320 && y >= 95 && y <= 125);
+    if (!isNorthPath) {
+      if (x < 120 && y < 270) return false;
+      if (x >= 180 && x < 465 && y < 115) return false;
+    }
+    if (x >= 465 && x <= 585 && y < 65) return false;
+    if (x > 585 && y < 80) return false;
+
+    if (y >= 270 && y <= 360 && x < 175) return false;
+    if (y > 360 && y <= 450 && x < 205) return false;
+
+    // Open walkable sand area across the beach
+    return true;
+  };
+
   // --- HARD RULES FOR MOVEMENT / WALKABILITY (DIRECT PIXEL-COLOR MASKING ACROSS ALL 4 LEVELS) ---
   // Hard Rule: Hamster CAN ONLY walk on pixels painted BLACK (R<70, G<70, B<70) in the level's annotated mask image!
   // Water, grass, rocks, forest, long grass, cliffs, and buildings are 100% STRICTLY IMPASSABLE across ALL 4 LEVELS!
   const checkCollisionAt = (px, py, size) => {
     const rLevel = stateRef.current?.rodLevel || 1;
+
+    // --- LEVEL 4 ONLY: DEDICATED NAVMESH COLLISION CHECK ---
+    if (rLevel === 4) {
+      const colSize = 8;
+      const points = [
+        { x: px, y: py },
+        { x: px - colSize/2, y: py - colSize/2 },
+        { x: px + colSize/2, y: py - colSize/2 },
+        { x: px - colSize/2, y: py + colSize/2 },
+        { x: px + colSize/2, y: py + colSize/2 }
+      ];
+      for (let c of points) {
+        if (!isLevel4Walkable(c.x, c.y)) return true;
+      }
+      return false;
+    }
+
     const activeMaskData = maskDataRef.current[rLevel];
 
-    // For ALL Levels: Direct Pixel-Color Sampling from the black path mask image!
+    // For Levels 1-3: Direct Pixel-Color Sampling from the black path mask image!
     if (activeMaskData) {
       const colSize = 8; // Nimble 8px collision box for smooth turning along black path
       const points = [
@@ -431,8 +514,38 @@ export default function Fishtopia({ onBack }) {
 
   // --- HARD RULES FOR INTERACTION TRIGGERS ---
   const getInteractionTarget = () => {
+    const rLevel = stateRef.current?.rodLevel || 1;
     const p = playerRef.current;
-    
+
+    // --- LEVEL 4 ONLY: DEDICATED INTERACTION ZONES ---
+    if (rLevel === 4) {
+      // 1. Question Booth (front counter entrance: x: 170..290, y: 275..340)
+      if (p.x >= 170 && p.x <= 290 && p.y >= 275 && p.y <= 340) {
+        return 'station';
+      }
+
+      // 2. Fish Market (front counter entrance: x: 460..595, y: 175..240)
+      if (p.x >= 460 && p.x <= 595 && p.y >= 175 && p.y <= 240) {
+        return 'market';
+      }
+
+      // 3. Wooden Pier / Ponton (fishing platform & walkway dock)
+      const onPlatform = (p.x >= 560 && p.x <= 720 && p.y >= 390 && p.y <= 520);
+      let onWalkway = false;
+      if (p.x >= 430 && p.x < 560) {
+        const progress = (p.x - 430) / (560 - 430);
+        const topY = 315 + progress * 75;
+        const botY = 375 + progress * 80;
+        if (p.y >= topY && p.y <= botY) onWalkway = true;
+      }
+      if (onPlatform || onWalkway) {
+        return 'fish';
+      }
+
+      return null;
+    }
+
+    // --- LEVELS 1, 2, 3 INTERACTION LOGIC REMAINS 100% UNTOUCHED BELOW ---
     // Check tiles directly in front (North / facing building entrance) of the hamster
     const tileInFrontFar = getTile(p.x, p.y - TILE * 0.75);
     const tileInFrontMid = getTile(p.x, p.y - TILE * 0.5);
@@ -499,9 +612,93 @@ export default function Fishtopia({ onBack }) {
 
     const target = getInteractionTarget();
     if (target === 'station') setInteractionHint("🏛️ CLIQUEZ OU APPUYEZ SUR ESPACE POUR POSER UNE QUESTION");
-    else if (target === 'market') setInteractionHint("🏪 CLIQUEZ OU APPUYEZ SUR ESPACE POUR OUVRIR LE MARCHÉ");
+    else if (target === 'market') setInteractionHint("🏪 CLIQUEZ OU APPUYEZ SUR ESPACE POUR OUVRIR LA POISSONNERIE");
     else if (target === 'fish') setInteractionHint("🎣 CLIQUEZ OU APPUYEZ SUR ESPACE POUR PÊCHER (COÛTE 1 APPÂT)");
     else setInteractionHint(null);
+  };
+
+  // --- DRAW STORE SIGN ("Poissonnerie") ON BUILDING ACROSS ALL 4 LEVELS ---
+  const drawStoreSign = (ctx, rLevel) => {
+    ctx.save();
+    if (rLevel === 1 || rLevel === 2 || rLevel === 3) {
+      // Levels 1, 2, 3: Replace "FISH MARKET" on the wooden sign board under the awning
+      const sx = 434;
+      const sy = 75;
+      const sw = 94;
+      const sh = 18;
+
+      // Wooden sign base matching the stall's warm cedar tone
+      ctx.fillStyle = '#9c6034';
+      ctx.fillRect(sx, sy, sw, sh);
+
+      // Wood plank top highlight & bottom shadow
+      ctx.fillStyle = '#b87743';
+      ctx.fillRect(sx, sy, sw, 2);
+      ctx.fillStyle = '#5c3516';
+      ctx.fillRect(sx, sy + sh - 2, sw, 2);
+
+      // Side borders & nail rivets
+      ctx.fillStyle = '#3a1e0b';
+      ctx.fillRect(sx, sy, 2, sh);
+      ctx.fillRect(sx + sw - 2, sy, 2, sh);
+      ctx.fillRect(sx + 3, sy + sh / 2 - 1, 2, 2);
+      ctx.fillRect(sx + sw - 5, sy + sh / 2 - 1, 2, 2);
+
+      // Carved text: "Poissonnerie"
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = "bold 9px 'Courier New', monospace, sans-serif";
+
+      // Shadow
+      ctx.fillStyle = '#3a1e0b';
+      ctx.fillText('Poissonnerie', sx + sw / 2 + 0.5, sy + sh / 2 + 1);
+
+      // Main cream lettering
+      ctx.fillStyle = '#fffbeb';
+      ctx.fillText('Poissonnerie', sx + sw / 2, sy + sh / 2);
+    } else if (rLevel === 4) {
+      // Level 4: Wooden sign board under the canopy
+      const sx = 485;
+      const sy = 78;
+      const sw = 84;
+      const sh = 18;
+
+      ctx.fillStyle = '#9c6034';
+      ctx.fillRect(sx, sy, sw, sh);
+      ctx.fillStyle = '#b87743';
+      ctx.fillRect(sx, sy, sw, 2);
+      ctx.fillStyle = '#5c3516';
+      ctx.fillRect(sx, sy + sh - 2, sw, 2);
+      ctx.fillStyle = '#3a1e0b';
+      ctx.fillRect(sx, sy, 2, sh);
+      ctx.fillRect(sx + sw - 2, sy, 2, sh);
+
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = "bold 8.5px 'Courier New', monospace, sans-serif";
+      ctx.fillStyle = '#3a1e0b';
+      ctx.fillText('Poissonnerie', sx + sw / 2 + 0.5, sy + sh / 2 + 1);
+      ctx.fillStyle = '#fffbeb';
+      ctx.fillText('Poissonnerie', sx + sw / 2, sy + sh / 2);
+
+      // Standing chalkboard sign next to stall: replace "FISH" with "Poisson"
+      const bx = 573;
+      const by = 146;
+      const bw = 29;
+      const bh = 26;
+
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(bx, by, bw, bh);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = "bold 8px sans-serif";
+      ctx.fillText('🐟', bx + bw / 2, by + 9);
+      ctx.font = "bold 5.5px 'Courier New', monospace";
+      ctx.fillText('Poisson', bx + bw / 2, by + 19);
+    }
+    ctx.restore();
   };
 
   // --- DRAW FUNCTION (DISNEY-STYLE CUTE HAMSTER WITH BIG EXPRESSIVE EYES, RED SCARF, WHITE GLOVES, AND VERTICAL FISHING POLE) ---
@@ -520,6 +717,9 @@ export default function Fishtopia({ onBack }) {
       ctx.fillStyle = '#15803d';
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
     }
+
+    // Draw "Poissonnerie" store building sign
+    drawStoreSign(ctx, rLevel);
 
     // --- DRAW ANIMATED DISNEY-STYLE HAMSTER CHARACTER ---
     const p = playerRef.current;
@@ -819,7 +1019,21 @@ export default function Fishtopia({ onBack }) {
     if (!unusedQuestionsRef.current[rodLevel] || unusedQuestionsRef.current[rodLevel].length === 0) {
       unusedQuestionsRef.current[rodLevel] = [...QUESTIONS[rodLevel]].sort(() => Math.random() - 0.5);
     }
-    const q = unusedQuestionsRef.current[rodLevel].pop();
+    const rawQ = unusedQuestionsRef.current[rodLevel].pop();
+
+    // Randomize option order dynamically so answers are never predictably in the first position
+    const optsWithMeta = rawQ.opts.map((opt, i) => ({ opt, isCorrect: i === rawQ.ans }));
+    for (let i = optsWithMeta.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [optsWithMeta[i], optsWithMeta[j]] = [optsWithMeta[j], optsWithMeta[i]];
+    }
+
+    const q = {
+      ...rawQ,
+      opts: optsWithMeta.map(o => o.opt),
+      ans: optsWithMeta.findIndex(o => o.isCorrect)
+    };
+
     setCurrentQ(q);
     setQState(null);
     setActiveModal('question');
@@ -880,8 +1094,30 @@ export default function Fishtopia({ onBack }) {
             <div className="hud-item" title="Appâts">🪱 {bait}</div>
             <div className="hud-item" title="Sac à dos">🎒 {inventory.length}</div>
           </div>
-          <div className="hud-panel font-extrabold">
+          <div className="hud-panel font-extrabold flex items-center gap-2">
             <span className="text-emerald-600">Niv. Joueur : {playerLevel}</span> | Canne : {RODS[rodLevel - 1].name}
+            <div className="flex gap-1 ml-2" style={{ display: 'inline-flex', gap: '4px', marginLeft: '8px' }}>
+              {[1, 2, 3, 4].map(lvl => (
+                <button
+                  key={lvl}
+                  type="button"
+                  onClick={() => setRodLevel(lvl)}
+                  title={`Tester Niveau ${lvl}`}
+                  style={{
+                    cursor: 'pointer',
+                    padding: '2px 7px',
+                    borderRadius: '4px',
+                    border: 'none',
+                    fontSize: '11px',
+                    fontWeight: 'bold',
+                    background: rodLevel === lvl ? '#f59e0b' : 'rgba(255,255,255,0.18)',
+                    color: rodLevel === lvl ? '#000' : '#fff'
+                  }}
+                >
+                  Niv. {lvl}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -934,7 +1170,7 @@ export default function Fishtopia({ onBack }) {
         {activeModal === 'shop' && (
           <div className="game-overlay">
             <div className="modal-content">
-              <h2>🏪 Le Marché de Poisson</h2>
+              <h2>🏪 La Poissonnerie</h2>
               
               <div className="shop-items">
                 <div className="shop-item bg-amber-50 border-amber-200">
@@ -985,7 +1221,7 @@ export default function Fishtopia({ onBack }) {
       </div>
       
       <div className="mt-4 text-center max-w-[800px] text-gray-600">
-        <p><strong>Règles :</strong> Marchez sur le chemin 🚶 ! Montez sur le ponton pour pêcher 🎣 ! Placez-vous devant l'entrée du Kiosque ou du Marché pour interagir !</p>
+        <p><strong>Règles :</strong> Marchez sur le chemin 🚶 ! Montez sur le ponton pour pêcher 🎣 ! Placez-vous devant l'entrée du Kiosque ou de la Poissonnerie pour interagir !</p>
       </div>
     </div>
   );

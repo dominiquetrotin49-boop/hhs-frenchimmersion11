@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { CheckCircle2, RefreshCw, ArrowLeft } from 'lucide-react';
+import './Crossword.css';
 
 const ACCENTS = ['É', 'È', 'Ê', 'Ë', 'À', 'Â', 'Ù', 'Û', 'Ç', 'Ô', 'Î', 'Ï', 'Œ'];
+
+const normalizeChar = (ch) => {
+  if (!ch) return '';
+  return ch
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase();
+};
 
 export default function Crossword({ title, description, numRows, numCols, puzzleData, onBack }) {
   const NUM_ROWS = numRows;
@@ -10,7 +19,7 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
   const gridScale = (numCols >= 16 || numRows >= 15) ? 0.78 : 1;
 
   const gridMeta = useMemo(() => {
-    const meta = Array.from({ length: numRows }, () => 
+    const meta = Array.from({ length: numRows }, () =>
       Array.from({ length: numCols }, () => ({
         isActive: false,
         answer: '',
@@ -21,13 +30,17 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
 
     puzzleData.forEach((w) => {
       meta[w.r][w.c].startNum = w.id;
-      
+
       for (let i = 0; i < w.word.length; i++) {
         const r = w.r + (w.dir === 'down' ? i : 0);
         const c = w.c + (w.dir === 'across' ? i : 0);
         if (r < numRows && c < numCols) {
           meta[r][c].isActive = true;
-          meta[r][c].answer = w.word[i];
+          const letter = w.word[i].toUpperCase();
+          const existing = meta[r][c].answer;
+          if (!existing || letter !== normalizeChar(letter)) {
+            meta[r][c].answer = letter;
+          }
           meta[r][c].words.push(w);
         }
       }
@@ -41,7 +54,7 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
   const [showErrors, setShowErrors] = useState(false);
   const [isWon, setIsWon] = useState(false);
   const [feedbackMsg, setFeedbackMsg] = useState(null);
-  
+
   const inputRefs = useRef({});
 
   useEffect(() => {
@@ -56,7 +69,7 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
     if (!cellMeta.isActive) return;
 
     setShowErrors(false);
-    
+
     if (activeCell?.r === r && activeCell?.c === c && cellMeta.words.length > 1) {
       const currentWordIndex = cellMeta.words.findIndex(w => w.id === activeWord?.id);
       const nextWord = cellMeta.words[(currentWordIndex + 1) % cellMeta.words.length];
@@ -67,38 +80,41 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
         setActiveWord(cellMeta.words[0]);
       }
     }
-    
+
     inputRefs.current[`${r}-${c}`]?.focus();
   };
 
   const moveCursor = (r, c, step) => {
-    if (!activeWord) return;
+    if (!activeWord) return false;
     const isAcross = activeWord.dir === 'across';
     const nextR = r + (isAcross ? 0 : step);
     const nextC = c + (isAcross ? step : 0);
-    
-    if (nextR >= 0 && nextR < NUM_ROWS && nextC >= 0 && nextC < NUM_COLS && gridMeta[nextR][nextC].isActive) {
+
+    if (nextR >= 0 && nextR < NUM_ROWS && nextC >= 0 && nextC < NUM_COLS && gridMeta[nextR]?.[nextC]?.isActive) {
       setActiveCell({ r: nextR, c: nextC });
       const nextInput = inputRefs.current[`${nextR}-${nextC}`];
       if (nextInput) {
         nextInput.focus();
         nextInput.select();
+        return true;
       }
     }
+    return false;
   };
 
   const moveInGrid = (r, c, dr, dc) => {
     const nextR = r + dr;
     const nextC = c + dc;
-    if (nextR >= 0 && nextR < NUM_ROWS && nextC >= 0 && nextC < NUM_COLS && gridMeta[nextR][nextC].isActive) {
+    if (nextR >= 0 && nextR < NUM_ROWS && nextC >= 0 && nextC < NUM_COLS && gridMeta[nextR]?.[nextC]?.isActive) {
       handleCellClick(nextR, nextC);
     }
   };
 
   const handleInputChange = (e, r, c) => {
-    const val = e.target.value.slice(-1).toUpperCase();
+    const raw = e.target.value.slice(-1);
+    const val = raw.toUpperCase();
     setShowErrors(false);
-    
+
     setInputs(prev => ({
       ...prev,
       [`${r}-${c}`]: val
@@ -111,7 +127,7 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
 
   const handleKeyDown = (e, r, c) => {
     setShowErrors(false);
-    
+
     if (e.key === 'Backspace') {
       e.preventDefault();
       if (inputs[`${r}-${c}`]) {
@@ -135,11 +151,24 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
   };
 
   const handleInsertAccent = (char) => {
-    if (!activeCell) return;
-    const { r, c } = activeCell;
+    let target = activeCell;
+    if (!target && activeWord) {
+      target = { r: activeWord.r, c: activeWord.c };
+    }
+    if (!target && puzzleData && puzzleData.length > 0) {
+      target = { r: puzzleData[0].r, c: puzzleData[0].c };
+    }
+    if (!target) return;
+
+    const { r, c } = target;
     setShowErrors(false);
-    setInputs(prev => ({ ...prev, [`${r}-${c}`]: char }));
-    moveCursor(r, c, 1);
+    const val = char.toUpperCase();
+    setInputs(prev => ({ ...prev, [`${r}-${c}`]: val }));
+
+    const moved = moveCursor(r, c, 1);
+    if (!moved) {
+      inputRefs.current[`${r}-${c}`]?.focus();
+    }
   };
 
   const checkAnswers = () => {
@@ -153,10 +182,10 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
       for (let c = 0; c < NUM_COLS; c++) {
         if (gridMeta[r][c].isActive) {
           totalCells++;
-          const val = (inputs[`${r}-${c}`] || "").toUpperCase();
+          const val = normalizeChar(inputs[`${r}-${c}`]);
           if (!val) {
             emptyCells++;
-          } else if (val === gridMeta[r][c].answer.toUpperCase()) {
+          } else if (val === normalizeChar(gridMeta[r][c].answer)) {
             correctCells++;
           } else {
             wrongCells++;
@@ -170,7 +199,7 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
       setFeedbackMsg({ type: "success", text: "Bravo ! Toutes les réponses sont correctes !" });
     } else {
       setIsWon(false);
-    setFeedbackMsg(null);
+      setFeedbackMsg(null);
       setFeedbackMsg({
         type: "info",
         text: `${correctCells} / ${totalCells} lettres correctes. (${wrongCells} erreur${wrongCells > 1 ? "s" : ""}, ${emptyCells} case${emptyCells > 1 ? "s" : ""} vide${emptyCells > 1 ? "s" : ""})`
@@ -182,6 +211,20 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
     setInputs({});
     setShowErrors(false);
     setIsWon(false);
+    setFeedbackMsg(null);
+  };
+
+  // Helper: is this word fully and correctly solved?
+  const isWordSolved = (word) => {
+    if (!showErrors) return false;
+    const normTarget = normalizeChar(word.word);
+    for (let i = 0; i < word.word.length; i++) {
+      const r = word.r + (word.dir === 'down' ? i : 0);
+      const c = word.c + (word.dir === 'across' ? i : 0);
+      const val = normalizeChar(inputs[`${r}-${c}`]);
+      if (val !== normTarget[i]) return false;
+    }
+    return true;
   };
 
   const cellSize = Math.max(18, Math.min(32, Math.floor(480 / Math.max(numCols, numRows * 0.85))));
@@ -189,131 +232,51 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
   const numFontSize = Math.max(7, Math.floor(cellSize * 0.32));
 
   return (
-    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.75rem" }}>
-        <button
-          onClick={onBack}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            background: "rgba(255, 255, 255, 0.15)",
-            color: "#ffffff",
-            border: "1px solid rgba(255, 255, 255, 0.25)",
-            borderRadius: "0.5rem",
-            padding: "0.5rem 1rem",
-            cursor: "pointer",
-            fontWeight: 600
-          }}
-        >
-          <ArrowLeft size={16} /> Retour au menu
-        </button>
+    <div className="cw-root">
 
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          <button
-            onClick={checkAnswers}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              background: "#22c55e",
-              color: "#ffffff",
-              border: "none",
-              borderRadius: "0.5rem",
-              padding: "0.5rem 1.25rem",
-              fontWeight: 700,
-              cursor: "pointer",
-              boxShadow: "0 2px 8px rgba(34, 197, 94, 0.35)"
-            }}
-          >
-            <CheckCircle2 size={18} /> Vérifier mes réponses
+      {/* ── Top Action Bar ── */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <button className="cw-btn-back" onClick={onBack}>
+          <ArrowLeft size={15} /> Retour au menu
+        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <button className="cw-btn-primary" onClick={checkAnswers}>
+            <CheckCircle2 size={16} /> Vérifier mes réponses
           </button>
-          <button
-            onClick={handleReset}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              background: "rgba(255, 255, 255, 0.12)",
-              color: "#e2e8f0",
-              border: "1px solid rgba(255, 255, 255, 0.2)",
-              borderRadius: "0.5rem",
-              padding: "0.5rem 1rem",
-              fontWeight: 600,
-              cursor: "pointer"
-            }}
-          >
-            <RefreshCw size={16} /> Réinitialiser
+          <button className="cw-btn-ghost" onClick={handleReset}>
+            <RefreshCw size={14} /> Réinitialiser
           </button>
         </div>
       </div>
 
+      {/* ── Feedback Banner ── */}
       {feedbackMsg && (
-        <div style={{
-          padding: "0.75rem 1.25rem",
-          borderRadius: "0.75rem",
-          fontWeight: 600,
-          display: "flex",
-          alignItems: "center",
-          gap: "0.75rem",
-          background: feedbackMsg.type === "success" ? "rgba(34, 197, 94, 0.2)" : "rgba(59, 130, 246, 0.2)",
-          border: feedbackMsg.type === "success" ? "1px solid #22c55e" : "1px solid #3b82f6",
-          color: "#ffffff"
-        }}>
-          <CheckCircle2 size={20} color={feedbackMsg.type === "success" ? "#4ade80" : "#60a5fa"} />
+        <div className={`cw-feedback ${feedbackMsg.type}`}>
+          {feedbackMsg.type === 'success'
+            ? <span className="cw-stamp"><CheckCircle2 size={18} /> Publié !</span>
+            : <CheckCircle2 size={18} />
+          }
           <span>{feedbackMsg.text}</span>
         </div>
       )}
 
-      <div style={{ background: "rgba(255, 255, 255, 0.08)", borderRadius: '1rem', padding: '1rem 1.5rem', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
-        <h2 style={{ color: '#ffffff', margin: 0, fontSize: '1.5rem', fontWeight: 700 }}>{title}</h2>
-        <p style={{ color: '#cbd5e1', margin: '0.35rem 0 0 0', fontSize: '0.95rem' }}>{description}</p>
+      {/* ── Masthead / Header ── */}
+      <div className="cw-masthead">
+        <h2 className="cw-masthead-title">{title}</h2>
+        <p className="cw-masthead-subtitle">{description}</p>
       </div>
 
-      {/* Floating Accent Toolbar Bar */}
-      <div style={{
-        background: 'rgba(15, 23, 42, 0.85)',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255, 255, 255, 0.15)',
-        borderRadius: '0.75rem',
-        padding: '0.65rem 1rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '0.5rem',
-        flexWrap: 'wrap'
-      }}>
-        <span style={{ color: '#94a3b8', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', marginRight: '0.25rem' }}>
-          Accents :
-        </span>
+      {/* ── Accent Toolbar ── */}
+      <div className="cw-accent-bar">
+        <span className="cw-accent-label">Accents :</span>
         {ACCENTS.map((char) => (
           <button
             key={char}
             type="button"
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={() => handleInsertAccent(char)}
-            style={{
-              background: 'rgba(255, 255, 255, 0.12)',
-              color: '#ffffff',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '0.4rem',
-              width: '32px',
-              height: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 700,
-              fontSize: '0.95rem',
-              cursor: 'pointer',
-              transition: 'background 0.15s ease, transform 0.1s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.25)';
-              e.currentTarget.style.transform = 'scale(1.08)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
-              e.currentTarget.style.transform = 'scale(1)';
+            className="cw-accent-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              handleInsertAccent(char);
             }}
           >
             {char}
@@ -321,23 +284,11 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
         ))}
       </div>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1.4fr) minmax(280px, 1fr)',
-        gap: '1.25rem',
-        alignItems: 'start'
-      }}>
-        {/* Crossword Board */}
-        <div style={{
-          background: '#ffffff',
-          borderRadius: '1rem',
-          padding: '1.25rem',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.25)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          overflowX: 'auto'
-        }}>
+      {/* ── Main Two-Column Layout ── */}
+      <div className="cw-layout">
+
+        {/* Grid Board */}
+        <div className="cw-board">
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {gridMeta.map((row, r) => (
               <div key={r} style={{ display: 'flex' }}>
@@ -346,11 +297,8 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
                     return (
                       <div
                         key={`${r}-${c}`}
-                        style={{
-                          width: `${cellSize}px`,
-                          height: `${cellSize}px`,
-                          background: 'transparent'
-                        }}
+                        className="cw-cell-inactive"
+                        style={{ width: `${cellSize}px`, height: `${cellSize}px` }}
                       />
                     );
                   }
@@ -358,54 +306,27 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
                   const isActiveCell = activeCell?.r === r && activeCell?.c === c;
                   const isWordCell = activeWord && cell.words.some(w => w.id === activeWord.id);
                   const isChecked = showErrors && inputs[`${r}-${c}`];
-                  const isCorrect = isChecked && inputs[`${r}-${c}`].toUpperCase() === cell.answer.toUpperCase();
+                  const isCorrect = isChecked && normalizeChar(inputs[`${r}-${c}`]) === normalizeChar(cell.answer);
                   const isWrong = isChecked && !isCorrect;
 
-                  let cellBg = '#ffffff';
-                  let borderColor = '#94a3b8';
-
-                  if (isCorrect) {
-                    cellBg = '#bbf7d0';
-                    borderColor = '#22c55e';
-                  } else if (isWrong) {
-                    cellBg = '#fecaca';
-                    borderColor = '#ef4444';
-                  } else if (isActiveCell) {
-                    cellBg = '#fed7aa';
-                    borderColor = '#ea580c';
-                  } else if (isWordCell) {
-                    cellBg = '#ffedd5';
-                    borderColor = '#fb923c';
-                  }
+                  let cellClass = 'cw-cell-base';
+                  if (isCorrect)    cellClass += ' cw-cell-correct';
+                  else if (isWrong) cellClass += ' cw-cell-wrong';
+                  else if (isActiveCell) cellClass += ' cw-cell-cursor';
+                  else if (isWordCell)   cellClass += ' cw-cell-word';
 
                   return (
                     <div
                       key={`${r}-${c}`}
+                      className={cellClass}
                       onClick={() => handleCellClick(r, c)}
-                      style={{
-                        width: `${cellSize}px`,
-                        height: `${cellSize}px`,
-                        position: 'relative',
-                        border: `1px solid ${borderColor}`,
-                        background: cellBg,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        boxSizing: 'border-box'
-                      }}
+                      style={{ width: `${cellSize}px`, height: `${cellSize}px` }}
                     >
                       {cell.startNum && (
-                        <span style={{
-                          position: 'absolute',
-                          top: '1px',
-                          left: '2px',
-                          fontSize: `${numFontSize}px`,
-                          fontWeight: 800,
-                          color: '#475569',
-                          lineHeight: 1,
-                          pointerEvents: 'none'
-                        }}>
+                        <span
+                          className="cw-cell-num"
+                          style={{ fontSize: `${numFontSize}px` }}
+                        >
                           {cell.startNum}
                         </span>
                       )}
@@ -413,23 +334,12 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
                         ref={el => (inputRefs.current[`${r}-${c}`] = el)}
                         type="text"
                         maxLength={2}
-                        value={inputs[`${r}-${c}`] || ''}
+                        value={(isChecked && isCorrect) ? cell.answer : (inputs[`${r}-${c}`] || '')}
                         onChange={e => handleInputChange(e, r, c)}
                         onKeyDown={e => handleKeyDown(e, r, c)}
                         onFocus={() => handleCellClick(r, c)}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          border: 'none',
-                          background: 'transparent',
-                          textAlign: 'center',
-                          fontSize: `${fontSize}px`,
-                          fontWeight: 800,
-                          color: '#0f172a',
-                          textTransform: 'uppercase',
-                          outline: 'none',
-                          padding: 0
-                        }}
+                        className="cw-cell-input"
+                        style={{ fontSize: `${fontSize}px` }}
                       />
                     </div>
                   );
@@ -439,126 +349,105 @@ export default function Crossword({ title, description, numRows, numCols, puzzle
           </div>
         </div>
 
-        {/* Clues Panel */}
-        <div style={{
-          background: '#ffffff',
-          borderRadius: '1rem',
-          padding: '1.25rem',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.25)',
-          maxHeight: '520px',
-          overflowY: 'auto',
-          color: '#1e293b'
-        }}>
-          <h3 style={{ margin: '0 0 1rem 0', color: '#0f172a', fontSize: '1.15rem', fontWeight: 700 }}>
-            Indices (Clues)
-          </h3>
+        {/* Clue Panel */}
+        <div className="cw-clues-panel">
+          <h3 className="cw-clues-title">Indices</h3>
 
+          {/* Horizontal clues */}
           <div style={{ marginBottom: '1.25rem' }}>
-            <h4 style={{ color: '#d97706', fontSize: '0.95rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>
-              Horizontal (Across)
-            </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+            <p className="cw-clue-section-head">Horizontale — Across</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
               {puzzleData.filter(w => w.dir === 'across').map(w => {
                 const isSelected = activeWord?.id === w.id;
+                const solved = isWordSolved(w);
                 return (
                   <div
                     key={w.id}
+                    className={`cw-clue-row${isSelected ? ' active' : ''}${solved ? ' solved' : ''}`}
                     onClick={() => {
                       setActiveWord(w);
                       setActiveCell({ r: w.r, c: w.c });
                       inputRefs.current[`${w.r}-${w.c}`]?.focus();
                     }}
-                    style={{
-                      padding: '0.45rem 0.65rem',
-                      borderRadius: '0.5rem',
-                      fontSize: '0.85rem',
-                      cursor: 'pointer',
-                      background: isSelected ? '#ffedd5' : 'transparent',
-                      color: isSelected ? '#c2410c' : '#334155',
-                      fontWeight: isSelected ? 700 : 500,
-                      borderLeft: isSelected ? '3px solid #ea580c' : '3px solid transparent'
-                    }}
                   >
-                    <strong>{w.id}.</strong> {w.clue}
+                    <span style={{ textDecoration: solved ? 'line-through' : 'none', opacity: solved ? 0.65 : 1 }}>
+                      <strong>{w.id}.</strong> {w.clue}
+                    </span>
+                    {solved && (
+                      <span style={{
+                        display: 'inline-block',
+                        marginLeft: '0.4rem',
+                        color: '#065f46',
+                        background: '#d1fae5',
+                        padding: '0.1rem 0.4rem',
+                        borderRadius: '0.25rem',
+                        fontWeight: 700,
+                        fontSize: '0.78rem',
+                        letterSpacing: '0.04em',
+                        textDecoration: 'none'
+                      }}>
+                        ✓ {w.word}
+                      </span>
+                    )}
                   </div>
                 );
               })}
             </div>
           </div>
 
-          <div style={{ marginBottom: '1.25rem' }}>
-            <h4 style={{ color: '#d97706', fontSize: '0.95rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>
-              Vertical (Down)
-            </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+          {/* Vertical clues */}
+          <div style={{ marginBottom: '0.5rem' }}>
+            <p className="cw-clue-section-head">Verticale — Down</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
               {puzzleData.filter(w => w.dir === 'down').map(w => {
                 const isSelected = activeWord?.id === w.id;
+                const solved = isWordSolved(w);
                 return (
                   <div
                     key={w.id}
+                    className={`cw-clue-row${isSelected ? ' active' : ''}${solved ? ' solved' : ''}`}
                     onClick={() => {
                       setActiveWord(w);
                       setActiveCell({ r: w.r, c: w.c });
                       inputRefs.current[`${w.r}-${w.c}`]?.focus();
                     }}
-                    style={{
-                      padding: '0.45rem 0.65rem',
-                      borderRadius: '0.5rem',
-                      fontSize: '0.85rem',
-                      cursor: 'pointer',
-                      background: isSelected ? '#ffedd5' : 'transparent',
-                      color: isSelected ? '#c2410c' : '#334155',
-                      fontWeight: isSelected ? 700 : 500,
-                      borderLeft: isSelected ? '3px solid #ea580c' : '3px solid transparent'
-                    }}
                   >
-                    <strong>{w.id}.</strong> {w.clue}
+                    <span style={{ textDecoration: solved ? 'line-through' : 'none', opacity: solved ? 0.65 : 1 }}>
+                      <strong>{w.id}.</strong> {w.clue}
+                    </span>
+                    {solved && (
+                      <span style={{
+                        display: 'inline-block',
+                        marginLeft: '0.4rem',
+                        color: '#065f46',
+                        background: '#d1fae5',
+                        padding: '0.1rem 0.4rem',
+                        borderRadius: '0.25rem',
+                        fontWeight: 700,
+                        fontSize: '0.78rem',
+                        letterSpacing: '0.04em',
+                        textDecoration: 'none'
+                      }}>
+                        ✓ {w.word}
+                      </span>
+                    )}
                   </div>
                 );
               })}
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #e2e8f0' }}>
-            <button
-              onClick={checkAnswers}
-              style={{
-                flex: 1,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                background: '#2563eb',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '0.5rem',
-                padding: '0.65rem 1rem',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
-            >
-              <CheckCircle2 size={16} /> Vérifier
+          <hr className="cw-clue-divider" />
+          <div className="cw-clue-actions">
+            <button className="cw-clue-btn-verify" onClick={checkAnswers}>
+              <CheckCircle2 size={14} /> Vérifier
             </button>
-            <button
-              onClick={handleReset}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                background: '#f1f5f9',
-                color: '#475569',
-                border: '1px solid #cbd5e1',
-                borderRadius: '0.5rem',
-                padding: '0.65rem 1rem',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
-            >
-              <RefreshCw size={16} /> Réinitialiser
+            <button className="cw-clue-btn-reset" onClick={handleReset}>
+              <RefreshCw size={14} /> Réinitialiser
             </button>
           </div>
         </div>
+
       </div>
     </div>
   );

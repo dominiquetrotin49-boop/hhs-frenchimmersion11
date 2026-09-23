@@ -26,8 +26,8 @@ const WRITING_PROMPTS = [
 
 
 const UNIT1_PROMPTS = [
-  { id: 1, title: "Journaliste en action", prompt: "Vous êtes un jeune journaliste. Écrivez un court texte (au moins 50 mots) au PRÉSENT pour décrire comment vous trouvez vos informations, comment vous écrivez vos articles, et pourquoi la liberté de la presse est importante." },
-  { id: 2, title: "La déontologie des médias", prompt: "Pourquoi est-il crucial de vérifier ses sources et de lutter contre la désinformation ? Exprimez votre point de vue avec les mots de l'unité." }
+  { id: 1, title: "1. Journaliste en action", prompt: "Vous êtes un jeune journaliste. Écrivez un court texte (au moins 50 mots) au PRÉSENT pour décrire comment vous trouvez vos informations, comment vous écrivez vos articles, et pourquoi la liberté de la presse est importante." },
+  { id: 2, title: "2. La déontologie des médias", prompt: "Pourquoi est-il crucial de vérifier ses sources et de lutter contre la désinformation ? Exprimez votre point de vue avec les mots de l'unité." }
 ];
 
 const UNIT2_PROMPTS = [
@@ -478,7 +478,7 @@ export default function WritingPrompt({ onBack, unitId }) {
             <div className="flex items-center gap-2 mb-4">
               <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
               <h3 className="text-xs font-black uppercase tracking-widest text-blue-400">
-                Sujet d'écriture (Niveau Intermédiaire-Bas)
+                Sujet d'écriture
               </h3>
             </div>
 

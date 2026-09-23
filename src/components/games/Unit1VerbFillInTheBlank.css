@@ -1,0 +1,600 @@
+/* Unit 1 Verb Conjugation Fill-in-the-Blank Activities */
+
+.verb-fill-container {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1e293b;
+}
+
+/* Category Switcher Tabs */
+.verb-subnav {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(12px);
+  padding: 0.6rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.verb-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.15rem;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.verb-nav-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.verb-nav-btn.active-er {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(14, 165, 233, 0.35));
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
+}
+
+.verb-nav-btn.active-ir {
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.25), rgba(16, 185, 129, 0.35));
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.5);
+  box-shadow: 0 0 16px rgba(52, 211, 153, 0.3);
+}
+
+.verb-nav-btn.active-re {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.25), rgba(139, 92, 246, 0.35));
+  color: #c084fc;
+  border-color: rgba(167, 139, 250, 0.5);
+  box-shadow: 0 0 16px rgba(167, 139, 250, 0.3);
+}
+
+.verb-nav-btn.active-irr {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.35));
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.3);
+}
+
+.verb-nav-btn.active-vocab {
+  background: linear-gradient(135deg, rgba(251, 146, 60, 0.25), rgba(249, 115, 22, 0.35));
+  color: #fb923c;
+  border-color: rgba(251, 146, 60, 0.5);
+  box-shadow: 0 0 16px rgba(251, 146, 60, 0.3);
+}
+
+/* Header Masthead */
+.verb-masthead {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1.25rem;
+  padding: 1.85rem;
+  color: #f8fafc;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.verb-masthead-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  margin-bottom: 0.75rem;
+}
+
+.verb-masthead-badge.er {
+  background: rgba(56, 189, 248, 0.18);
+  color: #7dd3fc;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.verb-masthead-badge.ir {
+  background: rgba(52, 211, 153, 0.18);
+  color: #6ee7b7;
+  border: 1px solid rgba(52, 211, 153, 0.4);
+}
+
+.verb-masthead-badge.re {
+  background: rgba(167, 139, 250, 0.18);
+  color: #d8b4fe;
+  border: 1px solid rgba(167, 139, 250, 0.4);
+}
+
+.verb-masthead-badge.irr {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fde047;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.verb-masthead-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.verb-masthead-desc {
+  color: #cbd5e1;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  margin: 0 0 1.25rem;
+}
+
+/* Grammar Rule Box */
+.verb-rule-card {
+  background: rgba(2, 6, 23, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 4px solid #38bdf8;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.verb-rule-card.ir {
+  border-left-color: #34d399;
+}
+
+.verb-rule-card.re {
+  border-left-color: #c084fc;
+}
+
+.verb-rule-card.irr {
+  border-left-color: #f59e0b;
+}
+
+.verb-rule-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.verb-rule-formula {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.92rem;
+  color: #fef08a;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.4rem;
+  width: fit-content;
+  display: inline-block;
+}
+
+.verb-rule-sub {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Toolbar & Accents */
+.verb-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  padding: 0.85rem 1.25rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.verb-accents-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.verb-accents-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 0.25rem;
+}
+
+.verb-accent-key {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f8fafc;
+  font-size: 0.92rem;
+  font-weight: 700;
+  min-width: 2rem;
+  height: 2.1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.verb-accent-key:hover {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+.verb-accent-key:active {
+  transform: translateY(0);
+}
+
+.verb-progress-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 0.45rem 0.95rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Question List */
+.verb-questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.verb-qcard {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 1.35rem 1.6rem;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.verb-qcard:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.verb-qcard.correct {
+  border-color: rgba(34, 197, 94, 0.5);
+  background: rgba(34, 197, 94, 0.08);
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.12);
+}
+
+.verb-qcard.incorrect {
+  border-color: rgba(239, 68, 68, 0.5);
+  background: rgba(239, 68, 68, 0.08);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.12);
+}
+
+.verb-qcard-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+}
+
+.verb-qnum {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 0.25rem 0.65rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+}
+
+.verb-hint-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #94a3b8;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.verb-hint-toggle:hover {
+  color: #facc15;
+  border-color: #facc15;
+  background: rgba(250, 204, 21, 0.1);
+}
+
+/* Sentence Text with Inline Input */
+.verb-sentence {
+  font-size: 1.05rem;
+  line-height: 2.1;
+  color: #f1f5f9;
+  font-weight: 400;
+}
+
+.verb-inline-blank {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  vertical-align: middle;
+  margin: 0 0.35rem;
+}
+
+.verb-input {
+  background: rgba(15, 23, 42, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  padding: 0.35rem 0.75rem;
+  min-width: 140px;
+  max-width: 190px;
+  text-align: center;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.verb-input:focus {
+  border-color: #38bdf8;
+  background: rgba(15, 23, 42, 0.95);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+}
+
+.verb-input.correct {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.verb-input.incorrect {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.verb-prompt-infinitive {
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 0.4rem;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  font-family: inherit;
+}
+
+.verb-prompt-infinitive.ir {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.3);
+}
+
+.verb-prompt-infinitive.re {
+  background: rgba(167, 139, 250, 0.15);
+  color: #c084fc;
+  border-color: rgba(167, 139, 250, 0.3);
+}
+
+.verb-prompt-infinitive.irr {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+/* Feedback & Hint Panels */
+.verb-hint-box {
+  margin-top: 0.85rem;
+  background: rgba(250, 204, 21, 0.08);
+  border-left: 3px solid #facc15;
+  padding: 0.65rem 1rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-size: 0.88rem;
+  color: #fef08a;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.verb-feedback-box {
+  margin-top: 0.85rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.65rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.verb-feedback-box.correct {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #86efac;
+}
+
+.verb-feedback-box.incorrect {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+.verb-ans-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.verb-ans-expected {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.verb-ans-explanation {
+  font-size: 0.84rem;
+  opacity: 0.9;
+}
+
+/* Bottom Action Controls */
+.verb-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.5rem;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.verb-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 0.96rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.verb-btn-submit {
+  background: linear-gradient(135deg, #0284c7, #0ea5e9);
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(14, 165, 233, 0.4);
+}
+
+.verb-btn-submit:hover {
+  background: linear-gradient(135deg, #0369a1, #0284c7);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(14, 165, 233, 0.5);
+}
+
+.verb-btn-retry {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.verb-btn-retry:hover {
+  background: rgba(245, 158, 11, 0.3);
+  transform: translateY(-2px);
+}
+
+.verb-btn-reset {
+  background: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.verb-btn-reset:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+/* Scorecard Section */
+.verb-scorecard {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1.25rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.verb-scorecard-stamp {
+  display: inline-block;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  padding: 0.35rem 1rem;
+  border-radius: 6px;
+  border: 2px solid;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.verb-scorecard-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 0.5rem;
+}
+
+.verb-scorecard-score {
+  font-size: 2.4rem;
+  font-weight: 900;
+  font-family: 'JetBrains Mono', monospace;
+  margin: 0.75rem 0;
+}
+
+.verb-scorecard-sub {
+  color: #94a3b8;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .verb-fill-container {
+    padding: 0.75rem;
+  }
+  .verb-input {
+    min-width: 110px;
+    font-size: 0.95rem;
+  }
+  .verb-sentence {
+    font-size: 0.98rem;
+  }
+}

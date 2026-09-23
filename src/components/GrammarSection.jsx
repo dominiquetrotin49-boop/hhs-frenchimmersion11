@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
 import { GRAMMAR_DATA, GRAMMAR_DATA_UNIT_2, GRAMMAR_DATA_UNIT_3, GRAMMAR_DATA_UNIT_4 } from '../data/grammar';
 import { ChevronDown, ChevronUp, Book } from 'lucide-react';
+import Unit1GrammarLab from './Unit1GrammarLab';
+import Unit2GrammarLab from './Unit2GrammarLab';
 import './GrammarSection.css';
 
 export default function GrammarSection({ unitId }) {
+  if (unitId === '1') {
+    return <Unit1GrammarLab />;
+  }
+  if (unitId === '2') {
+    return <Unit2GrammarLab />;
+  }
+
   const [openFolderId, setOpenFolderId] = useState(null);
 
   const dataToUse = unitId === '4' ? GRAMMAR_DATA_UNIT_4 : unitId === '3' ? GRAMMAR_DATA_UNIT_3 : unitId === '2' ? GRAMMAR_DATA_UNIT_2 : GRAMMAR_DATA;
 
-  const sectionTitle = unitId === '4' ? "Le Passé" : unitId === '3' ? "Les Pronoms" : "Le Présent";
+  const sectionTitle = unitId === '4' ? "Le Passé" : unitId === '3' ? "Les Pronoms" : unitId === '2' ? "Pronoms & Temps du Passé" : "Le Présent";
 
   const toggleFolder = (id) => {
     if (openFolderId === id) {

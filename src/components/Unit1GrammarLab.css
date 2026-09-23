@@ -1,0 +1,428 @@
+/* Unit 1 Grammar Lab - Detective Case File & Linguistic Lab */
+
+.grammar-lab-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  width: 100%;
+}
+
+.grammar-lab-header {
+  padding: 1.5rem 2rem;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.85));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.header-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.grammar-lab-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.badge-classified {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: rgba(244, 63, 94, 0.2);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-weight: 700;
+}
+
+.grammar-search-box {
+  position: relative;
+  min-width: 260px;
+}
+
+.grammar-search-input {
+  width: 100%;
+  padding: 0.6rem 1rem 0.6rem 2.5rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.6rem;
+  color: white;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.grammar-search-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+}
+
+.search-icon-pos {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+/* Segmented Pill Navigation */
+.grammar-nav-pills {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  background: rgba(15, 23, 42, 0.5);
+  padding: 0.35rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.grammar-nav-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 0.55rem;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.grammar-nav-pill:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.grammar-nav-pill.active {
+  background: linear-gradient(135deg, #0284c7, #38bdf8);
+  color: white;
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
+}
+
+/* Subject Radar Filter */
+.subject-radar-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(30, 41, 59, 0.4);
+  padding: 0.6rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  flex-wrap: wrap;
+}
+
+.radar-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.subject-pills {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.subject-pill-btn {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  padding: 0.25rem 0.65rem;
+  border-radius: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.subject-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.subject-pill-btn.active {
+  background: #f43f5e;
+  border-color: #fb7185;
+  color: white;
+  box-shadow: 0 2px 8px rgba(244, 63, 94, 0.4);
+}
+
+/* Callout Boxes */
+.callout-box {
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
+
+.callout-tip {
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 4px solid #f59e0b;
+  color: #fef3c7;
+}
+
+.callout-warning {
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 4px solid #ef4444;
+  color: #fee2e2;
+}
+
+.callout-oral {
+  background: rgba(16, 185, 129, 0.1);
+  border-left: 4px solid #10b981;
+  color: #d1fae5;
+}
+
+.callout-title {
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Verb Card Grid */
+.verb-matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 1.25rem;
+}
+
+.case-file-card {
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.8));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.85rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.case-file-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.case-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 0.75rem;
+  min-height: 2.85rem;
+  gap: 0.5rem;
+}
+
+.case-verb-infinitive {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.case-verb-tag {
+  font-size: 0.68rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.35rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: right;
+  line-height: 1.25;
+  max-width: 62%;
+}
+
+.case-card-desc {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin: 0;
+  line-height: 1.4;
+  min-height: 2.85rem;
+  color: #cbd5e1;
+  display: flex;
+  align-items: flex-start;
+}
+
+.tag-regular {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.tag-boot {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.tag-irregular {
+  background: rgba(244, 63, 94, 0.2);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.conjugation-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: auto;
+}
+
+.conjugation-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0.65rem;
+  border-radius: 0.4rem;
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.95rem;
+  transition: background 0.15s ease;
+}
+
+.conjugation-item.highlighted {
+  background: rgba(244, 63, 94, 0.22);
+  border: 1px solid rgba(244, 63, 94, 0.45);
+}
+
+.conjugation-item.boot-row {
+  border-left: 3px solid #f59e0b;
+}
+
+.conj-pronoun {
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.conj-form {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.stem-part {
+  color: #f8fafc;
+}
+
+.ending-part {
+  color: #38bdf8;
+  font-weight: 800;
+}
+
+.ending-silent {
+  color: #f43f5e;
+  text-decoration: underline dotted #f43f5e 1px;
+}
+
+.ending-accent {
+  color: #fbbf24;
+}
+
+.audio-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 0.3rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s, transform 0.15s;
+}
+
+.audio-btn:hover {
+  color: #38bdf8;
+  transform: scale(1.15);
+}
+
+/* Boot Diagram Metaphor */
+.boot-visual-card {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(30, 41, 59, 0.5));
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 0.85rem;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.boot-grid-explainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.boot-zone {
+  border: 2px dashed #f59e0b;
+  border-radius: 0.6rem;
+  padding: 0.85rem;
+  background: rgba(245, 158, 11, 0.06);
+}
+
+.non-boot-zone {
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 0.6rem;
+  padding: 0.85rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Interactive Radar Comparison Table */
+.radar-comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.radar-comparison-table th {
+  background: rgba(30, 41, 59, 0.8);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  color: #38bdf8;
+  border-bottom: 2px solid rgba(56, 189, 248, 0.4);
+  font-weight: 700;
+}
+
+.radar-comparison-table td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.radar-comparison-table tr:hover td {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.radar-comparison-table tr.row-highlighted td {
+  background: rgba(244, 63, 94, 0.2);
+  color: #f8fafc;
+}

@@ -1,0 +1,1661 @@
+/* ============================================================ */
+/* UNIT 2 GRAMMAR LAB - STYLES & INTERACTIVE VISUAL ARCHITECTURE */
+/* ============================================================ */
+
+.unit2-grammar-lab {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  width: 100%;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Glass Card Global Helper */
+.glass-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+}
+
+.glass-panel {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+/* ============================================================ */
+/* HEADER & TOP CONTROLS */
+/* ============================================================ */
+
+.lab-header {
+  padding: 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.lab-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.header-meta {
+  max-width: 680px;
+}
+
+.campus-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  margin-bottom: 0.5rem;
+}
+
+.lab-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0.25rem 0 0.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.lab-subtitle {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Search input */
+.search-filter-box {
+  position: relative;
+  min-width: 280px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.65rem 2.2rem 0.65rem 2.6rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.65rem;
+  color: white;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.search-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.3);
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 0.25rem;
+}
+
+/* ============================================================ */
+/* PRIMARY PILLAR SWITCHER */
+/* ============================================================ */
+
+.pillar-switcher-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.pillar-button {
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+  padding: 1.1rem 1.4rem;
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.25s ease;
+}
+
+.pillar-button:hover {
+  background: rgba(30, 41, 59, 0.7);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+.pillar-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 0.75rem;
+  flex-shrink: 0;
+}
+
+.icon-passe {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.icon-pronoms {
+  background: rgba(14, 165, 233, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(14, 165, 233, 0.3);
+}
+
+.pillar-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.pillar-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.pillar-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0.1rem 0;
+}
+
+.pillar-desc {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+/* Active styles */
+.pillar-button.active-passe {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.25));
+  border-color: #f59e0b;
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.2);
+}
+
+.pillar-button.active-passe .icon-passe {
+  background: #f59e0b;
+  color: #0f172a;
+}
+
+.pillar-button.active-pronoms {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(2, 132, 199, 0.25));
+  border-color: #0284c7;
+  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.2);
+}
+
+.pillar-button.active-pronoms .icon-pronoms {
+  background: #0284c7;
+  color: white;
+}
+
+/* ============================================================ */
+/* SUB-STATION NAVIGATOR */
+/* ============================================================ */
+
+.station-nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  background: rgba(15, 23, 42, 0.45);
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  flex-wrap: wrap;
+}
+
+.station-nav-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.station-buttons-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.station-btn {
+  padding: 0.45rem 0.95rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.station-btn:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.station-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* ============================================================ */
+/* CONTENT AREAS & GENERAL COMPONENTS */
+/* ============================================================ */
+
+.pillar-content-area {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.station-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+}
+
+.section-title-row h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.section-subtext {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 0.2rem 0 0 0;
+}
+
+/* Pedagogy Banner */
+.pedagogy-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05));
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.banner-icon-col {
+  color: #fbbf24;
+  margin-top: 2px;
+}
+
+.banner-text-col h4 {
+  margin: 0 0 0.35rem 0;
+  font-size: 1.05rem;
+  color: #fef3c7;
+}
+
+.banner-text-col p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+/* 3 Pillars Grid */
+.three-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.pillar-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: transform 0.2s;
+}
+
+.pillar-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.pillar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pillar-num {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #64748b;
+}
+
+.pillar-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.4rem;
+}
+
+.badge-decor {
+  background: rgba(14, 165, 233, 0.15);
+  color: #38bdf8;
+}
+
+.badge-routine {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.badge-continue {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+}
+
+.pillar-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.pillar-rule {
+  font-size: 0.88rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.example-bubble {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 0.6rem;
+  padding: 0.75rem 0.9rem;
+  border-left: 3px solid #38bdf8;
+}
+
+.example-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.example-bubble p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #e2e8f0;
+}
+
+/* ============================================================ */
+/* FORMULA & INTERACTIVE CONJUGATION */
+/* ============================================================ */
+
+.formula-equation-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.25rem;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 1.25rem;
+}
+
+.equation-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(30, 41, 59, 0.8);
+  padding: 0.6rem 1rem;
+  border-radius: 0.6rem;
+  min-width: 140px;
+}
+
+.step-tag {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #64748b;
+}
+
+.step-val {
+  font-size: 0.95rem;
+  color: #f8fafc;
+}
+
+.step-sub {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.equation-sign {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.highlight-step {
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.highlight-step .step-val {
+  color: #fbbf24;
+}
+
+/* Traps alert box */
+.trap-alert-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  font-size: 0.88rem;
+  color: #fde68a;
+  margin-bottom: 1.5rem;
+}
+
+.trap-content {
+  margin-top: 0.4rem;
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.trap-pill {
+  background: rgba(15, 23, 42, 0.6);
+  padding: 0.25rem 0.65rem;
+  border-radius: 0.4rem;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  font-size: 0.82rem;
+  color: white;
+}
+
+/* Interactive matrix selector */
+.matrix-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.matrix-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.verb-choice-pills {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.verb-pill-btn {
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.5rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.verb-pill-btn:hover {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.verb-pill-btn.selected {
+  background: #0284c7;
+  color: white;
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
+.active-verb-display {
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.85rem;
+  padding: 1.25rem;
+}
+
+.active-verb-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.active-infinitive {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin-right: 0.5rem;
+}
+
+.active-type-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.35rem;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+.stem-indicator {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.stem-indicator code {
+  color: #fbbf24;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.exception-note {
+  margin-left: 0.65rem;
+  color: #f43f5e;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.conjugation-tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.65rem;
+}
+
+.conjugation-tile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.9rem;
+  background: rgba(30, 41, 59, 0.7);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tile-pronoun {
+  font-weight: 600;
+  color: #94a3b8;
+  font-size: 0.88rem;
+}
+
+.tile-full-verb {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.tile-stem {
+  color: #e2e8f0;
+}
+
+.tile-ending {
+  color: #38bdf8;
+  font-weight: 800;
+  background: rgba(56, 189, 248, 0.12);
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.3rem;
+  margin-left: 1px;
+}
+
+/* ============================================================ */
+/* PASSÉ COMPOSÉ : DUAL ENGINE & DR MRS VANDERTRAMP */
+/* ============================================================ */
+
+.dual-engine-box {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.engine-card {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(30, 41, 59, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.engine-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.engine-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.engine-card h4 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #f8fafc;
+}
+
+.engine-formula {
+  background: rgba(15, 23, 42, 0.6);
+  padding: 0.6rem 0.85rem;
+  border-radius: 0.5rem;
+}
+
+.engine-formula code {
+  font-size: 0.85rem;
+  color: #fbbf24;
+}
+
+.engine-rule {
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.engine-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: rgba(15, 23, 42, 0.4);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.example-item {
+  font-size: 0.86rem;
+  color: #e2e8f0;
+}
+
+.example-item .subj {
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.example-item .aux {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.example-item .pp {
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+.badge-etre {
+  color: #a855f7;
+}
+
+.engine-etre {
+  border-color: rgba(168, 85, 247, 0.3);
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(30, 41, 59, 0.6));
+}
+
+.engine-etre .engine-formula code {
+  color: #c084fc;
+}
+
+/* DR & MRS VANDERTRAMP Grid */
+.vandertramp-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.subject-tester-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  background: rgba(15, 23, 42, 0.5);
+  padding: 0.65rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tester-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.tester-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tester-btn {
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(30, 41, 59, 0.8);
+  color: #cbd5e1;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tester-btn:hover {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.tester-btn.active {
+  background: #a855f7;
+  color: white;
+  border-color: #c084fc;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.35);
+}
+
+.vandertramp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 0.75rem;
+}
+
+.vander-card {
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.35rem;
+  transition: all 0.2s;
+}
+
+.vander-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(168, 85, 247, 0.4);
+  background: rgba(30, 41, 59, 0.7);
+}
+
+.vander-letter-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #a855f7;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.vander-verb-name {
+  font-weight: 700;
+  color: #f8fafc;
+  font-size: 0.92rem;
+}
+
+.vander-simulated-form {
+  font-size: 0.85rem;
+  margin: 0.15rem 0;
+}
+
+.aux-text {
+  color: #94a3b8;
+}
+
+.pp-text {
+  color: #c084fc;
+  font-weight: 700;
+}
+
+.agreement-highlight {
+  color: #f43f5e;
+  font-weight: 900;
+  background: rgba(244, 63, 94, 0.18);
+  padding: 0 0.2rem;
+  border-radius: 0.2rem;
+}
+
+.vander-meaning {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.pronominaux-box {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.9rem 1.2rem;
+  background: rgba(168, 85, 247, 0.08);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 0.75rem;
+  font-size: 0.85rem;
+  color: #e9d5ff;
+}
+
+.pronominaux-examples {
+  margin-top: 0.25rem;
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  color: #cbd5e1;
+}
+
+/* Two Column Details (Participles & Court-circuit) */
+.two-column-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.details-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.details-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 1.05rem;
+  color: #f8fafc;
+}
+
+.participles-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 0.4rem;
+}
+
+.participle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.45rem 0.75rem;
+  background: rgba(15, 23, 42, 0.4);
+  border-radius: 0.45rem;
+  font-size: 0.85rem;
+}
+
+.row-infinitive {
+  font-weight: 700;
+  color: #38bdf8;
+  min-width: 60px;
+}
+
+.arrow-sep {
+  color: #64748b;
+}
+
+.row-pp {
+  font-weight: 800;
+  color: #fbbf24;
+  min-width: 45px;
+}
+
+.row-example {
+  color: #94a3b8;
+  font-style: italic;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.court-circuit-card {
+  border-color: rgba(244, 63, 94, 0.25);
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.05), rgba(30, 41, 59, 0.5));
+}
+
+.court-circuit-intro {
+  font-size: 0.86rem;
+  color: #cbd5e1;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.comparison-pairs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.compare-block {
+  padding: 0.75rem 1rem;
+  border-radius: 0.6rem;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.case-tag {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.tag-alert {
+  color: #fb7185;
+}
+
+.case-sentence {
+  font-size: 0.95rem;
+  color: white;
+  margin: 0 0 0.25rem 0;
+}
+
+.case-expl {
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+/* ============================================================ */
+/* LE DUEL NARRATIF (IMPARFAIT VS PASSÉ COMPOSÉ) */
+/* ============================================================ */
+
+.duel-metaphor-card {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.metaphor-side {
+  padding: 1.25rem;
+  border-radius: 0.85rem;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.side-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.metaphor-side h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #f8fafc;
+}
+
+.side-metaphor-desc {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.side-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.84rem;
+  color: #94a3b8;
+}
+
+.side-points strong {
+  color: #e2e8f0;
+}
+
+.imparfait-side {
+  border-left: 3px solid #38bdf8;
+}
+
+.pc-side {
+  border-left: 3px solid #f59e0b;
+}
+
+.vs-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vs-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+/* Interactive Story Flow */
+.interactive-story-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.flow-step {
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.5);
+  border-left: 4px solid #64748b;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.step-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.step-sentence {
+  font-size: 0.95rem;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.imparfait-step {
+  border-left-color: #38bdf8;
+}
+
+.imparfait-step .step-badge {
+  color: #38bdf8;
+}
+
+.pc-step {
+  border-left-color: #f59e0b;
+}
+
+.pc-step .step-badge {
+  color: #f59e0b;
+}
+
+.alert-action {
+  background: rgba(245, 158, 11, 0.08);
+  border-left-color: #fbbf24;
+}
+
+.badge-sudden {
+  color: #fbbf24 !important;
+}
+
+/* Indicators Columns */
+.indicators-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.indicator-col {
+  padding: 1.2rem;
+  background: rgba(15, 23, 42, 0.45);
+  border-radius: 0.75rem;
+}
+
+.indicator-col h4 {
+  margin: 0 0 0.85rem 0;
+  font-size: 0.98rem;
+  color: #f8fafc;
+}
+
+.indicator-chips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 0.35rem 0.75rem;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border-radius: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.chip-pc {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+/* ============================================================ */
+/* FORTERESSE DES PRONOMS (COD, COI, Y, EN, RADAR) */
+/* ============================================================ */
+
+.diagnostic-hero-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.pronoun-hero-card {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card-cod {
+  border-top: 3px solid #38bdf8;
+}
+
+.card-coi {
+  border-top: 3px solid #a855f7;
+}
+
+.hero-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.hero-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.badge-cod { color: #38bdf8; }
+.badge-coi { color: #c084fc; }
+
+.pronoun-hero-card h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #f8fafc;
+}
+
+.question-trigger {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.question-trigger code {
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+.pronoun-inventory {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.p-pill {
+  padding: 0.25rem 0.6rem;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.p-pill.highlight {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  font-weight: 700;
+}
+
+.p-pill.highlight-coi {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  font-weight: 700;
+}
+
+.substitution-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.45);
+  padding: 0.85rem;
+  border-radius: 0.6rem;
+}
+
+.sub-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.84rem;
+}
+
+.sub-line .raw {
+  color: #94a3b8;
+}
+
+.sub-line .trans {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+/* Strategic Position Card */
+.rules-position-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.position-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.position-item {
+  background: rgba(15, 23, 42, 0.5);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pos-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #38bdf8;
+}
+
+.pos-formula code {
+  font-size: 0.8rem;
+  color: #fbbf24;
+}
+
+.pos-example {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}
+
+/* ============================================================ */
+/* PRONOMS SPÉCIAUX Y & EN */
+/* ============================================================ */
+
+.yen-duo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.yen-card {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.card-y {
+  border-top: 3px solid #10b981;
+}
+
+.card-en {
+  border-top: 3px solid #f59e0b;
+}
+
+.yen-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.badge-y { color: #34d399; }
+.badge-en { color: #fbbf24; }
+
+.yen-card h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #f8fafc;
+}
+
+.yen-case {
+  background: rgba(15, 23, 42, 0.5);
+  padding: 0.85rem;
+  border-radius: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.case-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.yen-example-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.84rem;
+}
+
+.yen-example-row .src {
+  color: #cbd5e1;
+}
+
+.yen-example-row .res {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+.alert-critique {
+  background: rgba(244, 63, 94, 0.08);
+  border-color: rgba(244, 63, 94, 0.3);
+}
+
+.alert-critique strong {
+  color: #f87171;
+  font-size: 0.95rem;
+}
+
+.alert-critique p {
+  margin: 0.25rem 0 0.5rem 0;
+  color: #fca5a5;
+  font-size: 0.85rem;
+}
+
+.safe-alternatives {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.alt-chip {
+  padding: 0.35rem 0.65rem;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 0.4rem;
+  font-size: 0.8rem;
+  color: #e2e8f0;
+}
+
+/* ============================================================ */
+/* RADAR TOUR DE CONTRÔLE (DOUBLES PRONOMS) */
+/* ============================================================ */
+
+.radar-belt-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.radar-track {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.75rem 0.25rem;
+}
+
+.track-node {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 140px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.track-node:hover {
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+}
+
+.track-node.node-selected {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+}
+
+.node-step {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.node-pronouns {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0.25rem 0;
+}
+
+.node-role {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.track-connector {
+  font-size: 1.1rem;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.node-verb {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.3);
+  cursor: default;
+}
+
+.node-verb .node-step {
+  color: #4ade80;
+}
+
+.node-verb .node-pronouns {
+  color: #86efac;
+}
+
+.mnemonic-tip-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.15rem;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 0.65rem;
+  font-size: 0.86rem;
+  color: #fde68a;
+}
+
+.mnemonic-tip-box code {
+  color: white;
+  font-weight: 700;
+}
+
+/* Combos Grid */
+.combos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.combo-card {
+  padding: 1.25rem;
+  background: rgba(30, 41, 59, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.combo-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.35rem;
+  display: inline-block;
+  margin-bottom: 0.3rem;
+}
+
+.combo-card h5 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #f1f5f9;
+}
+
+.combo-sentence {
+  background: rgba(15, 23, 42, 0.5);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.84rem;
+}
+
+.combo-sentence .orig {
+  color: #94a3b8;
+}
+
+.combo-sentence .result-line {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+/* ============================================================ */
+/* RESPONSIVE DESIGN */
+/* ============================================================ */
+
+@media (max-width: 860px) {
+  .duel-metaphor-card {
+    grid-template-columns: 1fr;
+  }
+  .vs-divider {
+    transform: rotate(90deg);
+    margin: 0.5rem 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .lab-header {
+    padding: 1.25rem 1rem;
+  }
+  .pillar-switcher-container {
+    grid-template-columns: 1fr;
+  }
+  .search-filter-box {
+    width: 100%;
+  }
+  .equation-step {
+    min-width: 100%;
+  }
+}

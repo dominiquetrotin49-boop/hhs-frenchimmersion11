@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, RefreshCw, AlertCircle } from 'lucide-react';
 import './Amnesique.css';
 
-export default function Amnesique() {
+export default function Amnesique({ onBack }) {
   const [messages, setMessages] = useState([
     { role: 'model', content: "Bonjour ! Je me souviens d'avoir passé de superbes vacances cet été, mais... j'ai oublié un objet très important et un événement ! Posez-moi des questions pour m'aider à retrouver la mémoire." }
   ]);
@@ -113,6 +113,11 @@ export default function Amnesique() {
 
   return (
     <div className="amnesique-container">
+      {onBack && (
+        <button className="back-btn mb-4" onClick={onBack} style={{ marginBottom: '1rem' }}>
+          ← Retour aux jeux
+        </button>
+      )}
       {/* Header */}
       <div className="amnesique-header">
         <div className="amnesique-title-group">
