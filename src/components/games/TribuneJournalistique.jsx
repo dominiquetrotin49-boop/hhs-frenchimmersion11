@@ -1,6 +1,6 @@
 /**
  * TribuneJournalistique.jsx
- * « Tribune Journalistique — L'Enquête au Présent (Tier 1 UDL) »
+ * « Tribune Journalistique — L'Enquête au Présent »
  * 
  * Interactive writing activity based on Dossiers 1 & 2 (FI11 Unité 1).
  * Layout: [Left pull-tab toolbox] | [Main writing canvas]
@@ -313,7 +313,7 @@ export default function TribuneJournalistique() {
           <div className="tj-header-top">
             <div>
               <div className="tj-unit-badge"><FileText size={12} />Unité 1 • Tribune Journalistique & Déontologie</div>
-              <h2 className="tj-title">Tribune Journalistique — L'Enquête au Présent (Tier 1 UDL)</h2>
+              <h2 className="tj-title">Tribune Journalistique — L'Enquête au Présent</h2>
             </div>
             <div className="tj-tense-legend">
               <span className="tj-legend-pill legend-lexique">📰 Dossier 1 = Lexique Presse</span>

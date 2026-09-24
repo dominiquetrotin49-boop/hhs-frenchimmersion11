@@ -19,7 +19,7 @@ export const UNIT_DOSSIER_CONFIG = {
     dossier3: {
       tag: 'Dossier 03',
       title: 'L\'Atelier Créatif & Jeux',
-      subtitle: 'Tribune UDL • Mots Croisés (7 grilles) • Quêtes'
+      subtitle: 'Tribune Journalistique • Mots Croisés (7 grilles) • Quêtes'
     }
   },
   '2': {
@@ -42,7 +42,7 @@ export const UNIT_DOSSIER_CONFIG = {
     dossier3: {
       tag: 'Dossier 03',
       title: 'L\'Atelier Créatif & Jeux',
-      subtitle: 'Tribune Académique UDL • Pronoms & Passé • Salle d\'Arcade'
+      subtitle: 'Tribune Académique • Pronoms & Passé • Salle d\'Arcade'
     }
   },
   '3': {

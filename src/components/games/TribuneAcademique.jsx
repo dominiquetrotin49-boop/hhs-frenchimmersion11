@@ -1,10 +1,9 @@
 /**
  * TribuneAcademique.jsx
- * « Tribune Académique — Plaidoyer & Récit pour l'Éducation (Tier 1 UDL) »
+ * « Tribune Académique — Plaidoyer & Récit pour l'Éducation »
  * 
  * Interactive writing activity based on Dossiers 1 & 2 (FI11 Unité 2).
  * Layout: [Left pull-tab toolbox] | [Main writing canvas]
- * Fully styled with Tier 1 Universal Design for Learning (UDL) principles.
  */
 
 import React, { useState, useRef, useCallback } from 'react';
@@ -334,7 +333,7 @@ export default function TribuneAcademique() {
                 <GraduationCap size={13} />
                 Unité 2 • Plaidoyer & Récit Académique
               </div>
-              <h2 className="tj-title">Tribune Académique — Récit & Plaidoyer pour l'Éducation (Tier 1 UDL)</h2>
+              <h2 className="tj-title">Tribune Académique — Récit & Plaidoyer pour l'Éducation</h2>
             </div>
             <div className="tj-tense-legend">
               <span className="tj-legend-pill legend-lexique">📚 Dossier 1 = Lexique Éducation</span>

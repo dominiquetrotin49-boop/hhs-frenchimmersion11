@@ -40,7 +40,7 @@ export default function AtelierSectionUnit2() {
   const TABS = [
     {
       id: 'tribune',
-      title: "Tribune Académique (UDL)",
+      title: "Tribune Académique",
       subtitle: "Atelier d'écriture guidée avec Boîte à Outils 3 Niveaux",
       icon: "🎓",
       color: "#06b6d4",
@@ -207,7 +207,7 @@ export default function AtelierSectionUnit2() {
 
       {/* Active Tab Panel */}
       <div className="atelier-subpanel-card animate-fade-in">
-        {/* Tab 1: Tribune Académique (Tier 1 UDL) */}
+        {/* Tab 1: Tribune Académique */}
         {activeTab === 'tribune' && (
           <div className="tribune-panel">
             <TribuneAcademique />
