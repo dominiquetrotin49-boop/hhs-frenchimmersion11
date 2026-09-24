@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { BookOpen, RefreshCw, Send, CheckCircle2, AlertTriangle, HelpCircle } from 'lucide-react';
+import { RefreshCw, Send, CheckCircle2, AlertTriangle, HelpCircle } from 'lucide-react';
+import { analyzeFrenchText } from '../../utils/frenchTextAnalyzer';
 
 const WRITING_PROMPTS = [
   {
@@ -65,278 +66,153 @@ const PROMPTS_BY_UNIT = {
   "reprise": WRITING_PROMPTS
 };
 
-const localAnalyzeText = (text, prompt) => {
-  const textClean = text.trim();
-  const textLower = textClean.toLowerCase();
-  
-  const spellingErrors = [];
-  const verbAgreements = [];
-  const adjectiveAgreements = [];
-  const nounGenders = [];
-  const wordChoices = [];
+const localAnalyzeText = (inputText, promptText = "", unitId = "1") => {
+  const result = analyzeFrenchText(inputText, {
+    unitId: String(unitId || "1"),
+    mode: "writing",
+    minWords: 5,
+    checkLength: false
+  });
 
-  // 1. Verb: je me leve -> je me lève
-  const leveMatch = textClean.match(/\b(je\s+me|je|tu|il|elle|on|ils|elles)\s+leve(s)?\b/i);
-  if (leveMatch) {
-    const pronom = leveMatch[1].toLowerCase();
-    let correctVerb = "lève";
-    if (pronom === "tu") correctVerb = "lèves";
-    if (pronom === "ils" || pronom === "elles") correctVerb = "lèvent";
-    
-    verbAgreements.push({
-      error: leveMatch[2] ? `${leveMatch[1]} leve${leveMatch[2]}` : `${leveMatch[1]} leve`,
-      subject: leveMatch[1],
-      correction: `${leveMatch[1]} ${correctVerb}`,
-      explanation: "Le verbe pronominal « se lever » prend un accent grave (è) au présent pour la prononciation : je me lève."
-    });
-  }
+  const corrections = [
+    ...(result.verbAgreements || []).map(v => ({
+      category: 'Conjugaison',
+      originalSegment: v.error,
+      suggestedCorrection: v.correction,
+      ruleExplanation: v.explanation
+    })),
+    ...(result.adjectiveAgreements || []).map(a => ({
+      category: 'Accords & Genre',
+      originalSegment: a.error,
+      suggestedCorrection: a.correction,
+      ruleExplanation: a.explanation
+    })),
+    ...(result.nounGenders || []).map(n => ({
+      category: 'Accords & Genre',
+      originalSegment: n.error,
+      suggestedCorrection: n.correction,
+      ruleExplanation: n.explanation
+    })),
+    ...(result.spellingErrors || []).map(s => ({
+      category: 'Orthographe',
+      originalSegment: s.error,
+      suggestedCorrection: s.correction,
+      ruleExplanation: s.explanation
+    })),
+    ...(result.wordChoices || []).map(w => ({
+      category: 'Vocabulaire',
+      originalSegment: w.error,
+      suggestedCorrection: w.correction,
+      ruleExplanation: w.explanation
+    }))
+  ];
 
-  // 2. Preposition a vs à
-  // Match 'a' followed by space and then a common noun, article, city, or digit
-  const aPrepMatch = textClean.match(/\ba\s+(la|l'|un|une|des|le|les|paris|canada|france|l'école|l'hôtel|l'hôpital|\d+)\b/i);
-  if (aPrepMatch) {
-    wordChoices.push({
-      error: `a ${aPrepMatch[1]}`,
-      correction: `à ${aPrepMatch[1]}`,
-      explanation: "La préposition de lieu ou de temps s'écrit « à » avec un accent grave. Le mot « a » sans accent est la troisième personne du verbe avoir."
-    });
-  }
-
-  // 3. Verb: prend -> prends (je prend, tu prend)
-  const prendMatch = textClean.match(/\b(je|tu)\s+prend\b/i);
-  if (prendMatch) {
-    verbAgreements.push({
-      error: `${prendMatch[1]} prend`,
-      subject: prendMatch[1],
-      correction: `${prendMatch[1]} prends`,
-      explanation: "Au présent de l'indicatif, le verbe « prendre » prend un « -s » avec les sujets je/tu : je prends, tu prends."
-    });
-  }
-
-  // 4. Noun Gender: ma déjeuner -> mon déjeuner
-  const dejeunerMatch = textClean.match(/\b(ma|la)\s+dé?jeuner\b/i);
-  if (dejeunerMatch) {
-    nounGenders.push({
-      error: dejeunerMatch[0],
-      correction: dejeunerMatch[1].toLowerCase() === 'ma' ? "mon déjeuner" : "le déjeuner",
-      explanation: "Le nom « déjeuner » est masculin. On dit « le déjeuner » ou « mon déjeuner »."
-    });
-  }
-
-  // 5. Elision/Preposition: a la école / la école / a la ecole
-  const ecoleMatch = textClean.match(/\b(a\s+)?la\s+é?cole\b/i);
-  if (ecoleMatch) {
-    wordChoices.push({
-      error: ecoleMatch[0],
-      correction: "à l'école",
-      explanation: "Devant un nom commençant par une voyelle comme école, l'article 'la' s'élide en 'l\''. De plus, on utilise la préposition « à » : à l'école."
-    });
-  }
-
-  // 5.5. Spelling/Elision for ercole: ercole -> école
-  const ercoleMatch = textClean.match(/\b(a\s+)?(la\s+)?(l['’]\s*)?ercole(s)?\b/i);
-  if (ercoleMatch) {
-    let corr = "école";
-    let expl = "Le mot s'écrit « école » avec un accent aigu sur le premier 'e' (et sans la lettre 'r').";
-    if (ercoleMatch[1] || ercoleMatch[2] || ercoleMatch[3]) {
-      corr = ercoleMatch[1] ? "à l'école" : "l'école";
-      expl = "Le mot s'écrit « école » avec un accent aigu sur le premier 'e' (et sans la lettre 'r'). Devant école (qui commence par une voyelle), l'article s'élide en l'.";
-    }
-    spellingErrors.push({
-      error: ercoleMatch[0],
-      correction: corr,
-      explanation: expl
-    });
-  }
-
-  // 6. Possessive agreement: mon amis
-  const monAmisMatch = textClean.match(/\bmon\s+ami(e)?s\b/i);
-  if (monAmisMatch) {
-    adjectiveAgreements.push({
-      error: monAmisMatch[0],
-      noun: "amis",
-      correction: "mon ami (singulier) ou mes amis (pluriel)",
-      explanation: "L'adjectif possessif doit s'accorder en nombre avec le nom. Utilisez « mon » avec un nom singulier ou « mes » avec un nom pluriel."
-    });
-  }
-
-  // 7. Context word choices: sur le bus -> dans le bus
-  const surBusMatch = textClean.match(/\bsur\s+(le|un|les)\s+bus\b/i);
-  if (surBusMatch) {
-    wordChoices.push({
-      error: surBusMatch[0],
-      correction: `dans ${surBusMatch[1]} bus`,
-      explanation: "En français, on voyage « dans le bus » (à l'intérieur) ou « en bus ». « Sur le bus » signifie sur le toit du véhicule !"
-    });
-  }
-
-  // 7.5. Irregular Verb conjugation: je va / tu va / il vais
-  const jeVaMatch = textClean.match(/\bje\s+va(s)?\b/i);
-  if (jeVaMatch) {
-    verbAgreements.push({
-      error: jeVaMatch[0],
-      subject: "je",
-      correction: "je vais",
-      explanation: "Au présent de l'indicatif, la forme correcte du verbe « aller » avec le sujet « je » est « vais » : je vais."
-    });
-  }
-  const tuVaMatch = textClean.match(/\btu\s+va\b/i);
-  if (tuVaMatch) {
-    verbAgreements.push({
-      error: tuVaMatch[0],
-      subject: "tu",
-      correction: "tu vas",
-      explanation: "Au présent de l'indicatif, la forme correcte du verbe « aller » avec le sujet « tu » prend un 's' : tu vas."
-    });
-  }
-  const ilVaisMatch = textClean.match(/\b(il|elle|on)\s+vai(s|t)\b/i);
-  if (ilVaisMatch) {
-    verbAgreements.push({
-      error: ilVaisMatch[0],
-      subject: ilVaisMatch[1],
-      correction: `${ilVaisMatch[1]} va`,
-      explanation: "Au présent de l'indicatif, la forme correcte du verbe « aller » avec la troisième personne (il/elle/on) est « va » : il/elle/on va."
-    });
-  }
-
-  // 8. General verb agreements
-  // Je + verb ending in -es (ex: je manges)
-  const jeEsMatch = textClean.match(/\b(je)\s+(\w+es)\b/i);
-  if (jeEsMatch && !leveMatch) {
-    verbAgreements.push({
-      error: jeEsMatch[2],
-      subject: "je",
-      correction: jeEsMatch[2].slice(0, -1),
-      explanation: "Au présent de l'indicatif, la terminaison avec le pronom sujet « je » est « -e » pour les verbes du premier groupe (-er)."
-    });
-  }
-
-  // Nous + verb ending in -e, -es, -ez (ex: nous mange)
-  const nousMatch = textClean.match(/\b(nous)\s+(\w+[^ons\s])\b/i);
-  if (nousMatch && !["sommes"].includes(nousMatch[2])) {
-    const verb = nousMatch[2];
-    if (verb.endsWith("e") || verb.endsWith("es") || verb.endsWith("ez")) {
-      verbAgreements.push({
-        error: verb,
-        subject: "nous",
-        correction: verb.replace(/e(s|z)?$/, "ons"),
-        explanation: "Au présent, la terminaison avec le sujet « nous » est « -ons » (ex: nous mangeons)."
-      });
-    }
-  }
-
-  // Vous + verb ending in -e, -es (ex: vous manges)
-  const vousMatch = textClean.match(/\b(vous)\s+(\w+[^ez\s])\b/i);
-  if (vousMatch && !["êtes", "faites", "dites"].includes(vousMatch[2])) {
-    const verb = vousMatch[2];
-    if (verb.endsWith("e") || verb.endsWith("es")) {
-      verbAgreements.push({
-        error: verb,
-        subject: "vous",
-        correction: verb.replace(/e(s)?$/, "ez"),
-        explanation: "Au présent, la terminaison avec le sujet « vous » est « -ez » (ex: vous mangez)."
-      });
-    }
-  }
-
-  // Ils/Elles + verb ending in -e, -es, -ez (ex: ils mange)
-  const ilsMatch = textClean.match(/\b(ils|elles)\s+(\w+[^ent\s])\b/i);
-  if (ilsMatch && !["sont", "ont", "font", "vont"].includes(ilsMatch[2])) {
-    const verb = ilsMatch[2];
-    if (verb.endsWith("e") || verb.endsWith("es") || verb.endsWith("ez")) {
-      verbAgreements.push({
-        error: verb,
-        subject: ilsMatch[1],
-        correction: verb.replace(/e(s|z)?$/, "ent"),
-        explanation: "Au présent, les verbes se terminent par « -ent » au pluriel avec les pronoms sujets « ils / elles »."
-      });
-    }
-  }
-
-  // Noun genders check
-  if (textLower.includes("le table")) {
-    nounGenders.push({
-      error: "le table",
-      correction: "la table",
-      explanation: "Le nom « table » est féminin."
-    });
-  }
-  if (textLower.includes("un pomme")) {
-    nounGenders.push({
-      error: "un pomme",
-      correction: "une pomme",
-      explanation: "Le nom « pomme » est féminin."
-    });
-  }
-  if (textLower.includes("la livre") && !textLower.includes("la livre sterling")) {
-    nounGenders.push({
-      error: "la livre",
-      correction: "le livre",
-      explanation: "Le nom « livre » (book) est masculin."
-    });
-  }
-
-  // Common spelling errors
-  if (textLower.includes("bocou")) {
-    spellingErrors.push({
-      error: "bocou",
-      correction: "beaucoup",
-      explanation: "L'adverbe d'intensité s'écrit toujours « beaucoup »."
-    });
-  }
-  if (textLower.includes("trés")) {
-    spellingErrors.push({
-      error: "trés",
-      correction: "très",
-      explanation: "L'accent sur le 'e' de « très » est un accent grave."
-    });
-  }
-  if (textLower.includes("deja")) {
-    spellingErrors.push({
-      error: "deja",
-      correction: "déjà",
-      explanation: "Le mot « déjà » s'écrit avec un accent aigu sur le premier 'e' et un accent grave sur le 'a'."
-    });
-  }
-
-  // Catch dejeuner without accent
-  const dejeunerSpelling = textClean.match(/\bdejeuner(s)?\b/i);
-  if (dejeunerSpelling) {
-    spellingErrors.push({
-      error: dejeunerSpelling[0],
-      correction: dejeunerSpelling[1] ? "déjeuners" : "déjeuner",
-      explanation: "Le mot s'écrit « déjeuner » avec un accent aigu sur le premier 'e'."
-    });
-  }
-
-  // Catch ecole without accent
-  const ecoleSpelling = textClean.match(/\becole(s)?\b/i);
-  if (ecoleSpelling) {
-    spellingErrors.push({
-      error: ecoleSpelling[0],
-      correction: ecoleSpelling[1] ? "écoles" : "école",
-      explanation: "Le mot s'écrit « école » avec un accent aigu sur le premier 'e'."
-    });
-  }
-
-  const isValid = spellingErrors.length === 0 && 
-                  verbAgreements.length === 0 && 
-                  adjectiveAgreements.length === 0 && 
-                  nounGenders.length === 0 && 
-                  wordChoices.length === 0;
+  const isValid = corrections.length === 0;
 
   return {
     isValid,
-    spellingErrors,
-    verbAgreements,
-    adjectiveAgreements,
-    nounGenders,
-    wordChoices,
-    generalFeedback: isValid 
-      ? "Excellent travail ! Votre paragraphe est bien rédigé et ne contient aucune erreur de syntaxe ou de grammaire."
-      : "Vous avez fait quelques erreurs dans votre texte. Examinez les corrections détaillées ci-dessous pour vous améliorer."
+    source: 'local',
+    generalFeedback: isValid
+      ? "Analyse locale de base : aucune erreur fréquente détectée parmi les règles courantes (accords et orthographe élémentaires). Pour vérifier la richesse du style et les structures avancées, demandez une confirmation à votre enseignant(e)."
+      : result.generalFeedback || "Plusieurs erreurs ont été identifiées. Consultez les corrections ci-dessous pour améliorer votre texte.",
+    strengths: isValid ? ["Bonne maîtrise des règles élémentaires observées."] : [],
+    corrections,
+    pedagogicalAdvice: isValid
+      ? "Pour progresser en immersion 11e, veillez à varier les temps verbaux (passé composé, imparfait, subjonctif) et à enrichir vos connecteurs logiques."
+      : "Prenez le temps de bien repérer le sujet de chaque verbe et le genre des noms pour assurer les accords.",
+    verbAgreements: result.verbAgreements || [],
+    adjectiveAgreements: result.adjectiveAgreements || [],
+    nounGenders: result.nounGenders || [],
+    spellingErrors: result.spellingErrors || [],
+    wordChoices: result.wordChoices || []
   };
 };
+
+async function analyzeWithClientGemini(studentText, promptSubject, promptInstructions, targetVocab = []) {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  if (!apiKey) throw new Error("Clé API non disponible côté client.");
+
+  const systemInstruction = `Tu es un professeur de français bienveillant et rigoureux pour des élèves en immersion française au lycée (Grade 11 / 11e année).
+Ton rôle est d'analyser le travail de rédaction d'un élève avec clarté et précision, SANS JAMAIS ATTRIBUER DE NOTE CHIFFRÉE.
+
+Critères d'évaluation Grade 11 Immersion :
+1. Points forts (richesse du vocabulaire thématique, structures de phrases élaborées, connecteurs logiques).
+2. Orthographe & Typographie (accents é, è, ê, à, â, ç, tréma, apostrophes et élisions j', l', d', qu', c').
+3. Conjugaison & Temps verbaux (présent, passé composé avec avoir/être et accords du participe passé, imparfait, plus-que-parfait, conditionnel, subjonctif).
+4. Accords essentiels et avancés (accords sujet-verbe même inversés ou éloignés, accords adjectifs masculin/féminin et singulier/pluriel, accord du participe passé avec COD placé avant).
+5. Syntaxe & Anglicismes (faux-amis, calques de l'anglais, prépositions après les verbes).
+
+Consignes impératives pour les corrections :
+- Si le texte de l'élève contient des fautes réelles, tu DOIS les répertorier dans "corrections".
+- Ne dis JAMAIS qu'un texte est sans faute s'il comporte des erreurs évidentes.
+- Si et seulement si le texte ne comporte absolument aucune erreur, renvoie une liste "corrections" vide [] et "isValid": true.
+- Si le texte a au moins une erreur, "isValid" DOIT être false.
+
+Réponds STRICTEMENT sous forme d'un objet JSON valide respectant ce format :
+{
+  "isValid": boolean,
+  "generalFeedback": "string",
+  "strengths": ["string"],
+  "corrections": [
+    {
+      "category": "Conjugaison" | "Orthographe" | "Syntaxe & Anglicismes" | "Accords & Genre" | "Vocabulaire",
+      "originalSegment": "extrait exact contenant la faute",
+      "suggestedCorrection": "version corrigée",
+      "ruleExplanation": "explication claire et pédagogique de la règle"
+    }
+  ],
+  "pedagogicalAdvice": "string"
+}`;
+
+  const userPrompt = `Sujet : "${promptSubject}"
+Consignes : "${promptInstructions}"
+Vocabulaire cible suggéré : ${targetVocab.length > 0 ? targetVocab.join(', ') : 'Aucun'}
+
+Texte de l'élève à analyser :
+"""
+${studentText}
+"""`;
+
+  const models = ['gemini-3.6-flash', 'gemini-3.5-flash-lite'];
+  for (const model of models) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: userPrompt }] }],
+          systemInstruction: { parts: [{ text: systemInstruction }] },
+          generationConfig: {
+            temperature: 0.1,
+            responseMimeType: 'application/json'
+          }
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.candidates || !data.candidates[0].content) {
+        throw new Error(data.error?.message || `Erreur Gemini ${model}`);
+      }
+
+      const parsed = JSON.parse(data.candidates[0].content.parts[0].text);
+      const corrections = Array.isArray(parsed.corrections) ? parsed.corrections : [];
+      const isValid = (typeof parsed.isValid === 'boolean') ? parsed.isValid : (corrections.length === 0);
+
+      return {
+        isValid,
+        generalFeedback: parsed.generalFeedback || (isValid ? "Excellent travail ! Votre texte est bien rédigé." : "Plusieurs erreurs ont été détectées."),
+        strengths: parsed.strengths || [],
+        corrections,
+        pedagogicalAdvice: parsed.pedagogicalAdvice || "Relisez vos phrases en vérifiant les accords.",
+        source: 'ai'
+      };
+    } catch (e) {
+      console.warn(`Fallback client Gemini (${model}):`, e.message);
+    }
+  }
+  throw new Error("Tous les modèles Gemini ont échoué.");
+}
 
 const ACCENTS = ["é", "è", "à", "ù", "ç", "â", "ê", "î", "ô", "û", "ë", "ï", "œ"];
 
@@ -388,6 +264,10 @@ export default function WritingPrompt({ onBack, unitId }) {
     setError(null);
     setFeedback(null);
 
+    const promptTitle = activePrompt?.title || "Sujet d'écriture";
+    const promptInstructions = activePrompt?.prompt || "";
+    const targetVocab = activePrompt?.vocab || [];
+
     try {
       const response = await fetch('/api/writing-feedback', {
         method: 'POST',
@@ -395,16 +275,30 @@ export default function WritingPrompt({ onBack, unitId }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          studentText: text.trim(),
           text: text.trim(),
-          prompt: activePrompt.prompt
+          promptSubject: promptTitle,
+          promptInstructions: promptInstructions,
+          prompt: promptInstructions,
+          targetVocab: targetVocab,
+          unitTheme: `Unité ${unitId || '1'} (Immersion 11e)`
         })
       });
 
       const textRes = await response.text();
       
-      // If we receive an HTML page (such as Vite SPA fallback in local dev), fall back to client-side checker
+      // If we receive an HTML page (such as Vite SPA fallback in local dev), try client Gemini then local
       if (textRes.trim().startsWith("<!DOCTYPE") || textRes.trim().startsWith("<html")) {
-        const localFeedback = localAnalyzeText(text.trim(), activePrompt.prompt);
+        try {
+          if (import.meta.env.VITE_GEMINI_API_KEY) {
+            const clientFeedback = await analyzeWithClientGemini(text.trim(), promptTitle, promptInstructions, targetVocab);
+            setFeedback(clientFeedback);
+            return;
+          }
+        } catch (cErr) {
+          console.warn("Client Gemini direct call error:", cErr);
+        }
+        const localFeedback = localAnalyzeText(text.trim(), promptInstructions, unitId);
         setFeedback(localFeedback);
         return;
       }
@@ -413,8 +307,7 @@ export default function WritingPrompt({ onBack, unitId }) {
       try {
         data = JSON.parse(textRes);
       } catch (parseErr) {
-        // Fall back to client-side rule checker if the string format is not JSON
-        const localFeedback = localAnalyzeText(text.trim(), activePrompt.prompt);
+        const localFeedback = localAnalyzeText(text.trim(), promptInstructions, unitId);
         setFeedback(localFeedback);
         return;
       }
@@ -425,9 +318,18 @@ export default function WritingPrompt({ onBack, unitId }) {
 
       setFeedback(data);
     } catch (err) {
-      console.error(err);
+      console.error("API error:", err);
+      try {
+        if (import.meta.env.VITE_GEMINI_API_KEY) {
+          const clientFeedback = await analyzeWithClientGemini(text.trim(), promptTitle, promptInstructions, targetVocab);
+          setFeedback(clientFeedback);
+          return;
+        }
+      } catch (cErr) {
+        console.warn("Client Gemini fallback error:", cErr);
+      }
       // As a last-resort safety, fall back to the local checker
-      const localFeedback = localAnalyzeText(text.trim(), activePrompt.prompt);
+      const localFeedback = localAnalyzeText(text.trim(), promptInstructions, unitId);
       setFeedback(localFeedback);
     } finally {
       setLoading(false);
@@ -553,11 +455,22 @@ export default function WritingPrompt({ onBack, unitId }) {
         <div className="lg:col-span-6 wp-panel flex flex-col justify-between">
           <div className="h-full flex flex-col justify-between">
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <span className="w-2.5 h-2.5 rounded-full bg-purple-400 animate-pulse" />
-                <h3 className="text-xs font-black uppercase tracking-widest text-purple-400">
-                  Rapport de Correction Pédagogique
-                </h3>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2.5 h-2.5 rounded-full ${feedback?.source === 'local' ? 'bg-amber-400' : 'bg-purple-400'} animate-pulse`} />
+                  <h3 className="text-xs font-black uppercase tracking-widest text-purple-400">
+                    Rapport de Correction Pédagogique
+                  </h3>
+                </div>
+                {feedback && (
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                    feedback.source === 'ai' 
+                      ? 'border-emerald-500/30 bg-emerald-950/40 text-emerald-300' 
+                      : 'border-amber-500/30 bg-amber-950/40 text-amber-300'
+                  }`}>
+                    {feedback.source === 'ai' ? '✨ Analyse IA Immersion 11e' : '⚡ Vérification de base'}
+                  </span>
+                )}
               </div>
 
               {/* Error banner */}
@@ -600,16 +513,85 @@ export default function WritingPrompt({ onBack, unitId }) {
                   {/* Perfect work check */}
                   {feedback.isValid && (
                     <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-950/10 text-emerald-100 flex items-center gap-2">
-                      <CheckCircle2 className="text-emerald-400" size={20} />
+                      <CheckCircle2 className="text-emerald-400 flex-shrink-0" size={20} />
                       <div>
-                        <span className="text-xs font-black uppercase text-emerald-400 tracking-wider block mb-0.5">Zéro faute !</span>
-                        <p className="text-xs font-medium">Excellent travail ! Votre orthographe et accords de verbes/adjectifs sont corrects.</p>
+                        <span className="text-xs font-black uppercase text-emerald-400 tracking-wider block mb-0.5">
+                          {feedback.source === 'ai' ? "Zéro faute !" : "Aucune erreur fréquente détectée"}
+                        </span>
+                        <p className="text-xs font-medium text-slate-300">
+                          {feedback.source === 'ai'
+                            ? "Excellent travail ! Votre orthographe, vos accords et votre syntaxe sont soignés."
+                            : "Aucune erreur élémentaire détectée par le vérificateur automatique. Faites relire votre paragraphe par votre enseignant(e) pour valider les tournures avancées."}
+                        </p>
                       </div>
                     </div>
                   )}
 
+                  {/* Strengths */}
+                  {feedback.strengths && feedback.strengths.length > 0 && (
+                    <div className="p-3.5 rounded-xl border border-emerald-500/25 bg-emerald-950/20 space-y-2">
+                      <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest flex items-center gap-1.5">
+                        <CheckCircle2 size={13} className="text-emerald-400" />
+                        Points forts observés
+                      </span>
+                      <ul className="space-y-1.5 pl-1">
+                        {feedback.strengths.map((str, idx) => (
+                          <li key={idx} className="text-xs text-emerald-100 flex items-start gap-2">
+                            <span className="text-emerald-400 font-bold">•</span>
+                            <span>{str}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Detailed Corrections */}
+                  {feedback.corrections && feedback.corrections.length > 0 && (
+                    <div className="space-y-2.5">
+                      <span className="text-[10px] font-black text-red-400 uppercase tracking-widest block">
+                        Corrections détaillées ({feedback.corrections.length})
+                      </span>
+                      {feedback.corrections.map((corr, idx) => {
+                        const catColor = corr.category === 'Conjugaison'
+                          ? 'border-red-500/30 bg-red-950/30 text-red-300'
+                          : corr.category === 'Accords & Genre'
+                          ? 'border-orange-500/30 bg-orange-950/30 text-orange-300'
+                          : corr.category === 'Orthographe'
+                          ? 'border-blue-500/30 bg-blue-950/30 text-blue-300'
+                          : 'border-purple-500/30 bg-purple-950/30 text-purple-300';
+
+                        return (
+                          <div key={idx} className="p-3 rounded-lg border border-slate-800 bg-slate-900/60 text-xs space-y-1.5">
+                            <div className="flex justify-between items-center flex-wrap gap-1">
+                              <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border ${catColor}`}>
+                                {corr.category}
+                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className="line-through text-slate-400 font-medium">« {corr.originalSegment} »</span>
+                                <span className="text-emerald-400 font-bold">➔ « {corr.suggestedCorrection} »</span>
+                              </div>
+                            </div>
+                            <p className="text-slate-300 leading-relaxed font-normal">{corr.ruleExplanation}</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Pedagogical Advice */}
+                  {feedback.pedagogicalAdvice && (
+                    <div className="p-3 rounded-xl border border-purple-500/25 bg-purple-950/20">
+                      <span className="text-[10px] font-black text-purple-300 uppercase tracking-widest block mb-1">
+                        💡 Conseil pour progresser
+                      </span>
+                      <p className="text-xs text-purple-100 leading-relaxed">
+                        {feedback.pedagogicalAdvice}
+                      </p>
+                    </div>
+                  )}
+
                   {/* Verbs feedback */}
-                  {feedback.verbAgreements && feedback.verbAgreements.length > 0 && (
+                  {(!feedback.corrections || feedback.corrections.length === 0) && feedback.verbAgreements && feedback.verbAgreements.length > 0 && (
                     <div className="space-y-2">
                       <span className="text-[10px] font-black text-red-400 uppercase tracking-widest block">Accords de verbes (présent)</span>
                       {feedback.verbAgreements.map((err, idx) => (
@@ -626,7 +608,7 @@ export default function WritingPrompt({ onBack, unitId }) {
                   )}
 
                   {/* Adjectives feedback */}
-                  {feedback.adjectiveAgreements && feedback.adjectiveAgreements.length > 0 && (
+                  {(!feedback.corrections || feedback.corrections.length === 0) && feedback.adjectiveAgreements && feedback.adjectiveAgreements.length > 0 && (
                     <div className="space-y-2">
                       <span className="text-[10px] font-black text-orange-400 uppercase tracking-widest block">Accord des adjectifs</span>
                       {feedback.adjectiveAgreements.map((err, idx) => (
@@ -643,7 +625,7 @@ export default function WritingPrompt({ onBack, unitId }) {
                   )}
 
                   {/* Noun Genders feedback */}
-                  {feedback.nounGenders && feedback.nounGenders.length > 0 && (
+                  {(!feedback.corrections || feedback.corrections.length === 0) && feedback.nounGenders && feedback.nounGenders.length > 0 && (
                     <div className="space-y-2">
                       <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest block">Genre des noms & articles</span>
                       {feedback.nounGenders.map((err, idx) => (
@@ -659,7 +641,7 @@ export default function WritingPrompt({ onBack, unitId }) {
                   )}
 
                   {/* Spelling feedback */}
-                  {feedback.spellingErrors && feedback.spellingErrors.length > 0 && (
+                  {(!feedback.corrections || feedback.corrections.length === 0) && feedback.spellingErrors && feedback.spellingErrors.length > 0 && (
                     <div className="space-y-2">
                       <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest block">Orthographe</span>
                       {feedback.spellingErrors.map((err, idx) => (
@@ -675,7 +657,7 @@ export default function WritingPrompt({ onBack, unitId }) {
                   )}
 
                   {/* Word Choices & Prepositions feedback */}
-                  {feedback.wordChoices && feedback.wordChoices.length > 0 && (
+                  {(!feedback.corrections || feedback.corrections.length === 0) && feedback.wordChoices && feedback.wordChoices.length > 0 && (
                     <div className="space-y-2">
                       <span className="text-[10px] font-black text-purple-400 uppercase tracking-widest block">Vocabulaire & Prépositions</span>
                       {feedback.wordChoices.map((err, idx) => (

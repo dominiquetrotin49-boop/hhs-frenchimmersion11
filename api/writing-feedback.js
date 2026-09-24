@@ -1,84 +1,142 @@
-import { GoogleGenAI, Type } from '@google/genai';
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'GEMINI_API_KEY is not configured in Vercel.' });
+    return res.status(500).json({ error: 'GEMINI_API_KEY is not configured in Vercel or environment.' });
   }
 
-  const { studentText, promptSubject, promptInstructions, targetVocab, unitTheme } = req.body;
+  const body = req.body || {};
+  const studentText = (body.studentText || body.text || '').trim();
+  const promptSubject = body.promptSubject || body.prompt || body.unitTheme || "Atelier d'Écriture";
+  const promptInstructions = body.promptInstructions || body.prompt || 'Rédigez votre paragraphe en appliquant les notions vues en classe.';
+  const targetVocab = Array.isArray(body.targetVocab) ? body.targetVocab : [];
 
-  if (!studentText || studentText.trim().length === 0) {
+  if (!studentText) {
     return res.status(400).json({ error: 'Texte vide.' });
   }
 
-  const systemInstruction = `Tu es un professeur de français bienveillant et rigoureux pour des élèves en immersion française au lycée (Grade 9).
-Ton rôle est d'analyser le travail de rédaction d'un élève avec clarté, SANS JAMAIS ATTRIBUER DE NOTE CHIFFRÉE.
+  const systemInstruction = `Tu es un professeur de français bienveillant et rigoureux pour des élèves en immersion française au lycée (Grade 11 / 11e année).
+Ton rôle est d'analyser le travail de rédaction d'un élève avec clarté et précision, SANS JAMAIS ATTRIBUER DE NOTE CHIFFRÉE.
 
-Critères d'évaluation Grade 9 :
-1. Points forts (richesse du vocabulaire thématique, structures de phrases claires).
-2. Orthographe & Typographie (accents é, è, ê, à, ç, apostrophes et élisions j', l', d', qu', c').
-3. Conjugaison & Temps verbaux (présent de l'indicatif, passé composé avec avoir/être, futur proche).
-4. Accords essentiels (accords sujet-verbe, accords adjectifs masculin/féminin et singulier/pluriel).
-5. Syntaxe & Anglicismes (faux-amis courants, prépositions simples).
+Critères d'évaluation Grade 11 Immersion :
+1. Points forts (richesse du vocabulaire thématique, structures de phrases élaborées, connecteurs logiques).
+2. Orthographe & Typographie (accents é, è, ê, à, â, ç, tréma, apostrophes et élisions j', l', d', qu', c').
+3. Conjugaison & Temps verbaux (présent, passé composé avec avoir/être et accords du participe passé, imparfait, plus-que-parfait, conditionnel, subjonctif).
+4. Accords essentiels et avancés (accords sujet-verbe même inversés ou éloignés, accords adjectifs masculin/féminin et singulier/pluriel, accord du participe passé avec COD placé avant).
+5. Syntaxe & Anglicismes (faux-amis, calques de l'anglais, prépositions après les verbes ex: participer à, s'intéresser à).
 
-Thème d'unité / Sujet : "${promptSubject || unitTheme || "Atelier d'Écriture"}"
-Consignes : "${promptInstructions || 'Rédigez votre paragraphe en appliquant les notions vues en classe.'}"
-Vocabulaire cible suggéré : ${(targetVocab || []).join(', ')}`;
+Consignes impératives pour les corrections :
+- Si le texte de l'élève contient des fautes réelles (de conjugaison, d'accord, d'accent, de syntaxe ou de vocabulaire), tu DOIS les répertorier dans "corrections".
+- Ne dis JAMAIS qu'un texte est sans faute s'il comporte des erreurs évidentes.
+- Si et seulement si le texte ne comporte absolument aucune erreur, renvoie une liste "corrections" vide [] et "isValid": true.
+- Si le texte a au moins une erreur, "isValid" DOIT être false.
 
-  const prompt = `Texte de l'élève à analyser :\n"""\n${studentText}\n"""`;
+Réponds STRICTEMENT sous forme d'un objet JSON valide respectant ce format :
+{
+  "isValid": boolean,
+  "generalFeedback": "string (appréciation générale globale bienveillante mais honnête)",
+  "strengths": ["string (point fort 1)", "string (point fort 2)"],
+  "corrections": [
+    {
+      "category": "Conjugaison" | "Orthographe" | "Syntaxe & Anglicismes" | "Accords & Genre" | "Vocabulaire",
+      "originalSegment": "extrait exact contenant la faute",
+      "suggestedCorrection": "version corrigée",
+      "ruleExplanation": "explication claire et pédagogique de la règle"
+    }
+  ],
+  "pedagogicalAdvice": "string (conseil concret pour continuer à progresser)"
+}`;
 
-  try {
-    const ai = new GoogleGenAI({ apiKey });
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        systemInstruction,
-        temperature: 0.2,
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            strengths: {
-              type: Type.ARRAY,
-              items: { type: Type.STRING },
-              description: 'Points forts observés dans la rédaction.'
-            },
-            corrections: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  category: {
-                    type: Type.STRING,
-                    enum: ['Conjugaison', 'Orthographe', 'Syntaxe & Anglicismes', 'Accords & Genre', 'Vocabulaire']
-                  },
-                  originalSegment: { type: Type.STRING },
-                  suggestedCorrection: { type: Type.STRING },
-                  ruleExplanation: { type: Type.STRING }
-                },
-                required: ['category', 'originalSegment', 'suggestedCorrection', 'ruleExplanation']
-              }
-            },
-            pedagogicalAdvice: {
-              type: Type.STRING,
-              description: 'Conseil constructif et bienveillant pour progresser.'
-            }
-          },
-          required: ['strengths', 'corrections', 'pedagogicalAdvice']
-        }
+  const userPrompt = `Thème d'unité / Sujet : "${promptSubject}"
+Consignes : "${promptInstructions}"
+Vocabulaire cible suggéré : ${targetVocab.length > 0 ? targetVocab.join(', ') : 'Aucun spécifique'}
+
+Texte de l'élève à analyser :
+"""
+${studentText}
+"""`;
+
+  // Fallback chain across supported models in case of demand spikes (503)
+  const models = ['gemini-3.6-flash', 'gemini-3.5-flash-lite'];
+  let lastError = null;
+
+  for (const model of models) {
+    try {
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+      const response = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: userPrompt }] }],
+          systemInstruction: { parts: [{ text: systemInstruction }] },
+          generationConfig: {
+            temperature: 0.1,
+            responseMimeType: 'application/json'
+          }
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.candidates || !data.candidates[0].content) {
+        throw new Error(data.error ? data.error.message : `Erreur HTTP ${response.status}`);
       }
-    });
 
-    const parsedFeedback = JSON.parse(response.text);
-    return res.status(200).json(parsedFeedback);
-  } catch (error) {
-    console.error("Gemini Evaluation Error:", error);
-    return res.status(500).json({ error: error.message || "Erreur interne lors de l'analyse." });
+      const rawText = data.candidates[0].content.parts[0].text;
+      const parsed = JSON.parse(rawText);
+
+      const corrections = Array.isArray(parsed.corrections) ? parsed.corrections : [];
+      const isValid = (typeof parsed.isValid === 'boolean') ? parsed.isValid : (corrections.length === 0);
+
+      // Backwards-compatible mappings for any UI components expecting older keys
+      const verbAgreements = [];
+      const adjectiveAgreements = [];
+      const nounGenders = [];
+      const spellingErrors = [];
+      const wordChoices = [];
+
+      corrections.forEach(c => {
+        const item = {
+          error: c.originalSegment,
+          correction: c.suggestedCorrection,
+          explanation: c.ruleExplanation
+        };
+        if (c.category === 'Conjugaison') {
+          verbAgreements.push({ ...item, subject: c.originalSegment });
+        } else if (c.category === 'Accords & Genre') {
+          adjectiveAgreements.push({ ...item, noun: c.originalSegment });
+        } else if (c.category === 'Orthographe') {
+          spellingErrors.push(item);
+        } else {
+          wordChoices.push(item);
+        }
+      });
+
+      return res.status(200).json({
+        isValid,
+        generalFeedback: parsed.generalFeedback || (isValid ? "Excellent travail ! Votre texte est bien rédigé." : "Plusieurs erreurs ont été relevées ci-dessous."),
+        strengths: parsed.strengths || [],
+        corrections,
+        pedagogicalAdvice: parsed.pedagogicalAdvice || "Relisez attentivement vos phrases en vérifiant les accords.",
+        source: 'ai',
+        // Backwards compatibility keys
+        verbAgreements,
+        adjectiveAgreements,
+        nounGenders,
+        spellingErrors,
+        wordChoices
+      });
+    } catch (err) {
+      lastError = err;
+      console.warn(`Tentative avec ${model} échouée :`, err.message);
+    }
   }
+
+  console.error("Tous les modèles Gemini ont échoué:", lastError);
+  return res.status(500).json({ error: lastError?.message || "Erreur lors de l'analyse avec Gemini." });
 }

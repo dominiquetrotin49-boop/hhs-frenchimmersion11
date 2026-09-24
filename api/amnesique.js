@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       parts: [{ text: message }]
     });
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
     if (!apiKey) {
       return res.status(500).json({ error: 'Clé API Gemini manquante dans la configuration du serveur.' });
     }
