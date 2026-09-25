@@ -215,6 +215,7 @@ ${studentText}
 }
 
 const ACCENTS = ["é", "è", "à", "ù", "ç", "â", "ê", "î", "ô", "û", "ë", "ï", "œ"];
+const MAX_CHARS = 2500;
 
 export default function WritingPrompt({ onBack, unitId }) {
   const promptsList = PROMPTS_BY_UNIT[String(unitId)] || WRITING_PROMPTS;
@@ -239,7 +240,7 @@ export default function WritingPrompt({ onBack, unitId }) {
     const newVal = currentVal.slice(0, start) + char + currentVal.slice(end);
     
     // Check characters count
-    if (newVal.length > 600) return;
+    if (newVal.length > MAX_CHARS) return;
 
     setText(newVal);
 
@@ -252,9 +253,13 @@ export default function WritingPrompt({ onBack, unitId }) {
 
   const handleTextChange = (e) => {
     const val = e.target.value;
-    if (val.length <= 600) {
+    if (val.length > MAX_CHARS) {
+      setText(val.slice(0, MAX_CHARS));
+    } else {
       setText(val);
     }
+    if (feedback) setFeedback(null);
+    if (error) setError(null);
   };
 
   const handleSubmit = async () => {
@@ -427,7 +432,7 @@ export default function WritingPrompt({ onBack, unitId }) {
                 spellCheck="false"
               />
               <div className="absolute right-3 bottom-3 text-xs text-slate-500 font-mono">
-                {text.length} / 150 caract.
+                {text.length} / {MAX_CHARS} caract.
               </div>
             </div>
           </div>
