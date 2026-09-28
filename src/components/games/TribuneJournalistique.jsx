@@ -9,7 +9,7 @@
 
 import React, { useState, useRef, useCallback } from 'react';
 import {
-  X, Copy, RefreshCw, Check, BookOpen, Zap, Star, FileText, ChevronRight, Newspaper, Scale, ShieldCheck
+  X, Copy, RefreshCw, Check, BookOpen, Zap, Star, FileText, ChevronRight, Newspaper, Scale, ShieldCheck, Search, ShieldAlert
 } from 'lucide-react';
 import './TribuneJournalistique.css';
 
@@ -151,6 +151,59 @@ const TOOLBOX_TABS = [
   },
 ];
 
+// ── Consignes de rédaction au choix (3 Sujets) ────────────────────────────────
+const PROMPTS = [
+  {
+    id: 'p1',
+    badge: 'Sujet 1',
+    icon: Newspaper,
+    title: "L'Enquête & L'Impartialité",
+    subtitle: "Salle de rédaction & Déontologie",
+    text: (
+      <>
+        « Vous êtes un journaliste d'investigation en salle de rédaction. Rédigez un court article ou une déclaration de presse <strong>(5 à 8 phrases / 60 mots min.)</strong> sur l'importance d'informer le public avec impartialité et rigueur.
+        Utilisez le vocabulaire de la presse{' '}
+        <span className="tj-lex-hl">(Dossier 1 : sources fiables, déontologie, impartialité, censure...)</span> et conjuguez vos verbes au présent de l'indicatif{' '}
+        <span className="tj-pres-hl">(Dossier 2 : -ER, -IR, -RE, être/avoir/faire...)</span>. »
+      </>
+    ),
+    placeholder: "« Dans la salle de rédaction, nous vérifions chaque information sensible. Les journalistes d'investigation défendent la liberté de la presse avec courage et rigueur... »"
+  },
+  {
+    id: 'p2',
+    badge: 'Sujet 2',
+    icon: Search,
+    title: "Traque à la Désinformation",
+    subtitle: "Réseaux sociaux & Fact-checking",
+    text: (
+      <>
+        « Vous animez la rubrique de vérification des faits (<em>fact-checking</em>) de votre média. Rédigez un éditorial ou un guide d'alerte <strong>(5 à 8 phrases / 60 mots min.)</strong> pour sensibiliser les citoyens aux pièges des fausses nouvelles sur les réseaux sociaux.
+        Expliquez comment repérer la manipulation, vérifier la crédibilité d'une source et aiguiser son esprit critique avec le lexique approprié{' '}
+        <span className="tj-lex-hl">(Dossier 1 : désinformation, réseaux sociaux, vérification des faits, esprit critique...)</span> et les verbes au présent{' '}
+        <span className="tj-pres-hl">(Dossier 2 : analyser, distinguer, alerter, devoir, vérifier...)</span>. »
+      </>
+    ),
+    placeholder: "« Face à la prolifération des fausses nouvelles sur les réseaux sociaux, nous alertons nos lecteurs. Pour démasquer la manipulation, chaque citoyen doit vérifier la fiabilité de ses sources... »"
+  },
+  {
+    id: 'p3',
+    badge: 'Sujet 3',
+    icon: ShieldAlert,
+    title: "Censure & Lanceurs d'Alerte",
+    subtitle: "Démocratie & Droit de savoir",
+    text: (
+      <>
+        « Vous rédigez une tribune d'opinion courageuse pour dénoncer la censure d'un journal indépendant ou soutenir un lanceur d'alerte <strong>(5 à 8 phrases / 60 mots min.)</strong>.
+        Expliquez pourquoi le public a le droit légitime de savoir la vérité et comment une presse libre protège la démocratie face aux pressions et aux abus de pouvoir.
+        Mobilisez le vocabulaire éthique et civique{' '}
+        <span className="tj-lex-hl">(Dossier 1 : censure, lanceur d'alerte, liberté d'expression, démocratie, abus de pouvoir...)</span> et conjuguez au présent{' '}
+        <span className="tj-pres-hl">(Dossier 2 : dénoncer, défendre, révéler, résister, pouvoir, devoir...)</span>. »
+      </>
+    ),
+    placeholder: "« Sans liberté de la presse, aucune démocratie ne peut survivre. Face à la censure gouvernementale, les lanceurs d'alerte et les journalistes indépendants risquent tout pour faire éclater la vérité... »"
+  }
+];
+
 // ── Checklist ──────────────────────────────────────────────────────────────────
 const CHECKLIST_ITEMS = [
   { id: 'cl1', label: "Vocabulaire de la presse et des médias (Dossier 1)", badge: "Lexique Presse", color: "badge-sky" },
@@ -165,12 +218,14 @@ function countSentences(t) { if (!t.trim()) return 0; const m = t.match(/[^.!?]*
 
 // ── Component ──────────────────────────────────────────────────────────────────
 export default function TribuneJournalistique() {
+  const [selectedPromptIdx, setSelectedPromptIdx] = useState(0);
   const [text, setText] = useState('');
   const [copied, setCopied] = useState(false);
   const [checklist, setChecklist] = useState({ cl1: false, cl2: false, cl3: false, cl4: false });
   const [openTab, setOpenTab] = useState(null);
 
   const textareaRef = useRef(null);
+  const activePrompt = PROMPTS[selectedPromptIdx];
 
   const wordCount = countWords(text);
   const sentenceCount = countSentences(text);
@@ -321,13 +376,41 @@ export default function TribuneJournalistique() {
             </div>
           </div>
 
+          {/* Prompt Selector */}
+          <div className="tj-prompt-selector-container">
+            <div className="tj-prompt-selector-label-row">
+              <span className="tj-prompt-selector-label">🎯 Choisissez votre consigne d'écriture :</span>
+              <span className="tj-prompt-selector-hint">3 sujets au choix</span>
+            </div>
+            <div className="tj-prompt-selector" role="tablist" aria-label="Consignes de rédaction">
+              {PROMPTS.map((p, idx) => {
+                const Icon = p.icon;
+                const isSelected = selectedPromptIdx === idx;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isSelected}
+                    className={`tj-prompt-tab ${isSelected ? 'active' : ''}`}
+                    onClick={() => setSelectedPromptIdx(idx)}
+                  >
+                    <Icon size={14} className="tj-ptab-icon" />
+                    <span className="tj-ptab-badge">{p.badge}</span>
+                    <span className="tj-ptab-title">{p.title}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="tj-prompt-box">
-            <span className="tj-prompt-label">📝 Consigne de rédaction :</span>
+            <div className="tj-prompt-box-header">
+              <span className="tj-prompt-label">📝 Consigne active • {activePrompt.badge} : {activePrompt.title}</span>
+              <span className="tj-prompt-sublabel">{activePrompt.subtitle}</span>
+            </div>
             <p className="tj-prompt-text">
-              « Vous êtes un journaliste d'investigation en salle de rédaction. Rédigez un court article ou une déclaration de presse <strong>(5 à 8 phrases)</strong> sur l'importance d'informer le public avec impartialité.
-              Utilisez le vocabulaire de la presse{' '}
-              <span className="tj-lex-hl">(Dossier 1 : sources fiables, censure, déontologie...)</span> et conjuguez vos verbes au présent de l'indicatif{' '}
-              <span className="tj-pres-hl">(Dossier 2 : -ER, -IR, -RE, être/avoir...)</span>. »
+              {activePrompt.text}
             </p>
           </div>
 
@@ -380,7 +463,7 @@ export default function TribuneJournalistique() {
               onChange={e => setText(e.target.value)}
               className="tj-textarea"
               rows={9}
-              placeholder="« Dans la salle de rédaction, nous vérifions chaque information sensible. Les journalistes d'investigation défendent la liberté de la presse avec courage... »"
+              placeholder={activePrompt.placeholder}
               autoCorrect="off"
               autoComplete="off"
               autoCapitalize="none"
