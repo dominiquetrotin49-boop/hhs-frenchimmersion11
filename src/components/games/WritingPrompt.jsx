@@ -410,7 +410,7 @@ export default function WritingPrompt({ onBack, unitId }) {
 
             {/* Prompt Selector Pills */}
             {promptsList.length > 1 && (
-              <div className="flex gap-2 mb-3 flex-wrap" role="tablist" aria-label="Choisir un sujet">
+              <div className="wp-prompt-tabs" role="tablist" aria-label="Choisir un sujet">
                 {promptsList.map((p, idx) => (
                   <button
                     key={p.id || idx}
@@ -422,11 +422,7 @@ export default function WritingPrompt({ onBack, unitId }) {
                       if (feedback) setFeedback(null);
                       if (error) setError(null);
                     }}
-                    className={`text-xs px-3 py-1.5 rounded-lg font-bold border transition-all ${
-                      promptIdx === idx
-                        ? "bg-blue-600/30 text-blue-200 border-blue-500 shadow-sm"
-                        : "bg-slate-900/60 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-slate-200"
-                    }`}
+                    className={`wp-prompt-tab ${promptIdx === idx ? 'active' : ''}`}
                   >
                     {p.title}
                   </button>
@@ -782,6 +778,47 @@ const STYLE_BLOCK = `
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 18px;
     padding: 1.5rem;
+  }
+
+  .wp-prompt-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  .wp-prompt-tab {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.42rem 0.85rem;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: #94a3b8;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .wp-prompt-tab:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f1f5f9;
+    border-color: rgba(59, 130, 246, 0.4);
+  }
+
+  .wp-prompt-tab.active {
+    background: rgba(59, 130, 246, 0.25);
+    border-color: #3b82f6;
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.25);
+  }
+
+  .wp-prompt-tab:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
   }
 
   .accent-key-btn {

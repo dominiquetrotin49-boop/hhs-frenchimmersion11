@@ -157,7 +157,7 @@ const PROMPTS = [
     id: 'p1',
     badge: 'Sujet 1',
     icon: Newspaper,
-    title: "L'Enquête & L'Impartialité",
+    title: "1. L'Enquête & L'Impartialité",
     subtitle: "Salle de rédaction & Déontologie",
     text: (
       <>
@@ -173,7 +173,7 @@ const PROMPTS = [
     id: 'p2',
     badge: 'Sujet 2',
     icon: Search,
-    title: "Traque à la Désinformation",
+    title: "2. Traque à la Désinformation",
     subtitle: "Réseaux sociaux & Fact-checking",
     text: (
       <>
@@ -189,7 +189,7 @@ const PROMPTS = [
     id: 'p3',
     badge: 'Sujet 3',
     icon: ShieldAlert,
-    title: "Censure & Lanceurs d'Alerte",
+    title: "3. Censure & Lanceurs d'Alerte",
     subtitle: "Démocratie & Droit de savoir",
     text: (
       <>
@@ -379,12 +379,11 @@ export default function TribuneJournalistique() {
           {/* Prompt Selector */}
           <div className="tj-prompt-selector-container">
             <div className="tj-prompt-selector-label-row">
-              <span className="tj-prompt-selector-label">🎯 Choisissez votre consigne d'écriture :</span>
+              <span className="tj-prompt-selector-label">🎯 Sujet d'écriture :</span>
               <span className="tj-prompt-selector-hint">3 sujets au choix</span>
             </div>
             <div className="tj-prompt-selector" role="tablist" aria-label="Consignes de rédaction">
               {PROMPTS.map((p, idx) => {
-                const Icon = p.icon;
                 const isSelected = selectedPromptIdx === idx;
                 return (
                   <button
@@ -395,9 +394,7 @@ export default function TribuneJournalistique() {
                     className={`tj-prompt-tab ${isSelected ? 'active' : ''}`}
                     onClick={() => setSelectedPromptIdx(idx)}
                   >
-                    <Icon size={14} className="tj-ptab-icon" />
-                    <span className="tj-ptab-badge">{p.badge}</span>
-                    <span className="tj-ptab-title">{p.title}</span>
+                    {p.title}
                   </button>
                 );
               })}
@@ -406,7 +403,7 @@ export default function TribuneJournalistique() {
 
           <div className="tj-prompt-box">
             <div className="tj-prompt-box-header">
-              <span className="tj-prompt-label">📝 Consigne active • {activePrompt.badge} : {activePrompt.title}</span>
+              <span className="tj-prompt-label">📝 {activePrompt.title}</span>
               <span className="tj-prompt-sublabel">{activePrompt.subtitle}</span>
             </div>
             <p className="tj-prompt-text">
