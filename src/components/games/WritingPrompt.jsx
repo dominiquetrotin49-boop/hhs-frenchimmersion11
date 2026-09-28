@@ -27,8 +27,27 @@ const WRITING_PROMPTS = [
 
 
 const UNIT1_PROMPTS = [
-  { id: 1, title: "1. Journaliste en action", prompt: "Vous êtes un jeune journaliste. Écrivez un court texte (au moins 50 mots) au PRÉSENT pour décrire comment vous trouvez vos informations, comment vous écrivez vos articles, et pourquoi la liberté de la presse est importante." },
-  { id: 2, title: "2. La déontologie des médias", prompt: "Pourquoi est-il crucial de vérifier ses sources et de lutter contre la désinformation ? Exprimez votre point de vue avec les mots de l'unité." }
+  {
+    id: 1,
+    title: "1. L'Enquête & L'Impartialité",
+    prompt: "« Vous êtes un journaliste d'investigation en salle de rédaction. Rédigez un court article ou une déclaration de presse (5 à 8 phrases / 60 mots min.) sur l'importance d'informer le public avec impartialité et rigueur. Utilisez le vocabulaire de la presse (sources fiables, déontologie, impartialité, censure...) et conjuguez vos verbes au présent de l'indicatif (-ER, -IR, -RE, être, avoir, faire...). »",
+    vocab: ["sources fiables", "déontologie", "impartialité", "censure", "liberté de la presse", "vérifier", "défendre"],
+    placeholder: "« Dans la salle de rédaction, nous vérifions chaque information sensible. Les journalistes d'investigation défendent la liberté de la presse avec courage et rigueur... »"
+  },
+  {
+    id: 2,
+    title: "2. Traque à la Désinformation",
+    prompt: "« Vous animez la rubrique de vérification des faits (fact-checking) de votre média. Rédigez un éditorial ou un guide d'alerte (5 à 8 phrases / 60 mots min.) pour sensibiliser les citoyens aux pièges des fausses nouvelles sur les réseaux sociaux. Expliquez comment repérer la manipulation, vérifier la crédibilité d'une source et aiguiser son esprit critique avec le lexique approprié (désinformation, réseaux sociaux, vérification des faits, esprit critique...) et les verbes au présent (analyser, distinguer, alerter, devoir, vérifier...). »",
+    vocab: ["désinformation", "réseaux sociaux", "vérification des faits", "esprit critique", "fausses nouvelles", "analyser", "alerter"],
+    placeholder: "« Face à la prolifération des fausses nouvelles sur les réseaux sociaux, nous alertons nos lecteurs. Pour démasquer la manipulation, chaque citoyen doit vérifier la fiabilité de ses sources... »"
+  },
+  {
+    id: 3,
+    title: "3. Censure & Lanceurs d'Alerte",
+    prompt: "« Vous rédigez une tribune d'opinion courageuse pour dénoncer la censure d'un journal indépendant ou soutenir un lanceur d'alerte (5 à 8 phrases / 60 mots min.). Expliquez pourquoi le public a le droit légitime de savoir la vérité et comment une presse libre protège la démocratie face aux pressions et aux abus de pouvoir. Mobilisez le vocabulaire éthique et civique (censure, lanceur d'alerte, liberté d'expression, démocratie, abus de pouvoir...) et conjuguez au présent (dénoncer, défendre, révéler, résister, pouvoir, devoir...). »",
+    vocab: ["censure", "lanceur d'alerte", "liberté d'expression", "démocratie", "abus de pouvoir", "dénoncer", "protéger"],
+    placeholder: "« Sans liberté de la presse, aucune démocratie ne peut survivre. Face à la censure gouvernementale, les lanceurs d'alerte et les journalistes indépendants risquent tout pour faire éclater la vérité... »"
+  }
 ];
 
 const UNIT2_PROMPTS = [
@@ -389,6 +408,32 @@ export default function WritingPrompt({ onBack, unitId }) {
               </h3>
             </div>
 
+            {/* Prompt Selector Pills */}
+            {promptsList.length > 1 && (
+              <div className="flex gap-2 mb-3 flex-wrap" role="tablist" aria-label="Choisir un sujet">
+                {promptsList.map((p, idx) => (
+                  <button
+                    key={p.id || idx}
+                    type="button"
+                    role="tab"
+                    aria-selected={promptIdx === idx}
+                    onClick={() => {
+                      setPromptIdx(idx);
+                      if (feedback) setFeedback(null);
+                      if (error) setError(null);
+                    }}
+                    className={`text-xs px-3 py-1.5 rounded-lg font-bold border transition-all ${
+                      promptIdx === idx
+                        ? "bg-blue-600/30 text-blue-200 border-blue-500 shadow-sm"
+                        : "bg-slate-900/60 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-slate-200"
+                    }`}
+                  >
+                    {p.title}
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* Prompt Display */}
             <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 mb-6">
               <h4 className="text-sm font-bold text-slate-200 mb-1">{activePrompt.title}</h4>
@@ -423,7 +468,7 @@ export default function WritingPrompt({ onBack, unitId }) {
                 value={text}
                 onChange={handleTextChange}
                 disabled={loading}
-                placeholder="Rédigez votre réponse ici (en français)..."
+                placeholder={activePrompt.placeholder || "Rédigez votre réponse ici (en français)..."}
                 className="wp-textarea"
                 rows="6"
                 autoCorrect="off"
