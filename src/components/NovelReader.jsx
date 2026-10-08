@@ -163,7 +163,7 @@ export default function NovelReader({ onBack }) {
     window.location.hostname.includes("vercel.app")
   )) || (typeof process !== "undefined" && process.env && (process.env.IS_VERCEL === "1" || process.env.VERCEL_URL));
 
-  if (isVercel && activeChapterIdx !== 0) {
+  if (isVercel && activeChapterIdx > 1) {
     return (
       <div className="novel-container glass-panel animate-in">
         <div className="novel-header">
@@ -186,7 +186,7 @@ export default function NovelReader({ onBack }) {
               className={`chapter-tab-btn ${activeChapterIdx === idx ? 'active' : ''}`}
               onClick={() => setActiveChapterIdx(idx)}
             >
-              <span className="chapter-num">{ch.number} {idx !== 0 && isVercel ? '🔒' : ''}</span>
+              <span className="chapter-num">{ch.number} {idx > 1 && isVercel ? '🔒' : ''}</span>
               <span className="chapter-tab-title">{ch.title}</span>
             </button>
           ))}

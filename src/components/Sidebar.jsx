@@ -52,7 +52,7 @@ export default function Sidebar() {
         <ul className="nav-list">
           {units.map((unit) => {
             const Icon = unit.icon;
-            const isLocked = isVercel && ['2', '3', '4', '5', '6', 'film1', 'film2'].includes(unit.id);
+            const isLocked = isVercel && ['3', '4', '5', '6', 'film1', 'film2'].includes(unit.id);
             return (
               <li key={unit.id}>
                 <NavLink 

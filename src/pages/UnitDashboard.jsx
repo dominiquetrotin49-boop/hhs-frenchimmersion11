@@ -29,7 +29,7 @@ const STANDARD_TABS = [
 
 export default function UnitDashboard() {
   const { unitId, section } = useParams();
-  const allowedUnits = ["reprise", "1"];
+  const allowedUnits = ["reprise", "1", "2"];
   const isVercel = (typeof window !== "undefined" && (
     window.location.hostname.includes("vercel") || 
     window.location.hostname.includes("vercel.app")
