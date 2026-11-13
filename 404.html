@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/hhs-frenchimmersion11/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>French Immersion 11 | Le Portail de Français 11e Année</title>
+    <script>
+      window.addEventListener('error', function(event) {
+        var errorDiv = document.getElementById('debug-error-box');
+        if (!errorDiv) {
+          errorDiv = document.createElement('div');
+          errorDiv.id = 'debug-error-box';
+          errorDiv.style.position = 'fixed';
+          errorDiv.style.top = '10px';
+          errorDiv.style.left = '10px';
+          errorDiv.style.right = '10px';
+          errorDiv.style.background = 'rgba(220, 38, 38, 0.95)';
+          errorDiv.style.color = 'white';
+          errorDiv.style.padding = '15px';
+          errorDiv.style.borderRadius = '8px';
+          errorDiv.style.zIndex = '999999';
+          errorDiv.style.fontFamily = 'monospace';
+          errorDiv.style.fontSize = '12px';
+          errorDiv.style.maxHeight = '80vh';
+          errorDiv.style.overflowY = 'auto';
+          errorDiv.style.boxShadow = '0 4px 6px rgba(0,0,0,0.2)';
+          
+          var header = document.createElement('h4');
+          header.innerText = "Erreur de chargement de l'application";
+          header.style.margin = '0 0 10px 0';
+          errorDiv.appendChild(header);
+          
+          document.body.appendChild(errorDiv);
+        }
+        
+        var msg = document.createElement('p');
+        msg.innerText = (event.message || 'Erreur inconnue') + ' dans ' + (event.filename || 'script') + ' (ligne ' + (event.lineno || '?') + ')';
+        msg.style.margin = '5px 0 0 0';
+        errorDiv.appendChild(msg);
+      });
+      
+      window.addEventListener('error', function(event) {
+        if (event.target && event.target.tagName === 'SCRIPT') {
+          var errorDiv = document.getElementById('debug-error-box');
+          if (!errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.id = 'debug-error-box';
+            errorDiv.style.position = 'fixed';
+            errorDiv.style.top = '10px';
+            errorDiv.style.left = '10px';
+            errorDiv.style.right = '10px';
+            errorDiv.style.background = 'rgba(220, 38, 38, 0.95)';
+            errorDiv.style.color = 'white';
+            errorDiv.style.padding = '15px';
+            errorDiv.style.borderRadius = '8px';
+            errorDiv.style.zIndex = '999999';
+            errorDiv.style.fontFamily = 'monospace';
+            errorDiv.style.fontSize = '12px';
+            
+            var header = document.createElement('h4');
+            header.innerText = 'Blocage par filtre de sécurité (Script Blocked)';
+            header.style.margin = '0 0 10px 0';
+            errorDiv.appendChild(header);
+            
+            document.body.appendChild(errorDiv);
+          }
+          var msg = document.createElement('p');
+          msg.innerText = 'Impossible de charger le script : ' + (event.target.src || 'inconnu') + '. Cela indique généralement un blocage par le filtre réseau de l\'école (GoGuardian, Securly, etc.).';
+          msg.style.margin = '5px 0 0 0';
+          errorDiv.appendChild(msg);
+        }
+      }, true);
+    </script>
+    <script type="module" crossorigin src="/hhs-frenchimmersion11/assets/index-DDDPBQ0A.js"></script>
+    <link rel="stylesheet" crossorigin href="/hhs-frenchimmersion11/assets/index-DOvOcx9C.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
